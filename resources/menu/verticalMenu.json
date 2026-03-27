@@ -152,6 +152,18 @@
       "menuHeader": "Apps & Pages"
     },
     {
+      "url": "admins",
+      "name": "Administrators",
+      "icon": "menu-icon icon-base bx bx-user-check",
+      "slug": "admins"
+    },
+    {
+      "url": "roles",
+      "name": "Roles Management",
+      "icon": "menu-icon icon-base bx bx-shield-quarter",
+      "slug": "roles"
+    },
+    {
       "url": "https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo-1/app/email",
       "name": "Email",
       "icon": "menu-icon icon-base bx bx-envelope",

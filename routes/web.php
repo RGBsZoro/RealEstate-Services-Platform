@@ -43,6 +43,41 @@ use App\Http\Controllers\form_elements\InputGroups;
 use App\Http\Controllers\form_layouts\VerticalForm;
 use App\Http\Controllers\form_layouts\HorizontalForm;
 use App\Http\Controllers\tables\Basic as TablesBasic;
+use App\Http\Controllers\Web\AdminController;
+use App\Http\Controllers\Web\AuthController;
+use App\Http\Controllers\Web\RoleController;
+
+////////////////////////////
+
+
+Route::get('login', [AuthController::class, 'loginForm'])->name('login');
+Route::post('login', [AuthController::class, 'login']);
+
+Route::group(['middleware' => ['auth:web', 'role:super-admin']], function () {
+
+  Route::get('admins', [AdminController::class, 'index'])->name('admins.index');
+  Route::get('admins/edit/{admin}', [AdminController::class, 'edit'])->name('admins.edit');
+  Route::put('admins/{admin}', [AdminController::class, 'update'])->name('admins.update');
+  Route::delete('admins/{admin}', [AdminController::class, 'destroy'])->name('admins.destroy');
+  Route::get('admins/create', [AdminController::class, 'create'])->name('admins.create');
+  Route::post('admins', [AdminController::class, 'store'])->name('admins.store');
+  Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
+  Route::get('roles/create', [RoleController::class, 'create'])->name('roles.create');
+  Route::post('roles', [RoleController::class, 'store'])->name('roles.store');
+  Route::get('roles/edit/{role}', [RoleController::class, 'edit'])->name('roles.edit');
+  Route::put('roles/{role}', [RoleController::class, 'update'])->name('roles.update');
+  Route::delete('roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
+});
+
+Route::get('locale/{lang}', function ($lang) {
+  session(['locale' => $lang]);
+  return redirect()->back();
+})->name('locale');
+
+
+
+///////////////////////////
+
 
 // Main Page Route
 Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');

@@ -2,9 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +16,24 @@ class DatabaseSeeder extends Seeder
    */
   public function run(): void
   {
-    // User::factory(10)->create();
+    $supeeAdmin = Admin::create([
+      'name' => 'super-admin',
+      'email' => 'superadmin@gmail.com',
+      'password' => 'gg',
+    ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
-    }
+    Admin::create([
+      'name' => 'wasem',
+      'email' => 'wasemalhariri13@gmail.com',
+      'password' => '12345678',
+    ]);
+
+    $superAdminRole = Role::create(['name' => 'super-admin']);
+
+    $supeeAdmin->assignRole($superAdminRole);
+
+    Permission::create(['name' => 'add-role']);
+    Permission::create(['name' => 'update-role']);
+    Permission::create(['name' => 'remove-role']);
+  }
 }
