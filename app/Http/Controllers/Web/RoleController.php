@@ -29,7 +29,7 @@ class RoleController extends Controller
     public function store(StoreRoleRequest $request)
     {
         $this->role->store($request->validated());
-        return redirect()->route('dashboard-analytics');
+        return redirect()->route('roles.index');
     }
 
     public function edit(Role $role)

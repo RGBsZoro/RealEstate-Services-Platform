@@ -27,7 +27,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($admins as $admin)
+                @forelse($admins as $admin)
                 <tr>
                     <td>
                         <div class="d-flex justify-content-start align-items-center user-name">
@@ -97,7 +97,16 @@
                         </div>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="4" class="text-center py-5">
+                        <div class="text-muted">
+                            <i class="bx bx-folder-open mb-2" style="font-size: 2rem;"></i>
+                            <p>No admins found in the database.</p>
+                        </div>
+                    </td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>

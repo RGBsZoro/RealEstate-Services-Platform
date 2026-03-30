@@ -4,7 +4,7 @@ namespace App\Http\Requests\Web;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreRoleRequest extends FormRequest
+class UpdateActivityRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,11 @@ class StoreRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'unique:roles,name'],
-            'permissions' => ['nullable', 'array'],
+            'name' => 'sometimes|array',
+            'name.en' => 'sometimes|string|max:255|unique:activities,name->en,' . $this->activity->id,
+            'name.ar' => 'sometimes|string|max:255|unique:activities,name->ar,' . $this->activity->id,
+            'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
         ];
     }
 }

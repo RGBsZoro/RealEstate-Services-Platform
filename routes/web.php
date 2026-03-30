@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Web\CityController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\dashboard\Analytics;
 use App\Http\Controllers\layouts\WithoutMenu;
@@ -43,6 +44,7 @@ use App\Http\Controllers\form_elements\InputGroups;
 use App\Http\Controllers\form_layouts\VerticalForm;
 use App\Http\Controllers\form_layouts\HorizontalForm;
 use App\Http\Controllers\tables\Basic as TablesBasic;
+use App\Http\Controllers\Web\ActivityController;
 use App\Http\Controllers\Web\AdminController;
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\RoleController;
@@ -61,12 +63,29 @@ Route::group(['middleware' => ['auth:web', 'role:super-admin']], function () {
   Route::delete('admins/{admin}', [AdminController::class, 'destroy'])->name('admins.destroy');
   Route::get('admins/create', [AdminController::class, 'create'])->name('admins.create');
   Route::post('admins', [AdminController::class, 'store'])->name('admins.store');
+
+
   Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
   Route::get('roles/create', [RoleController::class, 'create'])->name('roles.create');
   Route::post('roles', [RoleController::class, 'store'])->name('roles.store');
   Route::get('roles/edit/{role}', [RoleController::class, 'edit'])->name('roles.edit');
   Route::put('roles/{role}', [RoleController::class, 'update'])->name('roles.update');
   Route::delete('roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
+
+
+  Route::get('cities', [CityController::class, 'index'])->name('cities.index');
+  Route::get('cities/create', [CityController::class, 'create'])->name('cities.create');
+  Route::post('cities', [CityController::class, 'store'])->name('cities.store');
+  Route::get('cities/edit/{city}', [CityController::class, 'edit'])->name('cities.edit');
+  Route::put('cities/{city}', [CityController::class, 'update'])->name('cities.update');
+  Route::delete('cities/{city}', [CityController::class, 'destroy'])->name('cities.destroy');
+
+  Route::get('activities', [ActivityController::class, 'index'])->name('activities.index');
+  Route::get('activities/create', [ActivityController::class, 'create'])->name('activities.create');
+  Route::post('activities', [ActivityController::class, 'store'])->name('activities.store');
+  Route::get('activities/edit/{activity}', [ActivityController::class, 'edit'])->name('activities.edit');
+  Route::put('activities/{activity}', [ActivityController::class, 'update'])->name('activities.update');
+  Route::delete('activities/{activity}', [ActivityController::class, 'destroy'])->name('activities.destroy');
 });
 
 Route::get('locale/{lang}', function ($lang) {

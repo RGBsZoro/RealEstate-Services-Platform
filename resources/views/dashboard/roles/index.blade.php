@@ -27,7 +27,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($roles as $role)
+                @forelse($roles as $role)
                 <tr>
                     <td>
                         <div class="d-flex align-items-center">
@@ -83,7 +83,16 @@
                         </div>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="4" class="text-center py-5">
+                        <div class="text-muted">
+                            <i class="bx bx-folder-open mb-2" style="font-size: 2rem;"></i>
+                            <p>No Roles found in the database.</p>
+                        </div>
+                    </td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
