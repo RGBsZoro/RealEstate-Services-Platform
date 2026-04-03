@@ -16,4 +16,9 @@ class City extends Model
         'longitude',
         'radius'
     ];
+
+    public function businessAccounts()
+    {
+        return $this->hasMany(BusinessAccount::class);
+    }
 }

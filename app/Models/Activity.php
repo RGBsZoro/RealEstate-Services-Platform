@@ -15,4 +15,9 @@ class Activity extends Model implements HasMedia
     protected $fillable = [
         'name',
     ];
+
+    public function businessAccounts()
+    {
+        return $this->hasMany(BusinessAccount::class);
+    }
 }

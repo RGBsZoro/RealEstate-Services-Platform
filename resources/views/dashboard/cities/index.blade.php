@@ -22,7 +22,7 @@
                     <th style="width: 25%">City Name</th>
                     <th style="width: 25%">Coordinates (Lat/Lng)</th>
                     <th style="width: 15%">Coverage Area</th>
-                    <th style="width: 15%">User Statistics</th>
+                    <th style="width: 15%">Business Accounts</th>
                     <th style="width: 10%">Creation Date</th>
                     <th style="width: 10%">Actions</th>
                 </tr>
@@ -39,7 +39,7 @@
                             </div>
                             <div class="d-flex flex-column">
                                 <span class="fw-medium text-heading">{{ $city->getTranslation('name', 'en') }}</span>
-                                <small class="text-muted" dir="rtl">{{ $city->getTranslation('name', 'ar') }}</small>
+                                <small class="text-muted">{{ $city->getTranslation('name', 'ar') }}</small>
                             </div>
                         </div>
                     </td>
@@ -63,8 +63,8 @@
 
                     <td>
                         <div class="d-flex align-items-center">
-                            <i class="bx bx-group me-2 text-secondary"></i>
-                            <span class="text-muted">{{ $city->users_count ?? 0 }} Users</span>
+                            <i class="bx bx-store-alt me-2 text-secondary"></i>
+                            <span class="text-muted">{{ $city->businessAccounts->count() ?? 0 }} Account(s)</span>
                         </div>
                     </td>
 

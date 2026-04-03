@@ -49,7 +49,7 @@
                     <td>
                         <div class="d-flex align-items-center">
                             <i class="bx bx-store-alt me-2 text-secondary"></i>
-                            <span class="text-muted">{{ $activity->business_accounts_count ?? 0 }} Account(s)</span>
+                            <span class="text-muted">{{ $activity->businessAccounts->count() ?? 0 }} Account(s)</span>
                         </div>
                     </td>
 
