@@ -47,6 +47,7 @@ use App\Http\Controllers\tables\Basic as TablesBasic;
 use App\Http\Controllers\Web\ActivityController;
 use App\Http\Controllers\Web\AdminController;
 use App\Http\Controllers\Web\AuthController;
+use App\Http\Controllers\Web\BusinessAccountController;
 use App\Http\Controllers\Web\RoleController;
 
 ////////////////////////////
@@ -86,6 +87,11 @@ Route::group(['middleware' => ['auth:web', 'role:super-admin']], function () {
   Route::get('activities/edit/{activity}', [ActivityController::class, 'edit'])->name('activities.edit');
   Route::put('activities/{activity}', [ActivityController::class, 'update'])->name('activities.update');
   Route::delete('activities/{activity}', [ActivityController::class, 'destroy'])->name('activities.destroy');
+
+  Route::get('business-accounts', [BusinessAccountController::class, 'index'])->name('business-accounts.index');
+  Route::get('business-accounts/{businessAccount}', [BusinessAccountController::class, 'show'])->name('business-accounts.show');
+  Route::post('business-accounts/{businessAccount}/approve', [BusinessAccountController::class, 'approve'])->name('business-accounts.approve');
+  Route::post('business-accounts/{businessAccount}/reject', [BusinessAccountController::class, 'reject'])->name('business-accounts.reject');
 });
 
 Route::get('locale/{lang}', function ($lang) {

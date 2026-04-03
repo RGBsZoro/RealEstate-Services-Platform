@@ -35,5 +35,11 @@ class DatabaseSeeder extends Seeder
     Permission::create(['name' => 'add-role']);
     Permission::create(['name' => 'update-role']);
     Permission::create(['name' => 'remove-role']);
+
+    $user = User::create([
+      'name' => 'wasem',
+      'phone' => '+963994801706',
+      'password' => 'fcbayern'
+    ]);
   }
 }

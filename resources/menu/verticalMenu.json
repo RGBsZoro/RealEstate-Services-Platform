@@ -168,12 +168,18 @@
       "name": "Cities Management",
       "icon": "menu-icon icon-base bx bx-map",
       "slug": "cities"
-    },
+    },  
     {
       "url": "activities",
       "name": "Activities Management",
       "icon": "menu-icon icon-base bx bx-briefcase",
-      "slug": "Activities"
+      "slug": "activities"
+    },
+    {
+      "url": "business-accounts",
+      "name": "Business Accounts",
+      "icon": "menu-icon icon-base bx bx-briefcase",
+      "slug": "business-accounts"
     },
     {
       "url": "https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo-1/app/email",

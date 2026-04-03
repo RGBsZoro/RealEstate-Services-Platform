@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('cities', function (Blueprint $table) {
             $table->id();
             $table->json('name');
-            $table->string('latitude');
-            $table->string('longitude');
-            $table->double('radius');
+            $table->decimal('latitude', 10, 7);
+            $table->decimal('longitude', 10, 7);
+            $table->decimal('radius', 10, 2);
             $table->timestamps();
         });
     }
