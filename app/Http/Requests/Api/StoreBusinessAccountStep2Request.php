@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api;
 
 use App\Models\BusinessAccount;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-class StoreBusinessAccountStep3Request extends FormRequest
+class StoreBusinessAccountStep2Request extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,12 @@ class StoreBusinessAccountStep3Request extends FormRequest
     public function rules(): array
     {
         return [
-            'city_id' => 'required|exists:cities,id',
-            'latitude' => 'required',
-            'longitude' => 'required',
+            'license_number' => 'required',
+            'name' => 'required|array',
+            'name.ar' => 'required',
+            'name.en' => 'required',
+            'activities' => 'required',
+            'details' => 'nullable'
         ];
     }
 }

@@ -30,26 +30,30 @@
                 <tr>
                     <td>
                         <div class="d-flex align-items-center">
-                            <div class="avatar avatar-xs me-2">
-                                @if($activity->hasMedia('activities'))
-                                    <img src="{{ $activity->getFirstMediaUrl('activities') }}" alt="Icon" class="rounded">
-                                @else
-                                    <span class="avatar-initial rounded bg-label-primary">
+                            @if($activity->hasMedia('Activities'))
+                                <img src="{{ $activity->getFirstMediaUrl('Activities') }}" alt="Icon" class="rounded me-3" width="35" height="35" style="object-fit: cover;">
+                            @else
+                                <div class="avatar avatar-sm me-3">
+                                    <span class="avatar-initial rounded bg-label-secondary">
                                         <i class="bx bx-briefcase"></i>
                                     </span>
-                                @endif
-                            </div>
+                                </div>
+                            @endif
+                            
+                            {{-- نصوص الاسم (EN/AR) --}}
                             <div class="d-flex flex-column">
                                 <span class="fw-medium text-heading">{{ $activity->getTranslation('name', 'en') }}</span>
-                                <small class="text-muted" dir="rtl">{{ $activity->getTranslation('name', 'ar') }}</small>
+                                <small class="text-muted">{{ $activity->getTranslation('name', 'ar') }}</small>
                             </div>
                         </div>
                     </td>
 
                     <td>
                         <div class="d-flex align-items-center">
-                            <i class="bx bx-store-alt me-2 text-secondary"></i>
-                            <span class="text-muted">{{ $activity->businessAccounts->count() ?? 0 }} Account(s)</span>
+                            <span class="badge bg-label-info">
+                                <i class="bx bx-store-alt me-1"></i>
+                                {{ $activity->businessAccounts->count() ?? 0 }} Account(s)
+                            </span>
                         </div>
                     </td>
 
@@ -60,9 +64,9 @@
                     <td>
                         <div class="dropdown">
                             <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                <i class="bx bx-dots-vertical-rounded"></i>
+                                <i class="icon-base bx bx-dots-vertical-rounded"></i></button>
                             </button>
-                            <div class="dropdown-menu">
+                            <div class="dropdown-menu dropdown-menu-end">
                                 <a class="dropdown-item" href="{{ route('activities.edit', $activity->id) }}">
                                     <i class="bx bx-edit-alt me-1"></i> Edit
                                 </a>

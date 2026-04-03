@@ -85,7 +85,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="4" class="text-center py-5">
+                    <td colspan="5" class="text-center py-5">
                         <div class="text-muted">
                             <i class="bx bx-folder-open mb-2" style="font-size: 2rem;"></i>
                             <p>No Roles found in the database.</p>
