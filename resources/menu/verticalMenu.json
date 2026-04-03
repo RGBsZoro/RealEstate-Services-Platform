@@ -168,7 +168,7 @@
       "name": "Cities Management",
       "icon": "menu-icon icon-base bx bx-map",
       "slug": "cities"
-    },  
+    },
     {
       "url": "activities",
       "name": "Activities Management",
@@ -180,6 +180,18 @@
       "name": "Business Accounts",
       "icon": "menu-icon icon-base bx bx-briefcase",
       "slug": "business-accounts"
+    },
+    {
+      "url": "categories/main",
+      "name": "Main Categories",
+      "icon": "menu-icon icon-base bx bx-category",
+      "slug": "categories-main"
+    },
+    {
+      "url": "categories/sub",
+      "name": "Sub Categories",
+      "icon": "menu-icon icon-base bx bx-grid-alt",
+      "slug": "categories-sub"
     },
     {
       "url": "https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo-1/app/email",

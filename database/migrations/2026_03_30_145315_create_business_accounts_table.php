@@ -35,6 +35,7 @@ return new class extends Migration
             ])->default('draft');
 
             $table->integer('current_step')->nullable()->default(1);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

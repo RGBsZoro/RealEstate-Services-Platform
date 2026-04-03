@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreBusinessAccountStep1Request;
-use App\Http\Requests\StoreBusinessAccountStep2Request;
-use App\Http\Requests\StoreBusinessAccountStep3Request;
-use App\Http\Requests\StoreBusinessAccountStep4Request;
+use App\Http\Requests\Api\StoreBusinessAccountStep1Request;
+use App\Http\Requests\Api\StoreBusinessAccountStep2Request;
+use App\Http\Requests\Api\StoreBusinessAccountStep3Request;
+use App\Http\Requests\Api\StoreBusinessAccountStep4Request;
 use App\Models\BusinessAccount;
 use App\Services\Api\BusinessAccountService;
 use Illuminate\Http\Request;

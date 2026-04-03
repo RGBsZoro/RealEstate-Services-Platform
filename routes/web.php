@@ -48,6 +48,8 @@ use App\Http\Controllers\Web\ActivityController;
 use App\Http\Controllers\Web\AdminController;
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\BusinessAccountController;
+use App\Http\Controllers\Web\CategoryController;
+use App\Http\Controllers\Web\DynamicFieldController;
 use App\Http\Controllers\Web\RoleController;
 
 ////////////////////////////
@@ -58,6 +60,7 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:web', 'role:super-admin']], function () {
 
+  // admins
   Route::get('admins', [AdminController::class, 'index'])->name('admins.index');
   Route::get('admins/edit/{admin}', [AdminController::class, 'edit'])->name('admins.edit');
   Route::put('admins/{admin}', [AdminController::class, 'update'])->name('admins.update');
@@ -65,7 +68,7 @@ Route::group(['middleware' => ['auth:web', 'role:super-admin']], function () {
   Route::get('admins/create', [AdminController::class, 'create'])->name('admins.create');
   Route::post('admins', [AdminController::class, 'store'])->name('admins.store');
 
-
+  // roles
   Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
   Route::get('roles/create', [RoleController::class, 'create'])->name('roles.create');
   Route::post('roles', [RoleController::class, 'store'])->name('roles.store');
@@ -73,7 +76,7 @@ Route::group(['middleware' => ['auth:web', 'role:super-admin']], function () {
   Route::put('roles/{role}', [RoleController::class, 'update'])->name('roles.update');
   Route::delete('roles/{role}', [RoleController::class, 'destroy'])->name('roles.destroy');
 
-
+  // cities
   Route::get('cities', [CityController::class, 'index'])->name('cities.index');
   Route::get('cities/create', [CityController::class, 'create'])->name('cities.create');
   Route::post('cities', [CityController::class, 'store'])->name('cities.store');
@@ -81,6 +84,8 @@ Route::group(['middleware' => ['auth:web', 'role:super-admin']], function () {
   Route::put('cities/{city}', [CityController::class, 'update'])->name('cities.update');
   Route::delete('cities/{city}', [CityController::class, 'destroy'])->name('cities.destroy');
 
+
+  // activities
   Route::get('activities', [ActivityController::class, 'index'])->name('activities.index');
   Route::get('activities/create', [ActivityController::class, 'create'])->name('activities.create');
   Route::post('activities', [ActivityController::class, 'store'])->name('activities.store');
@@ -88,10 +93,40 @@ Route::group(['middleware' => ['auth:web', 'role:super-admin']], function () {
   Route::put('activities/{activity}', [ActivityController::class, 'update'])->name('activities.update');
   Route::delete('activities/{activity}', [ActivityController::class, 'destroy'])->name('activities.destroy');
 
+  // business accounts
   Route::get('business-accounts', [BusinessAccountController::class, 'index'])->name('business-accounts.index');
   Route::get('business-accounts/{businessAccount}', [BusinessAccountController::class, 'show'])->name('business-accounts.show');
   Route::post('business-accounts/{businessAccount}/approve', [BusinessAccountController::class, 'approve'])->name('business-accounts.approve');
   Route::post('business-accounts/{businessAccount}/reject', [BusinessAccountController::class, 'reject'])->name('business-accounts.reject');
+
+  // Main Categories
+  Route::prefix('categories/main')->name('categories.main.')->group(function () {
+    Route::get('/', [CategoryController::class, 'indexMain'])->name('index');
+    Route::get('/create', [CategoryController::class, 'createMain'])->name('create');
+  });
+
+  // Sub Categories
+  Route::prefix('categories/sub')->name('categories.sub.')->group(function () {
+    Route::get('/', [CategoryController::class, 'indexSub'])->name('index');
+    Route::get('/create', [CategoryController::class, 'createSub'])->name('create');
+  });
+
+  // Common (Store, Edit, Update, Delete)
+  // Route::resource('categories', CategoryController::class)->except(['index', 'create']);
+  Route::get('categories/edit/{category}', [CategoryController::class, 'edit'])->name('categories.edit');
+  Route::post('categories', [CategoryController::class, 'store'])->name('categories.store');
+  Route::put('categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+  Route::delete('categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+  // في ملف routes/web.php
+  Route::prefix('categories/')->group(function () {
+    Route::get('fields/{category}', [DynamicFieldController::class, 'index'])->name('categories.fields.index');
+    Route::get('fields/{category}/create', [DynamicFieldController::class, 'create'])->name('categories.fields.create');
+    Route::post('fields/{category}', [DynamicFieldController::class, 'store'])->name('categories.fields.store');
+    Route::get('fields/{dynamicField}/{category}/edit', [DynamicFieldController::class, 'edit'])->name('categories.fields.edit');
+    Route::put('fields/{dynamicField}/{category}', [DynamicFieldController::class, 'update'])->name('categories.fields.update');
+    Route::delete('fields/{dynamicField}/{category}', [DynamicFieldController::class, 'destroy'])->name('categories.fields.destroy');
+  });
 });
 
 Route::get('locale/{lang}', function ($lang) {
