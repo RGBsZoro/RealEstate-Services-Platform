@@ -51,6 +51,7 @@ use App\Http\Controllers\Web\BusinessAccountController;
 use App\Http\Controllers\Web\CategoryController;
 use App\Http\Controllers\Web\DynamicFieldController;
 use App\Http\Controllers\Web\RoleController;
+use App\Http\Controllers\Web\ServiceController;
 
 ////////////////////////////
 
@@ -126,6 +127,14 @@ Route::group(['middleware' => ['auth:web', 'role:super-admin']], function () {
     Route::get('fields/{dynamicField}/{category}/edit', [DynamicFieldController::class, 'edit'])->name('categories.fields.edit');
     Route::put('fields/{dynamicField}/{category}', [DynamicFieldController::class, 'update'])->name('categories.fields.update');
     Route::delete('fields/{dynamicField}/{category}', [DynamicFieldController::class, 'destroy'])->name('categories.fields.destroy');
+  });
+
+  Route::prefix('services/')->group(function(){
+    Route::get('/', [ServiceController::class, 'index'])->name('services.index');
+    Route::get('/{service}', [ServiceController::class, 'show'])->name('services.show');
+    Route::post('/{service}/approve' , [ServiceController::class, 'approve'])->name('services.approve');
+    Route::post('/{service}/reject' , [ServiceController::class, 'reject'])->name('services.reject');
+
   });
 });
 

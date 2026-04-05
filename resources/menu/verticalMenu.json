@@ -194,6 +194,12 @@
       "slug": "categories-sub"
     },
     {
+      "url": "services",
+      "name": "Services",
+      "icon": "menu-icon tf-icons bx bx-spreadsheet",
+      "slug": "services"
+    },
+    {
       "url": "https://demos.themeselection.com/sneat-bootstrap-html-laravel-admin-template/demo-1/app/email",
       "name": "Email",
       "icon": "menu-icon icon-base bx bx-envelope",

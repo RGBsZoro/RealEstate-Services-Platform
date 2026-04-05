@@ -27,14 +27,10 @@ return new class extends Migration
             $table->decimal('latitude', 10, 7)->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
 
-            $table->enum('status', [
-                'draft',
-                'pending',
-                'approved',
-                'rejected'
-            ])->default('draft');
+            $table->string('status')->default('draft');
 
             $table->integer('current_step')->nullable()->default(1);
+            $table->unique(['user_id', 'activity_id']);
             $table->softDeletes();
             $table->timestamps();
         });
