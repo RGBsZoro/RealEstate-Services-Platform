@@ -51,4 +51,26 @@ class User extends Authenticatable
     {
         return $this->hasMany(BusinessAccount::class);
     }
+
+    public function serviceRequests()
+    {
+        return $this->hasMany(ServiceRequest::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function receivedServiceRequests()
+    {
+        return $this->hasManyThrough(
+            ServiceRequest::class,
+            BusinessAccount::class,
+            'user_id',                      // Foreign key on business_accounts table
+            'provider_business_account_id', // Foreign key on service_requests table
+            'id',                           
+            'id'                            
+        );
+    }
 }

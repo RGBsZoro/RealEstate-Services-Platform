@@ -41,5 +41,11 @@ class DatabaseSeeder extends Seeder
       'phone' => '+963994801706',
       'password' => 'fcbayern'
     ]);
+
+    $user = User::create([
+      'name' => 'zoro',
+      'phone' => '+963994801708',
+      'password' => 'fcbayern'
+    ]);
   }
 }

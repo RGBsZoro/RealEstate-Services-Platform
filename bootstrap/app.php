@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\ApiLocalization;
+use App\Http\Middleware\EnsureHasApprovedBusinessAccount;
 use App\Http\Middleware\WebLocalization;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -21,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
       'role' => RoleMiddleware::class,
       'permission' => PermissionMiddleware::class,
       'role_or_permission' => RoleOrPermissionMiddleware::class,
+      'hasApprovedBusinessAccount' => EnsureHasApprovedBusinessAccount::class,
     ]);
 
     $middleware->web([

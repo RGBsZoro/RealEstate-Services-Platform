@@ -28,7 +28,8 @@ class BusinessAccount extends Model implements HasMedia
         'current_step'
     ];
 
-    public function casts(){
+    public function casts()
+    {
         return [
             'status' => StatusEnum::class
         ];

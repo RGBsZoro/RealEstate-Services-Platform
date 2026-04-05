@@ -77,9 +77,8 @@ class BusinessAccountService
 
     private function ensureStep($current_step, BusinessAccount $businessAccount)
     {
-        if ($businessAccount->current_step != $current_step) {
+        if ($businessAccount->current_step != $current_step)
             throw new AuthorizationException();
-        }
     }
 
     private function validateLocation($cityId, $lat, $lng)
