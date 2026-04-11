@@ -25,4 +25,10 @@ class AuthController extends Controller
 
         return redirect()->route('dashboard-analytics');
     }
+
+    public function logout()
+    {
+        $this->auth->logout();
+        return redirect()->route('login');
+    }
 }

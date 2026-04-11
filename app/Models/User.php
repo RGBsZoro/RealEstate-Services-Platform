@@ -69,8 +69,13 @@ class User extends Authenticatable
             BusinessAccount::class,
             'user_id',                      // Foreign key on business_accounts table
             'provider_business_account_id', // Foreign key on service_requests table
-            'id',                           
-            'id'                            
+            'id',
+            'id'
         );
+    }
+
+    public function deviceTokens()
+    {
+        return $this->morphMany(DeviceToken::class, 'tokenable');
     }
 }
