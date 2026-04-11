@@ -4,6 +4,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <title>
         @yield('title') | {{ config('variables.templateName') ? config('variables.templateName') : 'TemplateName' }}
@@ -41,6 +43,7 @@
 
     <!-- Include Scripts -->
     @include('layouts/sections/scripts')
+
 </body>
 
 </html>

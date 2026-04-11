@@ -7,13 +7,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class UniqueBusinessAccountPerActivity implements ValidationRule
 {
-    /**
-     * Run the validation rule.
-     *
-     * @param  \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString  $fail
-     */
-
-    public function __construct(private ?int $ignoreId = null){}
+    public function __construct(private ?int $ignoreId = null) {}
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         auth('api')->user()->businessAccounts()

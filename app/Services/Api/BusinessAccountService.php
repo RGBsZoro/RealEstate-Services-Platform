@@ -2,10 +2,13 @@
 
 namespace App\Services\Api;
 
+use App\Models\Admin;
 use App\Models\BusinessAccount;
 use App\Models\City;
+use App\Notifications\BusinessAccountRequestNotification;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Notification;
 
 class BusinessAccountService
 {
@@ -69,6 +72,10 @@ class BusinessAccountService
             }
         }
 
+        // send notification
+        $admins = Admin::permission('manage_business_account')->get();
+        Notification::send($admins, new BusinessAccountRequestNotification($businessAccount));
+
         $businessAccount->update([
             'status' => 'pending',
             'current_step' => null
@@ -77,7 +84,7 @@ class BusinessAccountService
 
     private function ensureStep($current_step, BusinessAccount $businessAccount)
     {
-        if ($businessAccount->current_step != $current_step)
+        if ($businessAccount->current_step < $current_step)
             throw new AuthorizationException();
     }
 

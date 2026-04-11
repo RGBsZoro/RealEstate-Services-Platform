@@ -3,6 +3,7 @@
 namespace App\Services\Web;
 
 use App\Models\BusinessAccount;
+use App\Notifications\BusinessAccountStatusNotification;
 use Illuminate\Validation\ValidationException;
 
 class BusinessAccountService
@@ -13,6 +14,9 @@ class BusinessAccountService
             throw ValidationException::withMessages([
                 'status' => ['Only pending services can be approved or rejected.']
             ]);
+
+        // send notification
+        $businessAccount->user->notify(new BusinessAccountStatusNotification($businessAccount));
 
         $businessAccount->update(['status' => $newStatus]);
     }

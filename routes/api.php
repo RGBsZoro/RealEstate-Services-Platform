@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BusinessAccountController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\ServiceRequestController;
+use App\Http\Controllers\FCMController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +17,11 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware(['auth:api'])->group(function () {
   Route::delete('logout', [AuthController::class, 'logout']);
+
+  // store fcm token 
+  Route::post('fcm/register-token', [FCMController::class, 'store'])
+    ->defaults('guardName', 'api');
+
   // business accounts
   Route::prefix('business-accounts/')->group(function () {
     Route::post('', [BusinessAccountController::class, 'store']);
@@ -47,5 +54,14 @@ Route::middleware(['auth:api'])->group(function () {
         });
       });
     });
+  });
+
+  // notifications 
+  Route::prefix('notifications')->group(function () {
+    Route::get('/', [NotificationController::class, 'index']);
+    Route::get('/unread', [NotificationController::class, 'getUnreadNotifications']);
+    Route::post('/{notification}/read', [NotificationController::class, 'markAsRead']);
+    Route::post('/read-all', [NotificationController::class, 'markAllAsRead']);
+    Route::delete('/{notification}', [NotificationController::class, 'destroy']);
   });
 });

@@ -25,7 +25,7 @@ class StoreBusinessAccountStep1Request extends FormRequest
     public function rules(): array
     {
         return [
-            'activity_id' => ['required', 'exists:activities,id' , new UniqueBusinessAccountPerActivity()]
+            'activity_id' => ['required', 'exists:activities,id', new UniqueBusinessAccountPerActivity($this->businessAccount->id)]
         ];
     }
 }

@@ -28,7 +28,12 @@ class DatabaseSeeder extends Seeder
       'password' => '12345678',
     ]);
 
+    $manage_service_permission = Permission::create(['name' => 'manage_service']);
+    $manage_business_account_permission = Permission::create(['name' => 'manage_business_account']);
+
     $superAdminRole = Role::create(['name' => 'super-admin']);
+    $superAdminRole->givePermissionTo($manage_service_permission);
+    $superAdminRole->givePermissionTo($manage_business_account_permission);
 
     $supeeAdmin->assignRole($superAdminRole);
 

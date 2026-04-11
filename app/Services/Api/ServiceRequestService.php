@@ -4,6 +4,7 @@ namespace App\Services\Api;
 
 use App\Models\Service;
 use App\Models\ServiceRequest;
+use App\Notifications\ServiceRequestStatusNotification;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\ValidationException;
 
@@ -27,8 +28,8 @@ class ServiceRequestService
             throw ValidationException::withMessages(
                 ['service_id' => ['You already have a pending request for this service.']]
             );
-
-        $service->requests()->create([
+            
+        $serviceRequest = $service->requests()->create([
             'user_id' => $this->user->id,
             'provider_business_account_id' => $service->business_account_id,
             'requester_business_account_id' => $data['requester_business_account_id'],
@@ -38,6 +39,10 @@ class ServiceRequestService
             'price_usd_at_request' => $service->price_usd,
             'price_syp_at_request' => $service->price_syp,
         ]);
+
+         // send notification
+        $service->businessAccount->user->notify(new ServiceRequestStatusNotification($serviceRequest));
+
     }
 
     public function updateStatus(string $newStatus, ServiceRequest $serviceRequest)

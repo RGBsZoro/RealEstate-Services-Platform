@@ -38,6 +38,7 @@ use App\Http\Controllers\user_interface\TooltipsPopovers;
 use App\Http\Controllers\user_interface\Typography;
 use App\Http\Controllers\extended_ui\PerfectScrollbar;
 use App\Http\Controllers\extended_ui\TextDivider;
+use App\Http\Controllers\FCMController;
 use App\Http\Controllers\icons\Boxicons;
 use App\Http\Controllers\form_elements\BasicInput;
 use App\Http\Controllers\form_elements\InputGroups;
@@ -50,16 +51,23 @@ use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\BusinessAccountController;
 use App\Http\Controllers\Web\CategoryController;
 use App\Http\Controllers\Web\DynamicFieldController;
+use App\Http\Controllers\Web\NotificationController;
 use App\Http\Controllers\Web\RoleController;
 use App\Http\Controllers\Web\ServiceController;
 
 ////////////////////////////
 
-
+// login 
 Route::get('login', [AuthController::class, 'loginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
 
-Route::group(['middleware' => ['auth:web', 'role:super-admin']], function () {
+Route::group(['middleware' => ['auth:web']], function () {
+
+  // logout
+  Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+  // store fcm token
+  Route::post('fcm/register-token', [FCMController::class, 'store'])
+    ->defaults('guardName', 'web');
 
   // admins
   Route::get('admins', [AdminController::class, 'index'])->name('admins.index');
@@ -112,14 +120,13 @@ Route::group(['middleware' => ['auth:web', 'role:super-admin']], function () {
     Route::get('/create', [CategoryController::class, 'createSub'])->name('create');
   });
 
-  // Common (Store, Edit, Update, Delete)
-  // Route::resource('categories', CategoryController::class)->except(['index', 'create']);
+  // Common function (Categories & subCategories) => (Store, Edit, Update, Delete)
   Route::get('categories/edit/{category}', [CategoryController::class, 'edit'])->name('categories.edit');
   Route::post('categories', [CategoryController::class, 'store'])->name('categories.store');
   Route::put('categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
   Route::delete('categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
-  // في ملف routes/web.php
+  // dynamic fields in categories & subCategories
   Route::prefix('categories/')->group(function () {
     Route::get('fields/{category}', [DynamicFieldController::class, 'index'])->name('categories.fields.index');
     Route::get('fields/{category}/create', [DynamicFieldController::class, 'create'])->name('categories.fields.create');
@@ -129,85 +136,108 @@ Route::group(['middleware' => ['auth:web', 'role:super-admin']], function () {
     Route::delete('fields/{dynamicField}/{category}', [DynamicFieldController::class, 'destroy'])->name('categories.fields.destroy');
   });
 
-  Route::prefix('services/')->group(function(){
+  // services
+  Route::prefix('services/')->group(function () {
     Route::get('/', [ServiceController::class, 'index'])->name('services.index');
     Route::get('/{service}', [ServiceController::class, 'show'])->name('services.show');
-    Route::post('/{service}/approve' , [ServiceController::class, 'approve'])->name('services.approve');
-    Route::post('/{service}/reject' , [ServiceController::class, 'reject'])->name('services.reject');
-
+    Route::post('/{service}/approve', [ServiceController::class, 'approve'])->name('services.approve');
+    Route::post('/{service}/reject', [ServiceController::class, 'reject'])->name('services.reject');
   });
+
+  Route::prefix('notifications/')->group(function () {
+    Route::get('/', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/{notification}/read', [NotificationController::class, 'readAndRedirect'])->name('notifications.readAndRedirect');
+    Route::post('/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
+    Route::delete('/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+  });
+
+
+  // lang
+  Route::get('locale/{lang}', function ($lang) {
+    session(['locale' => $lang]);
+    return redirect()->back();
+  })->name('locale');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ///////////////////////////
+
+
+  // Main Page Route
+  Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
+
+  // layout
+  Route::get('/layouts/without-menu', [WithoutMenu::class, 'index'])->name('layouts-without-menu');
+  Route::get('/layouts/without-navbar', [WithoutNavbar::class, 'index'])->name('layouts-without-navbar');
+  Route::get('/layouts/fluid', [Fluid::class, 'index'])->name('layouts-fluid');
+  Route::get('/layouts/container', [Container::class, 'index'])->name('layouts-container');
+  Route::get('/layouts/blank', [Blank::class, 'index'])->name('layouts-blank');
+
+  // pages
+  Route::get('/pages/account-settings-account', [AccountSettingsAccount::class, 'index'])->name('pages-account-settings-account');
+  Route::get('/pages/account-settings-notifications', [AccountSettingsNotifications::class, 'index'])->name('pages-account-settings-notifications');
+  Route::get('/pages/account-settings-connections', [AccountSettingsConnections::class, 'index'])->name('pages-account-settings-connections');
+  Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
+  Route::get('/pages/misc-under-maintenance', [MiscUnderMaintenance::class, 'index'])->name('pages-misc-under-maintenance');
+
+  // authentication
+  Route::get('/auth/login-basic', [LoginBasic::class, 'index'])->name('auth-login-basic');
+  Route::get('/auth/register-basic', [RegisterBasic::class, 'index'])->name('auth-register-basic');
+  Route::get('/auth/forgot-password-basic', [ForgotPasswordBasic::class, 'index'])->name('auth-reset-password-basic');
+
+  // cards
+  Route::get('/cards/basic', [CardBasic::class, 'index'])->name('cards-basic');
+
+  // User Interface
+  Route::get('/ui/accordion', [Accordion::class, 'index'])->name('ui-accordion');
+  Route::get('/ui/alerts', [Alerts::class, 'index'])->name('ui-alerts');
+  Route::get('/ui/badges', [Badges::class, 'index'])->name('ui-badges');
+  Route::get('/ui/buttons', [Buttons::class, 'index'])->name('ui-buttons');
+  Route::get('/ui/carousel', [Carousel::class, 'index'])->name('ui-carousel');
+  Route::get('/ui/collapse', [Collapse::class, 'index'])->name('ui-collapse');
+  Route::get('/ui/dropdowns', [Dropdowns::class, 'index'])->name('ui-dropdowns');
+  Route::get('/ui/footer', [Footer::class, 'index'])->name('ui-footer');
+  Route::get('/ui/list-groups', [ListGroups::class, 'index'])->name('ui-list-groups');
+  Route::get('/ui/modals', [Modals::class, 'index'])->name('ui-modals');
+  Route::get('/ui/navbar', [Navbar::class, 'index'])->name('ui-navbar');
+  Route::get('/ui/offcanvas', [Offcanvas::class, 'index'])->name('ui-offcanvas');
+  Route::get('/ui/pagination-breadcrumbs', [PaginationBreadcrumbs::class, 'index'])->name('ui-pagination-breadcrumbs');
+  Route::get('/ui/progress', [Progress::class, 'index'])->name('ui-progress');
+  Route::get('/ui/spinners', [Spinners::class, 'index'])->name('ui-spinners');
+  Route::get('/ui/tabs-pills', [TabsPills::class, 'index'])->name('ui-tabs-pills');
+  Route::get('/ui/toasts', [Toasts::class, 'index'])->name('ui-toasts');
+  Route::get('/ui/tooltips-popovers', [TooltipsPopovers::class, 'index'])->name('ui-tooltips-popovers');
+  Route::get('/ui/typography', [Typography::class, 'index'])->name('ui-typography');
+
+  // extended ui
+  Route::get('/extended/ui-perfect-scrollbar', [PerfectScrollbar::class, 'index'])->name('extended-ui-perfect-scrollbar');
+  Route::get('/extended/ui-text-divider', [TextDivider::class, 'index'])->name('extended-ui-text-divider');
+
+  // icons
+  Route::get('/icons/boxicons', [Boxicons::class, 'index'])->name('icons-boxicons');
+
+  // form elements
+  Route::get('/forms/basic-inputs', [BasicInput::class, 'index'])->name('forms-basic-inputs');
+  Route::get('/forms/input-groups', [InputGroups::class, 'index'])->name('forms-input-groups');
+
+  // form layouts
+  Route::get('/form/layouts-vertical', [VerticalForm::class, 'index'])->name('form-layouts-vertical');
+  Route::get('/form/layouts-horizontal', [HorizontalForm::class, 'index'])->name('form-layouts-horizontal');
+
+  // tables
+  Route::get('/tables/basic', [TablesBasic::class, 'index'])->name('tables-basic');
 });
-
-Route::get('locale/{lang}', function ($lang) {
-  session(['locale' => $lang]);
-  return redirect()->back();
-})->name('locale');
-
-
-
-///////////////////////////
-
-
-// Main Page Route
-Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
-
-// layout
-Route::get('/layouts/without-menu', [WithoutMenu::class, 'index'])->name('layouts-without-menu');
-Route::get('/layouts/without-navbar', [WithoutNavbar::class, 'index'])->name('layouts-without-navbar');
-Route::get('/layouts/fluid', [Fluid::class, 'index'])->name('layouts-fluid');
-Route::get('/layouts/container', [Container::class, 'index'])->name('layouts-container');
-Route::get('/layouts/blank', [Blank::class, 'index'])->name('layouts-blank');
-
-// pages
-Route::get('/pages/account-settings-account', [AccountSettingsAccount::class, 'index'])->name('pages-account-settings-account');
-Route::get('/pages/account-settings-notifications', [AccountSettingsNotifications::class, 'index'])->name('pages-account-settings-notifications');
-Route::get('/pages/account-settings-connections', [AccountSettingsConnections::class, 'index'])->name('pages-account-settings-connections');
-Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
-Route::get('/pages/misc-under-maintenance', [MiscUnderMaintenance::class, 'index'])->name('pages-misc-under-maintenance');
-
-// authentication
-Route::get('/auth/login-basic', [LoginBasic::class, 'index'])->name('auth-login-basic');
-Route::get('/auth/register-basic', [RegisterBasic::class, 'index'])->name('auth-register-basic');
-Route::get('/auth/forgot-password-basic', [ForgotPasswordBasic::class, 'index'])->name('auth-reset-password-basic');
-
-// cards
-Route::get('/cards/basic', [CardBasic::class, 'index'])->name('cards-basic');
-
-// User Interface
-Route::get('/ui/accordion', [Accordion::class, 'index'])->name('ui-accordion');
-Route::get('/ui/alerts', [Alerts::class, 'index'])->name('ui-alerts');
-Route::get('/ui/badges', [Badges::class, 'index'])->name('ui-badges');
-Route::get('/ui/buttons', [Buttons::class, 'index'])->name('ui-buttons');
-Route::get('/ui/carousel', [Carousel::class, 'index'])->name('ui-carousel');
-Route::get('/ui/collapse', [Collapse::class, 'index'])->name('ui-collapse');
-Route::get('/ui/dropdowns', [Dropdowns::class, 'index'])->name('ui-dropdowns');
-Route::get('/ui/footer', [Footer::class, 'index'])->name('ui-footer');
-Route::get('/ui/list-groups', [ListGroups::class, 'index'])->name('ui-list-groups');
-Route::get('/ui/modals', [Modals::class, 'index'])->name('ui-modals');
-Route::get('/ui/navbar', [Navbar::class, 'index'])->name('ui-navbar');
-Route::get('/ui/offcanvas', [Offcanvas::class, 'index'])->name('ui-offcanvas');
-Route::get('/ui/pagination-breadcrumbs', [PaginationBreadcrumbs::class, 'index'])->name('ui-pagination-breadcrumbs');
-Route::get('/ui/progress', [Progress::class, 'index'])->name('ui-progress');
-Route::get('/ui/spinners', [Spinners::class, 'index'])->name('ui-spinners');
-Route::get('/ui/tabs-pills', [TabsPills::class, 'index'])->name('ui-tabs-pills');
-Route::get('/ui/toasts', [Toasts::class, 'index'])->name('ui-toasts');
-Route::get('/ui/tooltips-popovers', [TooltipsPopovers::class, 'index'])->name('ui-tooltips-popovers');
-Route::get('/ui/typography', [Typography::class, 'index'])->name('ui-typography');
-
-// extended ui
-Route::get('/extended/ui-perfect-scrollbar', [PerfectScrollbar::class, 'index'])->name('extended-ui-perfect-scrollbar');
-Route::get('/extended/ui-text-divider', [TextDivider::class, 'index'])->name('extended-ui-text-divider');
-
-// icons
-Route::get('/icons/boxicons', [Boxicons::class, 'index'])->name('icons-boxicons');
-
-// form elements
-Route::get('/forms/basic-inputs', [BasicInput::class, 'index'])->name('forms-basic-inputs');
-Route::get('/forms/input-groups', [InputGroups::class, 'index'])->name('forms-input-groups');
-
-// form layouts
-Route::get('/form/layouts-vertical', [VerticalForm::class, 'index'])->name('form-layouts-vertical');
-Route::get('/form/layouts-horizontal', [HorizontalForm::class, 'index'])->name('form-layouts-horizontal');
-
-// tables
-Route::get('/tables/basic', [TablesBasic::class, 'index'])->name('tables-basic');

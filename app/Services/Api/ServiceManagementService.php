@@ -2,10 +2,12 @@
 
 namespace App\Services\Api;
 
+use App\Models\Admin;
 use App\Models\Service;
-use App\Models\ServiceFieldValue;
+use App\Notifications\AddServiceRequestNotification;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class ServiceManagementService
 {
@@ -81,6 +83,10 @@ class ServiceManagementService
     {
         $this->ensureStep(4, $service);
 
+        // send notification
+        $admins = Admin::permission('manage_service')->get();
+        Notification::send($admins, new AddServiceRequestNotification($service));
+
         $service->update([
             'latitude'     => $data['latitude'],
             'longitude'    => $data['longitude'],
@@ -91,7 +97,7 @@ class ServiceManagementService
 
     private function ensureStep($current_step, Service $service)
     {
-        if ($service->current_step != $current_step)
+        if ($service->current_step < $current_step)
             throw new AuthorizationException();
     }
 }

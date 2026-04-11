@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends Authenticatable
 {
-    use HasRoles;
+    use HasRoles, Notifiable;
     protected $fillable = [
         'name',
         'email',
@@ -25,5 +26,10 @@ class Admin extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function devices()
+    {
+        return $this->morphMany(DeviceToken::class, 'tokenable');
     }
 }

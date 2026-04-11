@@ -31,7 +31,6 @@ $container = ($container ?? 'container-xxl');
 @section('layoutContent')
 <div class="layout-wrapper layout-content-navbar {{ $isMenu ? '' : 'layout-without-menu' }}">
     <div class="layout-container">
-
         @if ($isMenu)
         @include('layouts/sections/menu/verticalMenu')
         @endif
@@ -83,6 +82,9 @@ $container = ($container ?? 'container-xxl');
         @endif
         <!-- Drag Target Area To SlideIn Menu On Small Screens -->
         <div class="drag-target"></div>
+
+        @include('_partials.firebase')
+
     </div>
     <!-- / Layout wrapper -->
 </div>
