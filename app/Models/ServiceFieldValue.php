@@ -19,6 +19,6 @@ class ServiceFieldValue extends Model
 
     public function field()
     {
-        return $this->belongsTo(DynamicField::class);
+        return $this->belongsTo(DynamicField::class, 'dynamic_field_id');
     }
 }

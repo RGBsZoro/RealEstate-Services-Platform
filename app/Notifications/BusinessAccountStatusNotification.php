@@ -11,40 +11,51 @@ class BusinessAccountStatusNotification extends Notification implements ShouldQu
 {
     use Queueable;
 
-    public $tries = 3;
-    public $backoff = 60;
-    protected $businessAccount;
-    public $title;
-    public $body;
+    public int $tries = 3;
+    public int $backoff = 60;
+    protected BusinessAccount $businessAccount;
 
     public function __construct(BusinessAccount $businessAccount)
     {
         $this->businessAccount = $businessAccount;
-
-        $status = $this->businessAccount->status->label();
-
-        $this->title = __("notifications.business_account_{$status}_title");
-
-        $this->body = __("notifications.business_account_{$status}_body", [
-            'name' => $this->businessAccount->name,
-        ]);
     }
 
-    public function via($notifiable): array
+    public function via(object $notifiable): array
     {
         return ['database'];
     }
 
-    // save notification in database
-    public function toDatabase($notifiable): array
+    protected function getNotificationData(): array
     {
+        $status = $this->businessAccount->status->value; 
+
         return [
-            'title' => $this->title,
-            'body'  => $this->body,
-            'data'  => [
-                'id'     => $this->businessAccount->id,
+            'title_key' => "notifications.business_account_{$status}_title",
+            'body_key'  => "notifications.business_account_{$status}_body",
+            'body_args' => [
+                'name' => $this->businessAccount->name,
+            ],
+            'icon' => $status === 'accepted' ? 'bx-check-circle' : 'bx-x-circle',
+            'id'   => (string) $this->businessAccount->id,
+            'type' => 'business_status_update',
+            'url'  => route('business-accounts.show', $this->businessAccount->id),
+        ];
+    }
+
+    public function toDatabase(object $notifiable): array
+    {
+        $data = $this->getNotificationData();
+
+        return [
+            'title_key' => $data['title_key'],
+            'body_key'  => $data['body_key'],
+            'body_args' => $data['body_args'],
+            'icon'      => $data['icon'],
+            'data'      => [
+                'id'     => $data['id'],
                 'status' => $this->businessAccount->status,
-                'type'   => 'business_status_update',
+                'type'   => $data['type'],
+                'url'    => $data['url'],
             ],
         ];
     }

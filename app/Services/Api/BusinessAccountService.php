@@ -73,9 +73,9 @@ class BusinessAccountService
         }
 
         // send notification
-        $admins = Admin::permission('manage_business_account')->get();
+        $admins = Admin::permission('manage-business-accounts')->get();
         Notification::send($admins, new BusinessAccountRequestNotification($businessAccount));
-
+        
         $businessAccount->update([
             'status' => 'pending',
             'current_step' => null

@@ -1,6 +1,7 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Edit Activity - ' . $activity->getTranslation('name', 'en'))
+{{-- العنوان يظهر اسم النشاط باللغة الحالية للمتصفح --}}
+@section('title', __('activities.edit_title') . ' - ' . $activity->getTranslation('name', app()->getLocale()))
 
 @section('page-style')
 <style>
@@ -8,7 +9,7 @@
     .input-group-merge[dir="rtl"] .form-control { border-left: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; padding-right: 15px; }
     .input-group-merge[dir="rtl"] .input-group-text { border-right: 0; border-top-right-radius: 0; border-bottom-right-radius: 0; }
     
-    /* تنسيق معاينة الصورة ليكون متطابقاً مع الأقسام */
+    /* تنسيق معاينة الصورة */
     .current-image-preview { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd; padding: 5px; }
 </style>
 @endsection
@@ -17,10 +18,10 @@
 <div class="row">
     <div class="col-xxl">
         <div class="card mb-6">
-            {{-- الهيدر مع إضافة وقت التحديث ليعطي طابعاً احترافياً --}}
             <div class="card-header d-flex align-items-center justify-content-between border-bottom">
-                <h5 class="mb-0">Edit Business Activity</h5>
-                <small class="text-muted float-end">Last updated: {{ $activity->updated_at->diffForHumans() }}</small>
+                <h5 class="mb-0">{{ __('activities.edit_title') }}</h5>
+                {{-- diffForHumans سيتم تعريبها تلقائياً لأننا ضبطنا الـ Locale في المشروع --}}
+                <small class="text-muted float-end">{{ __('activities.last_updated') }}: {{ $activity->updated_at->diffForHumans() }}</small>
             </div>
             
             <div class="card-body pt-5">
@@ -30,7 +31,7 @@
                     
                     {{-- Activity Name (EN) --}}
                     <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label" for="name_en">Activity Name (EN)</label>
+                        <label class="col-sm-2 col-form-label" for="name_en">{{ __('activities.label_name_en') }}</label>
                         <div class="col-sm-10">
                             <div class="input-group input-group-merge">
                                 <span class="input-group-text"><i class="bx bx-briefcase"></i></span>
@@ -43,7 +44,7 @@
 
                     {{-- Activity Name (AR) --}}
                     <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label" for="name_ar">Activity Name (AR)</label>
+                        <label class="col-sm-2 col-form-label" for="name_ar">{{ __('activities.label_name_ar') }}</label>
                         <div class="col-sm-10">
                             <div class="input-group input-group-merge" dir="rtl">
                                 <input type="text" name="name[ar]" id="name_ar" 
@@ -55,9 +56,9 @@
                         </div>
                     </div>
 
-                    {{-- Activity Image & Preview (نفس ستايل الكاتيجوري) --}}
+                    {{-- Activity Image & Preview --}}
                     <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label">Activity Image</label>
+                        <label class="col-sm-2 col-form-label">{{ __('activities.label_image') }}</label>
                         <div class="col-sm-10">
                             <div class="d-flex align-items-start align-items-sm-center gap-4">
                                 @if($activity->hasMedia('Activities'))
@@ -70,7 +71,7 @@
                                 
                                 <div class="button-wrapper">
                                     <input type="file" name="image" class="form-control @error('image') is-invalid @enderror" id="activity_image" accept="image/*" />
-                                    <div class="text-muted small mt-2">Allowed JPG, PNG or SVG. Max size of 2MB.</div>
+                                    <div class="text-muted small mt-2">{{ __('activities.image_constraints') }}</div>
                                     @error('image') <div class="invalid-feedback d-block small mt-1">{{ $message }}</div> @enderror
                                 </div>
                             </div>
@@ -82,8 +83,12 @@
                     {{-- Buttons --}}
                     <div class="row justify-content-end">
                         <div class="col-sm-10 text-end">
-                            <button type="submit" class="btn btn-primary btn-lg"><i class="bx bx-save me-1"></i> Update Activity</button>
-                            <a href="{{ route('activities.index') }}" class="btn btn-outline-secondary btn-lg ms-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bx bx-save me-1"></i> {{ __('activities.update_button') }}
+                            </button>
+                            <a href="{{ route('activities.index') }}" class="btn btn-outline-secondary btn-lg ms-2">
+                                {{ __('activities.cancel_button') }}
+                            </a>
                         </div>
                     </div>
                 </form>

@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Add New Sub Category')
+@section('title', __('categories.add_sub'))
 
 @section('page-style')
 <style>
@@ -14,23 +14,25 @@
     <div class="col-xxl">
         <div class="card mb-6">
             <div class="card-header d-flex align-items-center justify-content-between border-bottom">
-                <h5 class="mb-0">Add New Sub Category</h5>
+                <h5 class="mb-0">{{ __('categories.add_sub') }}</h5>
             </div>
             <div class="card-body pt-5">
                 <form action="{{ route('categories.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="return_url" value="http://127.0.0.1:8000/categories/sub">
-                    {{-- Parent Category Selection --}}
+                    {{-- توجيه المستخدم بعد الحفظ إلى جدول الفئات الفرعية --}}
+                    <input type="hidden" name="return_url" value="{{ route('categories.sub.index') }}">
+                    
+                    {{-- اختيار الفئة الأساسية (Parent Category Selection) --}}
                     <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label" for="parent_id">Main Category</label>
+                        <label class="col-sm-2 col-form-label" for="parent_id">{{ __('categories.column_parent') }}</label>
                         <div class="col-sm-10">
                             <div class="input-group input-group-merge">
                                 <span class="input-group-text"><i class="bx bx-layer"></i></span>
                                 <select name="parent_id" id="parent_id" class="form-select @error('parent_id') is-invalid @enderror" required>
-                                    <option value="">-- Choose Main Category --</option>
+                                    <option value="">{{ __('categories.choose_main') }}</option>
                                     @foreach($mainCategories as $main)
                                         <option value="{{ $main->id }}" {{ old('parent_id') == $main->id ? 'selected' : '' }}>
-                                            {{ $main->getTranslation('name', 'en') }} ({{ $main->getTranslation('name', 'ar') }})
+                                            {{ $main->getTranslation('name', app()->getLocale()) }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -41,7 +43,7 @@
 
                     {{-- Name EN --}}
                     <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label" for="name_en">Sub Name (EN)</label>
+                        <label class="col-sm-2 col-form-label" for="name_en">{{ __('categories.sub_name_en') }}</label>
                         <div class="col-sm-10">
                             <div class="input-group input-group-merge">
                                 <span class="input-group-text"><i class="bx bx-subdirectory-right"></i></span>
@@ -54,7 +56,7 @@
 
                     {{-- Name AR --}}
                     <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label" for="name_ar">Sub Name (AR)</label>
+                        <label class="col-sm-2 col-form-label" for="name_ar">{{ __('categories.sub_name_ar') }}</label>
                         <div class="col-sm-10">
                             <div class="input-group input-group-merge" dir="rtl">
                                 <input type="text" name="name[ar]" id="name_ar" 
@@ -68,23 +70,23 @@
 
                     {{-- Icon --}}
                     <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label" for="category_icon">Sub Category Icon</label>
+                        <label class="col-sm-2 col-form-label" for="category_icon">{{ __('categories.icon_label') }}</label>
                         <div class="col-sm-10">
                             <div class="input-group">
                                 <input type="file" name="icon" class="form-control @error('icon') is-invalid @enderror" id="category_icon" accept="image/*" />
                             </div>
-                            <small class="text-muted">Upload an icon for this sub category (PNG, SVG preferred).</small>
+                            <small class="text-muted">{{ __('categories.icon_help') }}</small>
                             @error('icon') <div class="invalid-feedback d-block small mt-1">{{ $message }}</div> @enderror
                         </div>
                     </div>
 
                     {{-- Status Switch --}}
                     <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label" for="isActive">Status</label>
+                        <label class="col-sm-2 col-form-label" for="isActive">{{ __('categories.status_label') }}</label>
                         <div class="col-sm-10">
                             <div class="form-check form-switch mt-2">
                                 <input class="form-check-input" type="checkbox" id="isActive" name="isActive" value="1" checked>
-                                <label class="form-check-label" for="isActive">Active (Visible in App)</label>
+                                <label class="form-check-label" for="isActive">{{ __('categories.active_help') }}</label>
                             </div>
                         </div>
                     </div>
@@ -92,8 +94,12 @@
                     <hr class="my-6">
                     <div class="row justify-content-end">
                         <div class="col-sm-10 text-end">
-                            <button type="submit" class="btn btn-primary btn-lg"><i class="bx bx-check-circle me-1"></i> Save Sub Category</button>
-                            <a href="{{ route('categories.sub.index') }}" class="btn btn-outline-secondary btn-lg ms-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bx bx-check-circle me-1"></i> {{ __('categories.save_category') }}
+                            </button>
+                            <a href="{{ route('categories.sub.index') }}" class="btn btn-outline-secondary btn-lg ms-2">
+                                {{ __('categories.cancel') }}
+                            </a>
                         </div>
                     </div>
                 </form>

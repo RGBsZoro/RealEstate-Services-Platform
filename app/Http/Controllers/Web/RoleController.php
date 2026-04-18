@@ -8,6 +8,7 @@ use App\Http\Requests\Web\StoreRoleRequest;
 use App\Http\Requests\Web\UpdateRoleRequest;
 use App\Services\Web\RoleService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -15,11 +16,15 @@ class RoleController extends Controller
 {
     public function __construct(protected RoleService $role) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        $roles = Role::where('name', '!=', 'super-admin')->with('permissions')->withCount('users')->get();
-        return view('dashboard.roles.index', compact('roles'));
+        $result = $this->role->index($request->all());
+        return view('dashboard.roles.index', [
+            'roles' => $result['roles']->appends($request->query()),
+            'stats' => $result['stats']
+        ]);
     }
+
     public function create()
     {
         $permissions = Permission::all();

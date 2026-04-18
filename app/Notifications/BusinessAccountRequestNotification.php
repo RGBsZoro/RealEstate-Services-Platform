@@ -15,29 +15,13 @@ class BusinessAccountRequestNotification extends Notification implements ShouldQ
 {
     use Queueable;
 
-    public $tries = 3;
-    public $backoff = 60;
-    protected $businessAccount;
-    public $title;
-    public $body;
-    public $notificationData;
+    public int $tries = 3;
+    public int $backoff = 60;
+    protected BusinessAccount $businessAccount;
 
     public function __construct(BusinessAccount $businessAccount)
     {
         $this->businessAccount = $businessAccount;
-
-        $this->title = __('notifications.new_business_account_title');
-
-        $this->body = __('notifications.new_business_account_body', [
-            'name' => $this->businessAccount->name,
-            'user'    => $this->businessAccount->user->name
-        ]);
-
-        $this->notificationData = [
-            'id'   => (string) $this->businessAccount->id,
-            'type' => 'business_account_request',
-            'url'  => route('business-accounts.show', $this->businessAccount->id),
-        ];
     }
 
     public function via(object $notifiable): array
@@ -45,21 +29,57 @@ class BusinessAccountRequestNotification extends Notification implements ShouldQ
         return ['database', FcmChannel::class];
     }
 
-    // 1. save notification in database
-    public function toDatabase($notifiable): array
+    protected function getNotificationData(): array
     {
         return [
-            'title' => $this->title,
-            'body'  => $this->body,
-            'data'  => $this->notificationData,
+            'title_key' => 'notifications.new_business_account_title',
+            'body_key'  => 'notifications.new_business_account_body',
+            'body_args' => [
+                'name' => $this->businessAccount->name,
+                'user' => $this->businessAccount->user->name ?? 'Unknown',
+            ],
+            'icon' => 'bx-briefcase',
+            'id'   => (string) $this->businessAccount->id,
+            'type' => 'business_account_request',
+            'url'  => route('business-accounts.show', $this->businessAccount->id),
         ];
     }
 
-    // 2. send notification by firebase    
+    public function toDatabase(object $notifiable): array
+    {
+        $data = $this->getNotificationData();
+
+        return [
+            'title_key' => $data['title_key'],
+            'body_key'  => $data['body_key'],
+            'body_args' => $data['body_args'],
+            'icon'      => $data['icon'],
+            'data'      => [
+                'id'   => $data['id'],
+                'type' => $data['type'],
+                'url'  => $data['url'],
+            ],
+        ];
+    }
+
     public function toFcm($notifiable)
     {
+        $data = $this->getNotificationData();
+        
+        $locale = $notifiable->locale ?? app()->getLocale();
+
+        $title = __($data['title_key'], [], $locale);
+        $body  = __($data['body_key'], $data['body_args'], $locale);
+
         return CloudMessage::new()
-            ->withNotification(MessagingNotification::create($this->title, $this->body))
-            ->withData($this->notificationData);
+            ->withNotification(MessagingNotification::create($title, $body))
+            ->withData([
+                'title' => $title,
+                'body'  => $body,
+                'id'    => $data['id'],
+                'type'  => $data['type'],
+                'url'   => $data['url'],
+                'icon'  => $data['icon']
+            ]);
     }
 }

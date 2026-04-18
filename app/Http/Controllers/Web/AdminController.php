@@ -8,6 +8,7 @@ use App\Http\Requests\Web\UpdateAdminRequest;
 use App\Models\Admin;
 use App\Services\Web\AdminService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -15,11 +16,16 @@ class AdminController extends Controller
 {
     public function __construct(protected AdminService $admin) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        $admins = Admin::where('email', '!=', 'superadmin@gmail.com')->get();
-        return view('dashboard.admins.index', compact('admins'));
+        $result = $this->admin->index($request->all());
+
+        return view('dashboard.admins.index', [
+            'admins' => $result['admins']->appends($request->query()), 
+            'stats'  => $result['stats']
+        ]);
     }
+
     public function create()
     {
         $roles = Role::where('name', '!=', 'super-admin')->get();

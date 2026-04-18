@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Create New Role')
+@section('title', __('roles.create_role_title'))
 
 @section('page-style')
 <style>
@@ -33,32 +33,41 @@
     <div class="col-xxl">
         <div class="card mb-6">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="mb-0">Create New Security Role</h5>
-                <small class="text-muted float-end">Step 1: Define permissions</small>
+                <h5 class="mb-0">{{ __('roles.create_security_title') }}</h5>
+                <small class="text-muted float-end">{{ __('roles.step_define_perms') }}</small>
             </div>
             <div class="card-body">
                 <form action="{{ route('roles.store') }}" method="POST">
                     @csrf
                     
+                    {{-- Role Name Field --}}
                     <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label" for="role-name">Role Name</label>
+                        <label class="col-sm-2 col-form-label" for="role-name">{{ __('roles.role_name_label') }}</label>
                         <div class="col-sm-10">
                             <div class="input-group input-group-merge">
                                 <span class="input-group-text"><i class="bx bx-shield-quarter"></i></span>
-                                <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="role-name" placeholder="e.g. Manager, Editor, Moderator" value="{{ old('name') }}" />
+                                <input 
+                                    type="text" 
+                                    name="name" 
+                                    class="form-control @error('name') is-invalid @enderror" 
+                                    id="role-name" 
+                                    placeholder="{{ __('roles.role_name_placeholder') }}" 
+                                    value="{{ old('name') }}" 
+                                />
                             </div>
-                            <div class="form-text">Use lowercase and hyphens (e.g., 'content-manager') or plain text.</div>
+                            <div class="form-text">{{ __('roles.role_name_help') }}</div>
                             @error('name') <div class="invalid-feedback small">{{ $message }}</div> @enderror
                         </div>
                     </div>
 
                     <hr class="my-6">
 
+                    {{-- Permissions Assignment --}}
                     <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label">Assign Permissions</label>
+                        <label class="col-sm-2 col-form-label">{{ __('roles.assign_permissions') }}</label>
                         <div class="col-sm-10">
                             <div class="d-flex justify-content-between mb-2">
-                                <span class="text-body fw-bold">Select all permissions that apply to this role:</span>
+                                <span class="text-body fw-bold">{{ __('roles.select_all_notice') }}</span>
                             </div>
                             
                             <div class="permissions-container">
@@ -66,9 +75,16 @@
                                     @foreach($permissions as $permission)
                                         <div class="col-md-4 mb-2">
                                             <div class="form-check perm-card">
-                                                <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $permission->name }}" id="perm_{{ $permission->id }}" {{ (collect(old('permissions'))->contains($permission->name)) ? 'checked':'' }}>
+                                                <input 
+                                                    class="form-check-input" 
+                                                    type="checkbox" 
+                                                    name="permissions[]" 
+                                                    value="{{ $permission->name }}" 
+                                                    id="perm_{{ $permission->id }}" 
+                                                    {{ (collect(old('permissions'))->contains($permission->name)) ? 'checked':'' }}
+                                                >
                                                 <label class="form-check-label" for="perm_{{ $permission->id }}">
-                                                    {{ $permission->name }}
+                                                    {{ ucwords(str_replace('-', ' ', $permission->name)) }}
                                                 </label>
                                             </div>
                                         </div>
@@ -79,12 +95,13 @@
                         </div>
                     </div>
 
+                    {{-- Action Buttons --}}
                     <div class="row justify-content-end mt-8">
                         <div class="col-sm-10">
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bx bx-check-shield me-1"></i> Save Role & Permissions
+                                <i class="bx bx-check-shield me-1"></i> {{ __('roles.save_role_btn') }}
                             </button>
-                            <a href="{{ url()->previous() }}" class="btn btn-outline-secondary btn-lg ms-2">Cancel</a>
+                            <a href="{{ route('roles.index') }}" class="btn btn-outline-secondary btn-lg ms-2">{{ __('roles.cancel') }}</a>
                         </div>
                     </div>
                 </form>

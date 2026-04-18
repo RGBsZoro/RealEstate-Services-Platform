@@ -1,10 +1,9 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Add New Admin')
+@section('title', __('admins.add_title'))
 
 @section('page-style')
 <style>
-    /* تنسيق خاص لجعل الصلاحيات في صندوق منظم مع سكرول */
     .permissions-container {
         max-height: 250px;
         overflow-y: auto;
@@ -13,26 +12,20 @@
         padding: 15px;
         background-color: #f8f9fa;
     }
-
-    /* تمييز الـ Switch عند الاختيار */
     .form-check-input:checked {
         background-color: #696cff;
         border-color: #696cff;
     }
-
-    /* تغيير لون خلفية الدور (Role) عند تفعيله */
     .role-item {
         transition: all 0.3s ease;
         padding: 10px;
         border-radius: 8px;
         border: 1px solid transparent;
     }
-
     .role-item:has(.form-check-input:checked) {
         background-color: rgba(105, 108, 255, 0.08);
         border-color: rgba(105, 108, 255, 0.2);
     }
-
     .invalid-feedback {
         display: block;
     }
@@ -44,30 +37,32 @@
     <div class="col-xxl">
         <div class="card mb-6">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="mb-0">Add New Admin</h5>
-                <small class="text-muted float-end">Admin Management System</small>
+                <h5 class="mb-0">{{ __('admins.add_title') }}</h5>
+                <small class="text-muted float-end">{{ __('admins.system_subtitle') }}</small>
             </div>
             <div class="card-body">
                 <form action="{{ route('admins.store') }}" method="POST">
                     @csrf
                     
+                    {{-- Full Name --}}
                     <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label" for="full-name">Full Name</label>
+                        <label class="col-sm-2 col-form-label" for="full-name">{{ __('admins.full_name') }}</label>
                         <div class="col-sm-10">
                             <div class="input-group input-group-merge">
                                 <span class="input-group-text"><i class="bx bx-user"></i></span>
-                                <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="full-name" placeholder="John Doe" value="{{ old('name') }}" />
+                                <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="full-name" placeholder="{{ __('admins.placeholders.name') }}" value="{{ old('name') }}" />
                             </div>
                             @error('name') <div class="invalid-feedback small">{{ $message }}</div> @enderror
                         </div>
                     </div>
 
+                    {{-- Email --}}
                     <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label" for="email">Email Address</label>
+                        <label class="col-sm-2 col-form-label" for="email">{{ __('admins.email_address') }}</label>
                         <div class="col-sm-10">
                             <div class="input-group input-group-merge">
                                 <span class="input-group-text"><i class="bx bx-envelope"></i></span>
-                                <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="admin@example.com" value="{{ old('email') }}" />
+                                <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" placeholder="{{ __('admins.placeholders.email') }}" value="{{ old('email') }}" />
                             </div>
                             @error('email') <div class="invalid-feedback small">{{ $message }}</div> @enderror
                         </div>
@@ -75,8 +70,9 @@
 
                     <hr class="my-6">
 
+                    {{-- Roles --}}
                     <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label">Assign Roles</label>
+                        <label class="col-sm-2 col-form-label">{{ __('admins.assign_roles') }}</label>
                         <div class="col-sm-10">
                             <div class="row">
                                 @foreach($roles as $role)
@@ -96,8 +92,9 @@
                         </div>
                     </div>
 
+                    {{-- Permissions --}}
                     <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label">Direct Permissions</label>
+                        <label class="col-sm-2 col-form-label">{{ __('admins.direct_permissions') }}</label>
                         <div class="col-sm-10">
                             <div class="permissions-container">
                                 <div class="row">
@@ -119,8 +116,9 @@
 
                     <hr class="my-6">
 
+                    {{-- Password --}}
                     <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label" for="password">Password</label>
+                        <label class="col-sm-2 col-form-label" for="password">{{ __('admins.password') }}</label>
                         <div class="col-sm-10">
                             <div class="input-group input-group-merge">
                                 <span class="input-group-text"><i class="bx bx-lock-alt"></i></span>
@@ -130,8 +128,9 @@
                         </div>
                     </div>
 
+                    {{-- Password Confirmation --}}
                     <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label" for="password_confirmation">Confirm Password</label>
+                        <label class="col-sm-2 col-form-label" for="password_confirmation">{{ __('admins.confirm_password') }}</label>
                         <div class="col-sm-10">
                             <div class="input-group input-group-merge">
                                 <span class="input-group-text"><i class="bx bx-check-shield"></i></span>
@@ -143,7 +142,7 @@
                     <div class="row justify-content-end mt-8">
                         <div class="col-sm-10">
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bx bx-save me-1"></i> Create Admin Account
+                                <i class="bx bx-save me-1"></i> {{ __('admins.create_button') }}
                             </button>
                         </div>
                     </div>

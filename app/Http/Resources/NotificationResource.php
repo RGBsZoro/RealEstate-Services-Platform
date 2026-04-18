@@ -7,19 +7,29 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class NotificationResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
+        $data = $this->data;
+
+        $title = isset($data['title_key']) 
+            ? __($data['title_key'], [], $request->header('Accept-Language')) 
+            : ($data['title'] ?? '');
+
+        $body = isset($data['body_key']) 
+            ? __($data['body_key'], $data['body_args'] ?? [], $request->header('Accept-Language')) 
+            : ($data['body'] ?? '');
+
         return [
             'id'         => $this->id,
-            'title'      => $this->data['title'] ?? null,
-            'body'       => $this->data['body'] ?? null,
-            'payload'    => $this->data['data'] ?? [], 
-            'type'       => $this->data['data']['type'] ?? 'general',
+            'title'      => $title,
+            'body'       => $body,
+            'icon'       => $data['icon'] ?? 'bx-bell',
+            'type'       => $data['data']['type'] ?? ($data['type'] ?? 'general'),
+            'payload'    => [
+                'id'   => $data['data']['id'] ?? null,
+                'type' => $data['data']['type'] ?? 'general',
+                'url'  => $data['data']['url'] ?? null, // سنناقش هذا بالأسفل
+            ],
             'read_at'    => $this->read_at ? $this->read_at->format('Y-m-d H:i:s') : null,
             'created_at' => $this->created_at->diffForHumans(),
         ];

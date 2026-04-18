@@ -1,0 +1,53 @@
+<?php
+
+return [
+    'title' => 'Cities Management',
+    'total_cities' => 'Total Cities',
+    'coverage_area' => 'Coverage Area',
+    'business_accounts' => 'Business Accounts',
+    'km' => 'KM',
+    'search_placeholder' => 'Search city name...',
+    'add_city' => 'Add City',
+    'th_city_name' => 'City Name',
+    'th_coordinates' => 'Coordinates',
+    'th_coverage' => 'Coverage',
+    'th_accounts' => 'Accounts',
+    'th_date' => 'Date',
+    'th_actions' => 'Actions',
+    'users_unit' => 'Users',
+    'edit' => 'Edit',
+    'delete' => 'Delete',
+    'delete_confirm' => 'Attention: Are you sure you want to delete this city?',
+    'no_results' => 'No cities found matching your search.',
+    'showing' => 'Showing',
+    'to' => 'to',
+    'of' => 'of',
+    'results' => 'results',
+
+    // Add these lines to the array
+    'create_title' => 'Add New City',
+    'card_header' => 'Create New City (Coverage Area)',
+    'service_zones' => 'Real Estate Service Zones',
+    'map_instruction' => 'Locate City Center & Define Radius',
+    'map_search_placeholder' => 'Search for a city or district (Min 3 chars)...',
+    'map_search_btn' => 'Search',
+    'latitude' => 'Latitude',
+    'longitude' => 'Longitude',
+    'radius_label' => 'Radius (Kilometers)',
+    'save_city' => 'Confirm & Save City',
+    // JS Messages
+    'js_min_chars' => 'Please enter at least 3 characters to search.',
+    'js_not_found' => 'Location not found, please try another name.',
+    'js_error' => 'An error occurred while searching. Please try again.',
+
+    // Add these lines to the array
+    'edit_title' => 'Edit City',
+    'edit_card_header' => 'Edit City: :name',
+    'update_coverage' => 'Update Service Coverage',
+    'update_map_instruction' => 'Update City Center & Radius',
+    'search_new_location' => 'Search for a new location...',
+    'update_changes' => 'Update Changes',
+    'cancel' => 'Cancel',
+    'placeholder_en' => 'e.g. Damascus',
+    'placeholder_ar' => 'e.g. Damascus (Arabic)',
+];
