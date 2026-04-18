@@ -8,15 +8,20 @@ use App\Http\Requests\Web\UpdateActivityRequest;
 use App\Models\Activity;
 use App\Services\Web\ActivityService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ActivityController extends Controller
 {
     public function __construct(protected ActivityService $activity) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        $activities = Activity::all();
-        return view('dashboard.activities.index', compact('activities'));
+        $result = $this->activity->index($request->all());
+
+        return view('dashboard.activities.index', [
+            'activities' => $result['activities']->appends($request->query()),
+            'stats' => $result['stats']
+        ]);
     }
 
     public function create()

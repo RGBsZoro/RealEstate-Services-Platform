@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class DeviceToken extends Model
 {
     protected $fillable = [
-        'admin_id',
+        'tokenable_id',
+        'tokenable_type',
         'fcm_token',
         'device_type'
     ];

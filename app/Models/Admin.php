@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -31,5 +33,11 @@ class Admin extends Authenticatable
     public function devices()
     {
         return $this->morphMany(DeviceToken::class, 'tokenable');
+    }
+
+    #[Scope]
+    protected function withoutSuper(Builder $query)
+    {
+        return $query->where('email', '!=', 'superadmin@gmail.com');
     }
 }

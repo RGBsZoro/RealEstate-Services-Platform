@@ -3,9 +3,37 @@
 namespace App\Services\Web;
 
 use App\Models\Admin;
+use Illuminate\Support\Facades\DB;
 
 class AdminService
 {
+    public function index(array $data)
+    {
+        $query = Admin::withoutSuper()->where('id', '!=', auth('web')->id())
+            ->with(['roles', 'permissions']);
+
+        $stats = [
+            'total'  => (clone $query)->count(),
+            'recent' => (clone $query)->where('created_at', '>=', now()->subDays(30))->count(),
+            'roles_count' => (clone $query)->has('roles')->count(),
+        ];
+
+        if (!empty($data['search'])) {
+            $search = $data['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $admins = $query->latest()->paginate(10);
+
+        return [
+            'admins' => $admins,
+            'stats'  => $stats
+        ];
+    }
+
     public function store(array $data)
     {
         $admin = Admin::create([

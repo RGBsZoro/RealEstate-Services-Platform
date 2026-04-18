@@ -10,10 +10,14 @@ use Illuminate\Http\Request;
 class ServiceController extends Controller
 {
     public function __construct(protected ServiceManagementService $service) {}
-    public function index()
+    public function index(Request $request)
     {
-        $services = Service::where('status', '!=', 'draft')->get();
-        return view('dashboard.services.index', compact('services'));
+        $result = $this->service->index($request->all());
+
+        return view('dashboard.services.index', [
+            'services' => $result['services']->appends($request->query()),
+            'stats'    => $result['stats']
+        ]);
     }
 
     public function show(Service $service)

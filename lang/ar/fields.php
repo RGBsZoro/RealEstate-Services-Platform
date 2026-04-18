@@ -1,0 +1,26 @@
+<?php
+return [
+  'manage_fields_title' => 'إدارة الحقول لـ :category',
+  'add_new_field' => 'إضافة حقل جديد',
+  'th_label' => 'عنوان الحقل',
+  'th_type' => 'النوع',
+  'th_required' => 'مطلوب',
+  'th_options' => 'الخيارات',
+  'required' => 'إجباري',
+  'optional' => 'اختياري',
+  'no_options' => 'لا توجد خيارات',
+  'no_fields_found' => 'لا توجد حقول ديناميكية معرفة لهذه الفئة.',
+  'remove' => 'إزالة الحقل',
+
+  'add_field_to' => 'إضافة حقل لـ :category',
+  'create_new_field' => 'إنشاء حقل جديد',
+  'field_label_en' => 'اسم الحقل (EN)',
+  'field_label_ar' => 'اسم الحقل (AR)',
+  'input_type' => 'نوع الحقل',
+  'selection_options' => 'خيارات الاختيار',
+  'options_help' => 'أدخل الخيارات مفصولة بفاصلة (مثلاً: أحمر, أزرق, أخضر)',
+  'is_required' => 'هل الحقل مطلوب؟',
+  'mark_as_mandatory' => 'تحديد كحقل إجباري',
+  'save_field' => 'حفظ الحقل',
+  'edit_field' => 'تعديل الحقل: :label',
+];

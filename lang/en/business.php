@@ -1,0 +1,62 @@
+<?php
+
+return [
+  'requests_title' => 'Business Accounts Requests',
+  'pending_req' => 'Pending Requests',
+  'approved_acc' => 'Approved Accounts',
+  'rejected_acc' => 'Rejected Accounts',
+  'management_card' => 'Business Accounts Management',
+
+  // Filters
+  'search_placeholder' => 'Search by name...',
+  'all_statuses' => 'All Statuses',
+  'status_pending' => 'Pending',
+  'status_approved' => 'Approved',
+  'status_rejected' => 'Rejected',
+  'all_cities' => 'All Cities',
+  'filter_btn' => 'Filter',
+
+  // Table Headers
+  'acc_name' => 'Account Name',
+  'owner' => 'User / Owner',
+  'activity_city' => 'Activity & City',
+  'status' => 'Status',
+  'date_applied' => 'Date applied',
+  'actions' => 'Actions',
+
+  // Actions & Messages
+  'view_details' => 'View Details',
+  'unknown' => 'Unknown',
+  'na' => 'N/A',
+  'no_results' => 'No matching requests found.',
+  'showing' => 'Showing',
+  'to' => 'to',
+  'of' => 'of',
+  'requests' => 'requests',
+
+  'req_details' => 'Request Details',
+  'full_info' => 'Full Account Information',
+  'acc_name_en' => 'Account Name (EN)',
+  'acc_name_ar' => 'Account Name (AR)',
+  'license_no' => 'License Number',
+  'main_activity' => 'Main Activity',
+  'primary_city' => 'Primary City',
+  'applicant' => 'Applicant (User)',
+  'desc_activities' => 'Description & Activities (Detailed)',
+  'detailed_text' => 'Detailed Activities Text',
+  'additional_details' => 'Additional Details',
+  'location_map' => 'Business Location (Map)',
+  'coordinates' => 'Coordinates',
+  'no_gps' => 'No GPS coordinates provided for this business.',
+  'attachments' => 'License & Attachments',
+  'no_attachments' => 'No files or licenses attached to this request.',
+  'approve_req' => 'Approve Request',
+  'reject_req' => 'Reject Request',
+  'reject_confirm_msg' => 'Are you sure you want to reject this account?',
+  'rejection_reason' => 'Reason for Rejection (Optional)',
+  'rejection_placeholder' => 'Explain why this request is rejected...',
+  'confirm_rejection' => 'Confirm Rejection',
+  'cancel' => 'Cancel',
+  'not_provided' => 'Not Provided',
+  'approve_confirm_msg' => 'Are you sure you want to approve this account?',
+];

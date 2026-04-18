@@ -13,16 +13,26 @@ class CategoryController extends Controller
 {
     public function __construct(protected CategoryService $category) {}
 
-    public function indexMain()
+    public function indexMain(Request $request)
     {
-        $categories = Category::whereNull('parent_id')->get();
-        return view('dashboard.categories.main.index', compact('categories'));
+        $result = $this->category->index($request->all(), isMain: true);
+
+        return view('dashboard.categories.main.index', [
+            'categories' => $result['categories']->appends($request->query()),
+            'stats'      => $result['stats']
+        ]);
     }
 
-    public function indexSub()
+    // عرض التصنيفات الفرعية
+    public function indexSub(Request $request)
     {
-        $categories = Category::whereNotNull('parent_id')->with('parent')->get();
-        return view('dashboard.categories.sub.index', compact('categories'));
+        $result = $this->category->index($request->all(), isMain: false);
+
+        return view('dashboard.categories.sub.index', [
+            'categories'     => $result['categories']->appends($request->query()),
+            'stats'          => $result['stats'],
+            'mainCategories' => $result['mainCategories']
+        ]);
     }
 
     public function createMain()
@@ -45,7 +55,7 @@ class CategoryController extends Controller
     public function edit(Category $category)
     {
         $mainCategories = Category::whereNull('parent_id')->get();
-        return view('dashboard.categories.edit', compact('category','mainCategories'));
+        return view('dashboard.categories.edit', compact('category', 'mainCategories'));
     }
 
     public function update(UpdateCategoryRequest $request, Category $category)

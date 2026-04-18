@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Edit Role')
+@section('title', __('roles.edit_role_title'))
 
 @section('page-style')
 <style>
@@ -33,20 +33,28 @@
     <div class="col-xxl">
         <div class="card mb-6">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="mb-0">Edit Role: <span class="text-primary">{{ $role->name }}</span></h5>
-                <small class="text-muted float-end">Update security permissions</small>
+                <h5 class="mb-0">{{ __('roles.edit_role_title') }}: <span class="text-primary">{{ $role->name }}</span></h5>
+                <small class="text-muted float-end">{{ __('roles.update_security') }}</small>
             </div>
             <div class="card-body">
                 <form action="{{ route('roles.update', $role->id) }}" method="POST">
                     @csrf
                     @method('PUT')
                     
+                    {{-- Role Name Field --}}
                     <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label" for="role-name">Role Name</label>
+                        <label class="col-sm-2 col-form-label" for="role-name">{{ __('roles.role_name_label') }}</label>
                         <div class="col-sm-10">
                             <div class="input-group input-group-merge">
                                 <span class="input-group-text"><i class="bx bx-shield-quarter"></i></span>
-                                <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="role-name" placeholder="Role Name" value="{{ old('name', $role->name) }}" />
+                                <input 
+                                    type="text" 
+                                    name="name" 
+                                    class="form-control @error('name') is-invalid @enderror" 
+                                    id="role-name" 
+                                    placeholder="{{ __('roles.role_name_label') }}" 
+                                    value="{{ old('name', $role->name) }}" 
+                                />
                             </div>
                             @error('name') <div class="invalid-feedback small">{{ $message }}</div> @enderror
                         </div>
@@ -54,11 +62,12 @@
 
                     <hr class="my-6">
 
+                    {{-- Permissions Assignment --}}
                     <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label">Assign Permissions</label>
+                        <label class="col-sm-2 col-form-label">{{ __('roles.assign_permissions') }}</label>
                         <div class="col-sm-10">
                             <div class="d-flex justify-content-between mb-2">
-                                <span class="text-body fw-bold">Modify permissions for this role:</span>
+                                <span class="text-body fw-bold">{{ __('roles.modify_notice') }}</span>
                             </div>
                             
                             <div class="permissions-container">
@@ -72,7 +81,8 @@
                                                     {{ (in_array($permission->name, old('permissions', $rolePermissions))) ? 'checked' : '' }}>
                                                 
                                                 <label class="form-check-label" for="perm_{{ $permission->id }}">
-                                                    {{ $permission->name }}
+                                                    {{-- استبدال الواصلات بمسافات لجعل اسم الصلاحية مقروءاً --}}
+                                                    {{ ucwords(str_replace('-', ' ', $permission->name)) }}
                                                 </label>
                                             </div>
                                         </div>
@@ -83,12 +93,13 @@
                         </div>
                     </div>
 
+                    {{-- Action Buttons --}}
                     <div class="row justify-content-end mt-8">
                         <div class="col-sm-10">
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bx bx-save me-1"></i> Update Role
+                                <i class="bx bx-save me-1"></i> {{ __('roles.update_btn') }}
                             </button>
-                            <a href="{{ route('roles.index') }}" class="btn btn-outline-secondary btn-lg ms-2">Cancel</a>
+                            <a href="{{ route('roles.index') }}" class="btn btn-outline-secondary btn-lg ms-2">{{ __('roles.cancel') }}</a>
                         </div>
                     </div>
                 </form>

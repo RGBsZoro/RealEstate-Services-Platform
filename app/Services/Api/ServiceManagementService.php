@@ -84,7 +84,7 @@ class ServiceManagementService
         $this->ensureStep(4, $service);
 
         // send notification
-        $admins = Admin::permission('manage_service')->get();
+        $admins = Admin::permission('manage-services')->get();
         Notification::send($admins, new AddServiceRequestNotification($service));
 
         $service->update([

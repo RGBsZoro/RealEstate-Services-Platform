@@ -1,67 +1,84 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Account Request Details')
+@section('title', __('business.req_details'))
 
 @section('page-style')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
     #map { height: 300px; border-radius: 0.5rem; z-index: 1; }
-    /* تنسيق خاص لعرض التفاصيل بشكل أوضح */
     .detail-item { margin-bottom: 1rem; border-bottom: 1px solid #ebedf0; padding-bottom: 0.5rem; }
     .detail-label { color: #8592a3; font-weight: 500; }
     .detail-value { font-weight: 500; color: #566a7f; }
+    [dir="rtl"] .detail-value { text-align: right; }
+
+    /* التنسيق الموحد للأزرار القوية */
+    .btn-approve { background-color: #28c76f !important; border-color: #28c76f !important; color: #fff !important; }
+    .btn-approve:hover { background-color: #24b364 !important; box-shadow: 0 8px 25px -8px #28c76f; }
+    .btn-reject { background-color: #ea5455 !important; border-color: #ea5455 !important; color: #fff !important; }
+    .btn-reject:hover { background-color: #e03e3e !important; box-shadow: 0 8px 25px -8px #ea5455; }
+    
+    .card { border-radius: 0.75rem; border: none; }
 </style>
 @endsection
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="fw-bold py-3 mb-0">
-        <span class="text-muted fw-light">Business Accounts /</span> Request Details
+        <span class="text-muted fw-light">{{ __('business.requests_title') }} /</span> {{ __('business.req_details') }}
     </h4>
-    <span class="badge {{ $businessAccount->status->badge() }} fs-6 px-3 py-2">
+    {{-- الحالة بتصميم الـ Pill الموحد --}}
+    <span class="badge {{ $businessAccount->status->badge() }} fs-6 px-3 py-2 rounded-pill shadow-sm">
         {{ $businessAccount->status->label() }}
     </span>
 </div>
 
 <div class="row">
     <div class="col-xl-7 col-lg-7 col-md-12 mb-4">
-        
-        <div class="card mb-4">
-            <h5 class="card-header border-bottom">Full Account Information</h5>
+        {{-- كرت المعلومات الأساسية --}}
+        <div class="card mb-4 shadow-sm">
+            <h5 class="card-header border-bottom bg-transparent fw-bold">{{ __('business.full_info') }}</h5>
             <div class="card-body mt-3">
                 <div class="row detail-item">
-                    <div class="col-sm-4 detail-label">Account Name (EN)</div>
-                    <div class="col-sm-8 detail-value">{{ $businessAccount->getTranslation('name', 'en') ?? 'N/A' }}</div>
+                    <div class="col-sm-4 detail-label">{{ __('business.acc_name_en') }}</div>
+                    <div class="col-sm-8 detail-value">{{ $businessAccount->getTranslation('name', 'en') ?? __('business.na') }}</div>
                 </div>
 
                 <div class="row detail-item">
-                    <div class="col-sm-4 detail-label">Account Name (AR)</div>
-                    <div class="col-sm-8 detail-value text-start">{{ $businessAccount->getTranslation('name', 'ar') ?? 'غير متوفر' }}</div>
+                    <div class="col-sm-4 detail-label">{{ __('business.acc_name_ar') }}</div>
+                    <div class="col-sm-8 detail-value">{{ $businessAccount->getTranslation('name', 'ar') ?? __('business.na') }}</div>
                 </div>
 
                 <div class="row detail-item">
-                    <div class="col-sm-4 detail-label">License Number</div>
-                    <div class="col-sm-8 detail-value"><span class="badge bg-label-dark">{{ $businessAccount->license_number ?? 'Not Provided' }}</span></div>
+                    <div class="col-sm-4 detail-label">{{ __('business.license_no') }}</div>
+                    <div class="col-sm-8">
+                        <span class="badge bg-label-dark rounded-pill">{{ $businessAccount->license_number ?? __('business.not_provided') }}</span>
+                    </div>
                 </div>
 
                 <div class="row detail-item">
-                    <div class="col-sm-4 detail-label">Main Activity</div>
-                    <div class="col-sm-8 detail-value"><i class="bx bx-briefcase me-1 text-secondary"></i> {{ $businessAccount->activity->name ?? 'N/A' }}</div>
+                    <div class="col-sm-4 detail-label">{{ __('business.main_activity') }}</div>
+                    <div class="col-sm-8 detail-value">
+                        <i class="bx bx-briefcase me-1 text-primary"></i> 
+                        {{ $businessAccount->activity?->name ?? __('business.na') }}
+                    </div>
                 </div>
 
                 <div class="row detail-item">
-                    <div class="col-sm-4 detail-label">Primary City</div>
-                    <div class="col-sm-8 detail-value"><i class="bx bx-map me-1 text-danger"></i> {{ $businessAccount->city->name ?? 'N/A' }}</div>
+                    <div class="col-sm-4 detail-label">{{ __('business.primary_city') }}</div>
+                    <div class="col-sm-8 detail-value">
+                        <i class="bx bx-map me-1 text-danger"></i> 
+                        {{ $businessAccount->city?->name ?? __('business.na') }}
+                    </div>
                 </div>
 
                 <div class="row detail-item border-bottom-0 mb-0">
-                    <div class="col-sm-4 detail-label">Applicant (User)</div>
+                    <div class="col-sm-4 detail-label">{{ __('business.applicant') }}</div>
                     <div class="col-sm-8 detail-value">
-                        <div class="d-flex align-items-center">
-                            <i class="bx bx-user me-2 text-primary"></i>
+                        <div class="d-flex align-items-center bg-light p-2 rounded-3">
+                            <i class="bx bx-user-circle fs-3 me-2 text-primary"></i>
                             <div>
-                                {{ $businessAccount->user->name ?? 'Unknown' }}<br>
-                                <small class="text-muted">{{ $businessAccount->user->email ?? '' }}</small>
+                                <div class="fw-bold">{{ $businessAccount->user?->name ?? __('business.unknown') }}</div>
+                                <small class="text-muted">{{ $businessAccount->user?->email ?? '' }}</small>
                             </div>
                         </div>
                     </div>
@@ -69,109 +86,120 @@
             </div>
         </div>
 
-        <div class="card mb-4">
-            <h5 class="card-header border-bottom">Description & Activities (Detailed)</h5>
+        {{-- كرت الأنشطة والتفاصيل --}}
+        <div class="card mb-4 shadow-sm">
+            <h5 class="card-header border-bottom bg-transparent fw-bold">{{ __('business.desc_activities') }}</h5>
             <div class="card-body mt-3">
-                <h6 class="text-muted mb-2">Detailed Activities Text (`activities` field)</h6>
-                <div class="bg-light p-3 rounded mb-4">
-                    {{ $businessAccount->activities ?? 'No activities described.' }}
+                <h6 class="text-muted small text-uppercase fw-bold mb-2">{{ __('business.detailed_text') }}</h6>
+                <div class="bg-light p-3 rounded-3 mb-4 text-secondary" style="white-space: pre-line;">
+                    {{ $businessAccount->activities ?? __('business.na') }}
                 </div>
 
-                <h6 class="text-muted mb-2">Additional Details (`details` field)</h6>
-                <div class="bg-light p-3 rounded mb-0">
-                    {{ $businessAccount->details ?? 'No additional details provided.' }}
+                <h6 class="text-muted small text-uppercase fw-bold mb-2">{{ __('business.additional_details') }}</h6>
+                <div class="bg-light p-3 rounded-3 mb-0 text-secondary" style="white-space: pre-line;">
+                    {{ $businessAccount->details ?? __('business.na') }}
                 </div>
             </div>
         </div>
     </div>
 
     <div class="col-xl-5 col-lg-5 col-md-12">
-        
-        <div class="card mb-4">
-            <h5 class="card-header border-bottom">Business Location (Map)</h5>
+        {{-- كرت الخريطة --}}
+        <div class="card mb-4 shadow-sm">
+            <h5 class="card-header border-bottom bg-transparent fw-bold">{{ __('business.location_map') }}</h5>
             <div class="card-body mt-3">
-                <div class="mb-3 detail-value">
-                    <i class="bx bx-map text-danger me-1"></i> <strong>City:</strong> {{ $businessAccount->city->name ?? 'N/A' }}
-                </div>
                 @if($businessAccount->latitude && $businessAccount->longitude)
-                    <div class="mb-2 text-muted small">Coordinates: {{ $businessAccount->latitude }}, {{ $businessAccount->longitude }}</div>
-                    <div id="map"></div>
+                    <div class="mb-3 d-flex align-items-center text-muted small">
+                        <i class="bx bx-current-location me-1 text-danger"></i>
+                        {{ $businessAccount->latitude }}, {{ $businessAccount->longitude }}
+                    </div>
+                    <div id="map" class="shadow-sm border"></div>
                 @else
-                    <div class="alert alert-warning mb-0">No GPS coordinates provided for this business.</div>
+                    <div class="alert alert-warning mb-0 small">{{ __('business.no_gps') }}</div>
                 @endif
             </div>
         </div>
 
-        <div class="card mb-4">
-            <h5 class="card-header border-bottom">License & Attachments (Spatie Media)</h5>
+        {{-- كرت المرفقات --}}
+        <div class="card mb-4 shadow-sm">
+            <h5 class="card-header border-bottom bg-transparent fw-bold">{{ __('business.attachments') }}</h5>
             <div class="card-body mt-3">
-                @php
-                    $mediaItems = $businessAccount->getMedia('*');
-                @endphp
-
+                @php $mediaItems = $businessAccount->getMedia('*'); @endphp
                 @if($mediaItems->count() > 0)
-                    <ul class="list-group list-group-flush">
+                    <div class="list-group list-group-flush">
                         @foreach($mediaItems as $media)
-                            <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                                <div class="d-flex align-items-center">
-                                    <i class="bx bx-file text-primary fs-4 me-2"></i>
-                                    <div>
-                                        <p class="mb-0 fw-medium text-break">{{ $media->file_name }}</p>
+                            <div class="list-group-item d-flex justify-content-between align-items-center px-0 border-bottom-dashed">
+                                <div class="d-flex align-items-center overflow-hidden">
+                                    <div class="avatar flex-shrink-0 me-3">
+                                        <span class="avatar-initial rounded bg-label-primary"><i class="bx bx-file"></i></span>
+                                    </div>
+                                    <div class="overflow-hidden">
+                                        <p class="mb-0 fw-medium text-truncate" style="max-width: 200px;">{{ $media->file_name }}</p>
                                         <small class="text-muted">{{ $media->human_readable_size }}</small>
                                     </div>
                                 </div>
-                                <a href="{{ $media->getUrl() }}" target="_blank" class="btn btn-sm btn-outline-secondary ms-2">
+                                <a href="{{ $media->getUrl() }}" target="_blank" class="btn btn-sm btn-icon btn-outline-primary">
                                     <i class="bx bx-download"></i>
                                 </a>
-                            </li>
+                            </div>
                         @endforeach
-                    </ul>
+                    </div>
                 @else
-                    <p class="text-muted mb-0">No files or licenses attached to this request.</p>
+                    <div class="text-center py-3">
+                        <i class="bx bx-folder-open fs-2 text-muted mb-2"></i>
+                        <p class="text-muted small mb-0">{{ __('business.no_attachments') }}</p>
+                    </div>
                 @endif
             </div>
         </div>
 
-        @if($businessAccount->status->value === 'pending')
-        <div class="card bg-transparent shadow-none border-0">
-            <div class="card-body p-0 d-flex gap-2">
-                <form action="{{ route('business-accounts.approve', $businessAccount->id) }}" method="POST" class="flex-grow-1">
-                    @csrf
-                    <button type="submit" class="btn btn-success w-100 btn-lg" onclick="return confirm('Are you sure you want to approve this account?')">
-                        <i class="bx bx-check-circle me-1"></i> Approve Request
-                    </button>
-                </form>
-
-                <button type="button" class="btn btn-danger w-100 btn-lg" data-bs-toggle="modal" data-bs-target="#rejectModal">
-                    <i class="bx bx-x-circle me-1"></i> Reject
-                </button>
-            </div>
-        </div>
+        {{-- أزرار التحكم بالتصميم الاحترافي --}}
+        @if($businessAccount->status === \App\Enum\StatusEnum::PENDING)
+            @can('manage-business-accounts') {{-- تأكد من وجود الصلاحية --}}
+                <div class="card bg-transparent shadow-none border-0 mt-4">
+                    <div class="card-body p-0">
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <form action="{{ route('business-accounts.approve', $businessAccount->id) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-approve w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm" 
+                                        onclick="return confirm('{{ __("business.approve_confirm_msg") ?? "Are you sure?" }}')">
+                                        <i class="bx bx-check-circle fs-4 me-2"></i> {{ __('business.approve_req') }}
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <button type="button" class="btn btn-reject w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm" 
+                                    data-bs-toggle="modal" data-bs-target="#rejectModal">
+                                    <i class="bx bx-x-circle fs-4 me-2"></i> {{ __('business.reject_req') }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endcan
         @endif
-
     </div>
 </div>
 
+{{-- Modal الرفض الموحد --}}
 <div class="modal fade" id="rejectModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-danger" id="exampleModalLabel1">Reject Account Request</h5>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header border-bottom p-4">
+                <h5 class="modal-title text-danger fw-bold fs-4">{{ __('business.reject_req') }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ route('business-accounts.reject', $businessAccount->id) }}" method="POST">
                 @csrf
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col mb-3">
-                            <label for="rejection_reason" class="form-label">Reason for Rejection (Optional)</label>
-                            <textarea id="rejection_reason" name="rejection_reason" class="form-control" rows="3" placeholder="Explain why this request is rejected..."></textarea>
-                        </div>
-                    </div>
+                <div class="modal-body p-4">
+                    <label for="rejection_reason" class="form-label fw-bold mb-2">{{ __('business.rejection_reason') }}</label>
+                    <textarea id="rejection_reason" name="rejection_reason" class="form-control border-2" rows="5" 
+                        placeholder="{{ __('business.rejection_placeholder') }}"></textarea>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-danger">Confirm Rejection</button>
+                <div class="modal-footer border-top p-4">
+                    <button type="button" class="btn btn-label-secondary px-4 py-2" data-bs-dismiss="modal">{{ __('business.cancel') }}</button>
+                    <button type="submit" class="btn btn-danger px-4 py-2 fw-bold shadow-sm">{{ __('business.confirm_rejection') }}</button>
                 </div>
             </form>
         </div>
@@ -186,12 +214,10 @@
     document.addEventListener("DOMContentLoaded", function() {
         var lat = {{ $businessAccount->latitude }};
         var lng = {{ $businessAccount->longitude }};
-        var map = L.map('map').setView([lat, lng], 14);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
+        var map = L.map('map', { scrollWheelZoom: false }).setView([lat, lng], 14);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         L.marker([lat, lng]).addTo(map)
-            .bindPopup('<b>{{ $businessAccount->getTranslation("name", "en") }}</b><br>Business Location.')
+            .bindPopup('<b>{{ addslashes($businessAccount->getTranslation("name", app()->getLocale())) }}</b>')
             .openPopup();
     });
 </script>

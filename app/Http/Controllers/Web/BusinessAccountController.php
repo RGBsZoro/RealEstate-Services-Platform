@@ -4,16 +4,22 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\BusinessAccount;
+use App\Models\City;
 use App\Services\Web\BusinessAccountService;
 use Illuminate\Http\Request;
 
 class BusinessAccountController extends Controller
 {
     public function __construct(protected BusinessAccountService $businessAccount) {}
-    public function index()
+    public function index(Request $request)
     {
-        $business_accounts = BusinessAccount::where('status', '!=', 'draft')->get();
-        return view('dashboard.business-accounts.index', compact('business_accounts'));
+        $result = $this->businessAccount->index($request->all());
+
+        return view('dashboard.business-accounts.index', [
+            'business_accounts' => $result['business_accounts']->appends($request->query()),
+            'stats'             => $result['stats'],
+            'cities'            => $result['cities'],
+        ]);
     }
 
     public function show(BusinessAccount $businessAccount)

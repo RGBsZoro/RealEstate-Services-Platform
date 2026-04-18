@@ -1,26 +1,106 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Sub Categories')
+@section('title', __('categories.sub_title'))
 
 @section('content')
-<div class="card">
-    <div class="card-header border-bottom d-flex justify-content-between align-items-center">
-        <h5 class="card-title mb-0">Sub Categories</h5>
-        <a href="{{ route('categories.sub.create') }}" class="btn btn-primary">
-            <i class="bx bx-plus me-1"></i> Add Sub Category
-        </a>
+
+{{-- الإحصائيات الملونة --}}
+<div class="row g-4 mb-4">
+    <div class="col-sm-6 col-xl-4">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(3, 195, 236, 0.08);">
+            <div class="card-body p-3">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="mb-1 fw-bold text-info">{{ __('categories.total_sub') }}</h6>
+                        <h4 class="mb-0 fw-black">{{ $stats['total'] }}</h4>
+                    </div>
+                    <span class="badge bg-info rounded-circle p-2"><i class="bx bx-subdirectory-right fs-3"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-4">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(113, 221, 55, 0.08);">
+            <div class="card-body p-3">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="mb-1 fw-bold text-success">{{ __('categories.active_sub') }}</h6>
+                        <h4 class="mb-0 fw-black">{{ $stats['active'] }}</h4>
+                    </div>
+                    <span class="badge bg-success rounded-circle p-2"><i class="bx bx-check-double fs-3"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-4">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(133, 146, 163, 0.08);">
+            <div class="card-body p-3">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="mb-1 fw-bold text-secondary">{{ __('categories.inactive_sub') }}</h6>
+                        <h4 class="mb-0 fw-black">{{ $stats['inactive'] }}</h4>
+                    </div>
+                    <span class="badge bg-secondary rounded-circle p-2"><i class="bx bx-hide fs-3"></i></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- جدول البيانات مع الفلترة --}}
+<div class="card rounded-4 overflow-hidden">
+    <div class="card-header border-bottom">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h5 class="card-title mb-0">{{ __('categories.sub_title') }}</h5>
+            <a href="{{ route('categories.sub.create') }}" class="btn btn-primary rounded-pill">
+                <i class="bx bx-plus me-1"></i> {{ __('categories.add_sub') }}
+            </a>
+        </div>
+
+        <form action="{{ route('categories.sub.index') }}" method="GET">
+            <div class="row g-2">
+                <div class="col-12 col-md-4">
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text"><i class="bx bx-search"></i></span>
+                        <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="{{ __('categories.search_placeholder') }}">
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <select name="parent_id" class="form-select">
+                        <option value="">{{ __('categories.all_parents') }}</option>
+                        @foreach($mainCategories as $main)
+                            <option value="{{ $main->id }}" {{ request('parent_id') == $main->id ? 'selected' : '' }}>
+                                {{ $main->getTranslation('name', app()->getLocale()) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-6 col-md-3">
+                    <select name="status" class="form-select">
+                        <option value="">{{ __('categories.all_statuses') }}</option>
+                        <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>{{ __('categories.active_only') }}</option>
+                        <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>{{ __('categories.inactive_only') }}</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-2">
+                    <button type="submit" class="btn btn-outline-primary w-100 rounded-pill">{{ __('categories.filter_btn') }}</button>
+                </div>
+            </div>
+        </form>
     </div>
 
     <div class="table-responsive text-nowrap">
         <table class="table table-hover mb-0">
-            <thead class="table-light">
+            <thead class="table-light text-uppercase small fw-bold">
                 <tr>
-                    <th>Sub Category</th>
-                    <th>Parent Category</th>
-                    <th>Dynamic Fields</th>
-                    <th>Status</th>
-                    <th>Date Created</th>
-                    <th>Actions</th>
+                    <th style="width: 30%">{{ __('categories.column_sub') }}</th>
+                    <th>{{ __('categories.column_parent') }}</th>
+                    <th>{{ __('categories.column_fields') }}</th>
+                    <th>{{ __('categories.status_label') }}</th>
+                    <th>{{ __('categories.th_date') }}</th>
+                    @if(auth()->user()->can('edit-categories') || auth()->user()->can('delete-categories') || auth()->user()->can('view-dynamic-fields'))
+                        <th class="text-center">{{ __('categories.th_actions') }}</th>
+                    @endif
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -29,61 +109,75 @@
                     <td>
                         <div class="d-flex align-items-center">
                             @if($category->getFirstMediaUrl('Categories'))
-                                <img src="{{ $category->getFirstMediaUrl('Categories') }}" alt="icon" width="35" class="rounded me-3">
+                                <img src="{{ $category->getFirstMediaUrl('Categories') }}" alt="icon" width="38" height="38" class="rounded-circle me-3 border" style="object-fit: cover;">
                             @else
-                                <div class="avatar avatar-sm me-3"><span class="avatar-initial rounded bg-label-secondary"><i class="bx bx-subdirectory-right"></i></span></div>
+                                <div class="avatar avatar-sm me-3">
+                                    <span class="avatar-initial rounded-circle bg-label-secondary"><i class="bx bx-subdirectory-right fs-4"></i></span>
+                                </div>
                             @endif
                             <div class="d-flex flex-column">
-                                <span class="fw-medium text-heading">{{ $category->getTranslation('name', 'en') }}</span>
-                                <small class="text-muted">{{ $category->getTranslation('name', 'ar') }}</small>
+                                <span class="fw-bold text-heading">{{ $category->getTranslation('name', 'en') }}</span>
+                                <small class="text-muted small">{{ $category->getTranslation('name', 'ar') }}</small>
                             </div>
                         </div>
                     </td>
-                    <td><span class="text-heading"><i class="bx bx-layer me-1 text-primary"></i> {{ $category->parent->name ?? 'N/A' }}</span></td>
-                    <td><span class="text-heading"><i class="bx bx-list-check me-1 text-info"></i> {{ $category->dynamic_fields_count ?? 0 }} Fields</span></td>
-                    <td><span class="badge {{ $category->isActive ? 'bg-label-success' : 'bg-label-danger' }}">{{ $category->isActive ? 'Active' : 'Inactive' }}</span></td>
-                    <td><span class="text-muted">{{ $category->created_at->format('M d, Y') }}</span></td>
-                    
                     <td>
-                        <div class="dropdown">
-                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                <i class="icon-base bx bx-dots-vertical-rounded"></i></button>
-                            </button>
-                            <div class="dropdown-menu">
-                                {{-- Manage Fields --}}
-                                <a class="dropdown-item" href={{ route('categories.fields.index' , $category->id) }}>
-                                    <i class="bx bx-cog me-1 text-info"></i> Manage Fields
-                                </a>
+                        <span class="badge bg-label-primary rounded-pill">
+                            <i class="bx bx-layer me-1"></i> {{ $category->parent->getTranslation('name', app()->getLocale()) ?? 'N/A' }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge bg-label-info rounded-pill">
+                            <i class="bx bx-list-check me-1"></i> {{ __('categories.fields_count', ['count' => $category->dynamic_fields_count]) }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge {{ $category->isActive ? 'bg-label-success' : 'bg-label-danger' }} rounded-pill">
+                            {{ $category->isActive ? __('categories.status_active') : __('categories.status_inactive') }}
+                        </span>
+                    </td>
+                    <td><span class="text-muted small">{{ $category->created_at->format('M d, Y') }}</span></td>
 
-                                {{-- Edit --}}
-                                <a class="dropdown-item" href="{{ route('categories.edit', $category->id) }}">
-                                    <i class="bx bx-edit-alt me-1"></i> Edit
-                                </a>
-                                
-                                {{-- Delete --}}
-                                <form action="{{ route('categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this sub-category?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="dropdown-item text-danger" title="Delete">
-                                        <i class="bx bx-trash me-1"></i> Delete
-                                    </button>
-                                </form>
+                    <td class="text-center">
+                        <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded fs-4"></i></button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                @can('view-dynamic-fields')
+                                    <a class="dropdown-item" href="{{ route('categories.fields.index', $category->id) }}"><i class="bx bx-cog me-2 text-info"></i> {{ __('categories.manage_fields') }}</a>
+                                @endcan
+                                @can('edit-categories')
+                                    <a class="dropdown-item" href="{{ route('categories.edit', $category->id) }}"><i class="bx bx-edit-alt me-2"></i> {{ __('categories.edit') }}</a>
+                                @endcan
+                                @can('delete-categories')
+                                    <div class="dropdown-divider"></div>
+                                    <form action="{{ route('categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('{{ __('categories.confirm_delete') }}')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="dropdown-item text-danger"><i class="bx bx-trash me-2"></i> {{ __('categories.delete') }}</button>
+                                    </form>
+                                @endcan
                             </div>
                         </div>
                     </td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="text-center py-5">
-                        <div class="text-muted">
-                            <i class="bx bx-folder-open mb-2" style="font-size: 2rem;"></i>
-                            <p>No sub categories found.</p>
-                        </div>
+                    <td colspan="6" class="text-center py-5 text-muted">
+                        <i class="bx bx-search-alt-2 display-6 mb-2"></i>
+                        <p>{{ __('categories.no_sub_found') }}</p>
                     </td>
-                </tr>                
+                </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
+
+    @if($categories->hasPages() || $categories->total() > 0)
+    <div class="card-footer border-top d-flex align-items-center justify-content-between py-3">
+        <span class="text-muted small">
+            {{ __('categories.showing_count', ['first' => $categories->firstItem(), 'last' => $categories->lastItem(), 'total' => $categories->total()]) }}
+        </span>
+        <div>{{ $categories->links('pagination::bootstrap-5') }}</div>
+    </div>
+    @endif
 </div>
 @endsection
