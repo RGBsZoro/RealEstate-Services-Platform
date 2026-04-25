@@ -9,6 +9,8 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 
+use function PHPUnit\Framework\isEmpty;
+
 class ServiceManagementService
 {
     public function initialize(array $data)
@@ -53,9 +55,9 @@ class ServiceManagementService
         $category = $service->category()->first();
         $dynamicFields = $category->allDynamicFields();
 
-        if ($dynamicFields == null) {
+
+        if ($dynamicFields->isEmpty()) {
             $service->update(['current_step' => 4]);
-            dd($service->current_step);
         }
 
         return $dynamicFields;

@@ -19,4 +19,7 @@ return [
     'activities' => 'الأنشطة',
     'cities_management' => 'إدارة المدن',
     'app_name' => 'خدمات العقارات',
+
+    'content_moderation' => 'رقابة المحتوى',
+    'service_reports' => 'بلاغات الخدمات',
 ];

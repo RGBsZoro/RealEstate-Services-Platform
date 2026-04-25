@@ -42,6 +42,9 @@ class DatabaseSeeder extends Seeder
             
             // Services 
             'view-services', 'manage-services',
+
+            // Service Reports
+            'view-reports', 'manage-reports', 'delete-reports',
             
         ];
 

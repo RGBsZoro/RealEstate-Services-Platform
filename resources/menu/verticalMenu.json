@@ -47,6 +47,15 @@
       "permission": "view-services"
     },
 
+    { "menuHeader": "content_moderation" },
+    {
+      "url": "reports",
+      "name": "service_reports",
+      "icon": "menu-icon icon-base bx bx-flag",
+      "slug": "reports",
+      "permission": "view-reports"
+    },
+
     { "menuHeader": "system_data" },
     {
       "url": "javascript:void(0);", 

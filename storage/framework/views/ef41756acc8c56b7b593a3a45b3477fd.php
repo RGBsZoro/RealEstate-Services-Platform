@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', __('cities.create_title')); ?>
 
 <?php $__env->startSection('content'); ?>

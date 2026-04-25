@@ -59,4 +59,9 @@ class Service extends Model implements HasMedia
     {
         return $this->hasMany(Review::class);
     }
+
+    public function reports()
+    {
+        return $this->hasMany(ServiceReport::class);
+    }
 }
