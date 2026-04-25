@@ -54,7 +54,7 @@ use App\Http\Controllers\Web\DynamicFieldController;
 use App\Http\Controllers\Web\NotificationController;
 use App\Http\Controllers\Web\RoleController;
 use App\Http\Controllers\Web\ServiceController;
-
+use App\Http\Controllers\Web\ServiceReportController;
 
 // Login 
 Route::get('login', [AuthController::class, 'loginForm'])->name('login');
@@ -194,6 +194,19 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::group(['middleware' => ['permission:manage-services']], function () {
             Route::post('/{service}/approve', [ServiceController::class, 'approve'])->name('services.approve');
             Route::post('/{service}/reject', [ServiceController::class, 'reject'])->name('services.reject');
+        });
+    });
+
+    // reports
+    Route::prefix('reports')->name('reports.')->group(function () {
+        Route::group(['middleware' => ['permission:view-reports']], function () {
+            Route::get('/', [ServiceReportController::class, 'index'])->name('index');
+        });
+        Route::group(['middleware' => ['permission:manage-reports']], function () {
+            Route::post('/{report}/resolve', [ServiceReportController::class, 'resolve'])->name('resolve');
+        });
+        Route::group(['middleware' => ['permission:delete-reports']], function () {
+            Route::delete('/{report}', [ServiceReportController::class, 'destroy'])->name('destroy');
         });
     });
 

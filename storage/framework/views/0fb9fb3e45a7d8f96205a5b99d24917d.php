@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', __('activities.add_title')); ?>
 
 <?php $__env->startSection('page-style'); ?>

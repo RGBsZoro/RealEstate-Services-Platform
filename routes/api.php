@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\BusinessAccountController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\ServiceController;
+use App\Http\Controllers\Api\ServiceReportController;
 use App\Http\Controllers\Api\ServiceRequestController;
 use App\Http\Controllers\FCMController;
 use Illuminate\Http\Request;
@@ -64,4 +65,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/read-all', [NotificationController::class, 'markAllAsRead']);
     Route::delete('/{notification}', [NotificationController::class, 'destroy']);
   });
+
+  // report service
+  Route::post('services/{service}/report', [ServiceReportController::class, 'store']);
 });

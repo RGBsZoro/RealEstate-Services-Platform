@@ -5,4 +5,5 @@ return [
     'approved' => 'مقبول',
     'rejected' => 'مرفوض',
     'draft' => 'مسودة',
+    'resolved' => 'تم حلها',
 ];

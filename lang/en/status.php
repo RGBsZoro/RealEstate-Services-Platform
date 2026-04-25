@@ -5,4 +5,5 @@ return [
     'approved' => 'Approved',
     'rejected' => 'Rejected',
     'draft' => 'Draft',
+    'resolved' => 'Resolved',
 ];

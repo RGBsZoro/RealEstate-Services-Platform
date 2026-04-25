@@ -19,4 +19,7 @@ return [
     'activities' => 'Activities',
     'cities_management' => 'Cities Management',
     'app_name' => 'Real Estate',
+
+    'content_moderation' => 'Content Moderation',
+    'service_reports' => 'Service Reports',
 ];
