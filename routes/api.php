@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BusinessAccountController;
+use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\ServiceController;
@@ -72,4 +73,11 @@ Route::middleware(['auth:api'])->group(function () {
 
   // sliders
   Route::get('sliders', [SliderController::class, 'index']);
+
+  // chats
+  Route::prefix('chats')->group(function () {
+    Route::get('/', [ChatController::class, 'index']);
+    Route::get('/{conversation}', [ChatController::class, 'show'])->middleware('can:view,conversation');
+    Route::post('/', [ChatController::class, 'store']);
+  });
 });

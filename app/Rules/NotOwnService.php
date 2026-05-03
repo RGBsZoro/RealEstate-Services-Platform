@@ -19,7 +19,7 @@ class NotOwnService implements ValidationRule
         $service = Service::find($value);
 
         if ($service && $service->businessAccount && $service->businessAccount->user_id === auth('api')->id()) {
-            $fail('You cannot report your own service.');
+            $fail('This is your own service.');
         }
     }
 }
