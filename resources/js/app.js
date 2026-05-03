@@ -1,4 +1,7 @@
 import './bootstrap';
+import './chat';
+import './echo';
+
 /*
   Add custom scripts here
 */

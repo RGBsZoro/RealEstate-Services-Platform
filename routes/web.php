@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\MessageSent;
 use App\Http\Controllers\Web\CityController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\dashboard\Analytics;
@@ -56,6 +57,7 @@ use App\Http\Controllers\Web\RoleController;
 use App\Http\Controllers\Web\ServiceController;
 use App\Http\Controllers\Web\ServiceReportController;
 use App\Http\Controllers\Web\SliderController;
+use Illuminate\Http\Request;
 
 // Login 
 Route::get('login', [AuthController::class, 'loginForm'])->name('login');
@@ -322,3 +324,13 @@ Route::group(['middleware' => ['auth:web']], function () {
     // tables
     Route::get('/tables/basic', [TablesBasic::class, 'index'])->name('tables-basic');
 });
+
+
+Route::post("/send-message", function (Request $request) {
+    broadcast(new MessageSent($request->message))->toOthers();
+    return response()->json(["status" => "Message Sent!"]);
+});
+
+Route::get('chat', function () {
+    return view('chat');
+})->middleware('auth:web')->name('chat');
