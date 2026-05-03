@@ -55,6 +55,7 @@ use App\Http\Controllers\Web\NotificationController;
 use App\Http\Controllers\Web\RoleController;
 use App\Http\Controllers\Web\ServiceController;
 use App\Http\Controllers\Web\ServiceReportController;
+use App\Http\Controllers\Web\SliderController;
 
 // Login 
 Route::get('login', [AuthController::class, 'loginForm'])->name('login');
@@ -207,6 +208,25 @@ Route::group(['middleware' => ['auth:web']], function () {
         });
         Route::group(['middleware' => ['permission:delete-reports']], function () {
             Route::delete('/{report}', [ServiceReportController::class, 'destroy'])->name('destroy');
+        });
+    });
+
+    // sliders
+    Route::group(['prefix' => 'sliders', 'as' => 'sliders.'], function () {
+        Route::middleware(['permission:view-sliders'])->group(function () {
+            Route::get('/', [SliderController::class, 'index'])->name('index');
+        });
+        Route::middleware(['permission:create-sliders'])->group(function () {
+            Route::get('/create', [SliderController::class, 'create'])->name('create');
+            Route::post('/', [SliderController::class, 'store'])->name('store');
+        });
+        Route::middleware(['permission:edit-sliders'])->group(function () {
+            Route::get('/{slider}/edit', [SliderController::class, 'edit'])->name('edit');
+            Route::put('/{slider}', [SliderController::class, 'update'])->name('update');
+            Route::post('/{slider}/toggle-status', [SliderController::class, 'toggleStatus'])->name('toggle-status');
+        });
+        Route::middleware(['permission:delete-sliders'])->group(function () {
+            Route::delete('/{slider}', [SliderController::class, 'destroy'])->name('destroy');
         });
     });
 

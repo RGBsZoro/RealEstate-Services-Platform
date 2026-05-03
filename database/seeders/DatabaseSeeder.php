@@ -45,6 +45,9 @@ class DatabaseSeeder extends Seeder
 
             // Service Reports
             'view-reports', 'manage-reports', 'delete-reports',
+
+            // Sliders
+            'view-sliders', 'create-sliders', 'edit-sliders', 'delete-sliders',
             
         ];
 

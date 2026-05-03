@@ -22,4 +22,8 @@ return [
 
     'content_moderation' => 'Content Moderation',
     'service_reports' => 'Service Reports',
+
+    'promotion_marketing' => 'Promotion & Marketing',
+    'sliders_management' => 'Sliders Management',
+
 ];
