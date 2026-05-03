@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', __('sliders.title')); ?>
 
 <?php $__env->startSection('content'); ?>
