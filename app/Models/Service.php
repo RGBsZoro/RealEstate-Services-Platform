@@ -64,4 +64,9 @@ class Service extends Model implements HasMedia
     {
         return $this->hasMany(ServiceReport::class);
     }
+
+    public function sliders()
+    {
+        return $this->morphMany(Slider::class, 'sliderable');
+    }
 }

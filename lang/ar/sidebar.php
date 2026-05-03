@@ -22,4 +22,7 @@ return [
 
     'content_moderation' => 'رقابة المحتوى',
     'service_reports' => 'بلاغات الخدمات',
+
+    'promotion_marketing' => 'العروض والتسويق',
+    'sliders_management' => 'إدارة السلايدر',
 ];

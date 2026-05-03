@@ -41,4 +41,9 @@ class Category extends Model implements HasMedia
     {
         return $this->hasMany(Category::class, 'parent_id');
     }
+
+    public function sliders()
+    {
+        return $this->morphMany(Slider::class, 'sliderable');
+    }
 }

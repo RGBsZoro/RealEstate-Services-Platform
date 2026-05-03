@@ -47,6 +47,15 @@
       "permission": "view-services"
     },
 
+    { "menuHeader": "promotion_marketing" },
+    {
+      "url": "sliders",
+      "name": "sliders_management",
+      "icon": "menu-icon icon-base bx bx-images",
+      "slug": "sliders",
+      "permission": "view-sliders"
+    },
+
     { "menuHeader": "content_moderation" },
     {
       "url": "reports",

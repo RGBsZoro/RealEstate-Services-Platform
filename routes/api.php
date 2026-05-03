@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\ServiceReportController;
 use App\Http\Controllers\Api\ServiceRequestController;
+use App\Http\Controllers\Api\SliderController;
 use App\Http\Controllers\FCMController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -68,4 +69,7 @@ Route::middleware(['auth:api'])->group(function () {
 
   // report service
   Route::post('services/{service}/report', [ServiceReportController::class, 'store']);
+
+  // sliders
+  Route::get('sliders', [SliderController::class, 'index']);
 });
