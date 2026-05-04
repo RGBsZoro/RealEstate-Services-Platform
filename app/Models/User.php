@@ -80,4 +80,11 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->morphMany(DeviceToken::class, 'tokenable');
     }
+
+    public function favoriteServices()
+{
+    return $this->belongsToMany(Service::class, 'favorites')
+                ->withTimestamps()
+                ->orderByPivot('created_at', 'desc'); 
+}
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BusinessAccountController;
 use App\Http\Controllers\Api\ChatController;
+use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\ServiceController;
@@ -79,5 +80,12 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/', [ChatController::class, 'index']);
     Route::get('/{conversation}', [ChatController::class, 'show'])->middleware('can:view,conversation');
     Route::post('/', [ChatController::class, 'store']);
+  });
+
+  // favorites
+  Route::prefix('favorites')->group(function () {
+    Route::get('/', [FavoriteController::class, 'index']);
+    Route::post('/', [FavoriteController::class, 'store']);
+    Route::delete('/{service}', [FavoriteController::class, 'destroy']);
   });
 });

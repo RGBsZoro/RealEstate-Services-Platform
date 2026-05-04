@@ -16,11 +16,26 @@ class ServiceResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'business_account_id' => $this->business_account_id,
-            'name' => $this->name,
-            'description' => $this->description,
+            'title' => $this->title,
             'price_usd' => $this->price_usd,
-            'price_syp' => $this->price_syp,
+            'main_image' => $this->getFirstMediaUrl('main_image_service') ?: null,
+
+            'is_favorite' => $this->handleIsFavorite(),
+
+            'business_account' => [
+                'id' => $this->businessAccount->id,
+                'name' => $this->businessAccount->name,
+            ],
+            'created_at' => $this->created_at->format('Y-m-d'),
         ];
+    }
+
+    protected function handleIsFavorite(): bool
+    {
+        if (isset($this->is_favorite_exists)) {
+            return (bool) $this->is_favorite_exists;
+        }
+
+        return true;
     }
 }
