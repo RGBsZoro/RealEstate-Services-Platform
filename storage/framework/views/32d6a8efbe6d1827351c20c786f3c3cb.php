@@ -123,29 +123,7 @@ unset($__errorArgs, $__bag); ?>
                     </div>
 
                     
-                    <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label"><?php echo e(__('admins.direct_permissions')); ?></label>
-                        <div class="col-sm-10">
-                            <div class="permissions-container">
-                                <div class="row">
-                                    <?php $__currentLoopData = $permissions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $permission): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <div class="col-md-6 mb-2">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="permissions[]" 
-                                                    value="<?php echo e($permission->name); ?>" 
-                                                    id="perm_<?php echo e($permission->id); ?>" 
-                                                    <?php echo e((in_array($permission->name, old('permissions', $adminDirectPermissions))) ? 'checked' : ''); ?>>
-                                                <label class="form-check-label" for="perm_<?php echo e($permission->id); ?>">
-                                                    <?php echo e($permission->name); ?>
-
-                                                </label>
-                                            </div>
-                                        </div>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
 
                     <hr class="my-6">
 

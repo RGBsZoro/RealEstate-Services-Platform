@@ -77,7 +77,7 @@
                 <tr>
                     <th style="width: 25%"><?php echo e(__('admins.column_admin')); ?></th>
                     <th style="width: 20%"><?php echo e(__('admins.column_roles')); ?></th>
-                    <th style="width: 25%"><?php echo e(__('admins.column_permissions')); ?></th>
+                    
                     <th style="width: 15%"><?php echo e(__('admins.column_joined')); ?></th>
                     <?php if(auth()->user()->can('edit-admins') || auth()->user()->can('delete-admins')): ?>
                         <th style="width: 10%"><?php echo e(__('admins.column_actions')); ?></th>
@@ -123,27 +123,7 @@
                         <?php endif; ?>
                     </td>
 
-                    <td>
-                        <?php 
-                            $directPerms = $admin->getDirectPermissions()->take(2); 
-                        ?>
-                        
-                        <?php $__empty_2 = true; $__currentLoopData = $directPerms; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $perm): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_2 = false; ?>
-                            <span class="badge bg-label-warning rounded-pill mb-1" style="font-size: 0.7rem;">
-                                <i class="bx bx-star me-1"></i><?php echo e($perm->name); ?>
-
-                            </span>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_2): ?>
-                            <small class="text-muted small fst-italic"><?php echo e(__('admins.no_permissions')); ?></small>
-                        <?php endif; ?>
-
-                        <?php if($admin->getDirectPermissions()->count() > 2): ?>
-                            <small class="text-muted cursor-pointer" data-bs-toggle="tooltip" title="<?php echo e($admin->getDirectPermissions()->skip(2)->pluck('name')->implode(', ')); ?>">
-                                +<?php echo e($admin->getDirectPermissions()->count() - 2); ?>
-
-                            </small>
-                        <?php endif; ?>
-                    </td>
+                    
 
                     <td>
                         <span class="text-muted small"><?php echo e($admin->created_at->translatedFormat('M d, Y')); ?></span>

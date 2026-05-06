@@ -92,28 +92,6 @@
                         </div>
                     </div>
 
-                    {{-- Permissions --}}
-                    <div class="row mb-6">
-                        <label class="col-sm-2 col-form-label">{{ __('admins.direct_permissions') }}</label>
-                        <div class="col-sm-10">
-                            <div class="permissions-container">
-                                <div class="row">
-                                    @foreach($permissions as $permission)
-                                        <div class="col-md-6 mb-2">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $permission->name }}" id="perm_{{ $permission->id }}" {{ (collect(old('permissions'))->contains($permission->name)) ? 'checked':'' }}>
-                                                <label class="form-check-label" for="perm_{{ $permission->id }}">
-                                                    {{ $permission->name }}
-                                                </label>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            @error('permissions') <div class="text-danger small">{{ $message }}</div> @enderror
-                        </div>
-                    </div>
-
                     <hr class="my-6">
 
                     {{-- Password --}}

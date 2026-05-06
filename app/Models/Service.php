@@ -21,7 +21,6 @@ class Service extends Model implements HasMedia
         'type',
         'price_syp',
         'price_usd',
-        'currency',
         'latitude',
         'longitude',
         'current_step',

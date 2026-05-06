@@ -21,7 +21,7 @@ class AdminController extends Controller
         $result = $this->admin->index($request->all());
 
         return view('dashboard.admins.index', [
-            'admins' => $result['admins']->appends($request->query()), 
+            'admins' => $result['admins']->appends($request->query()),
             'stats'  => $result['stats']
         ]);
     }
@@ -37,7 +37,7 @@ class AdminController extends Controller
     {
         $this->admin->store($request->validated());
 
-        return redirect()->route('dashboard-analytics');
+        return redirect()->route('admins.index');
     }
 
     public function edit(Admin $admin)
