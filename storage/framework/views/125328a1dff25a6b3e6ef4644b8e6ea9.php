@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', __('profile.security_title')); ?>
 
 <?php $__env->startSection('content'); ?>

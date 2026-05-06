@@ -24,6 +24,6 @@ class ReviewController extends Controller
     {
         $reviews = $this->review->allReviewsOnService($service);
 
-        return successResponse(ReviewResource::collection($reviews));
+        return successResponse(ReviewResource::collection($reviews)->response()->getData(true));
     }
 }

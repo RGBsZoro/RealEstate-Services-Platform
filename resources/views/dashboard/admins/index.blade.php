@@ -78,7 +78,6 @@
                 <tr>
                     <th style="width: 25%">{{ __('admins.column_admin') }}</th>
                     <th style="width: 20%">{{ __('admins.column_roles') }}</th>
-                    <th style="width: 25%">{{ __('admins.column_permissions') }}</th>
                     <th style="width: 15%">{{ __('admins.column_joined') }}</th>
                     @if(auth()->user()->can('edit-admins') || auth()->user()->can('delete-admins'))
                         <th style="width: 10%">{{ __('admins.column_actions') }}</th>
@@ -118,26 +117,6 @@
                         @if($admin->roles->count() > 2)
                             <small class="text-muted cursor-pointer" data-bs-toggle="tooltip" title="{{ $admin->roles->skip(2)->pluck('name')->implode(', ') }}">
                                 +{{ $admin->roles->count() - 2 }}
-                            </small>
-                        @endif
-                    </td>
-
-                    <td>
-                        @php 
-                            $directPerms = $admin->getDirectPermissions()->take(2); 
-                        @endphp
-                        
-                        @forelse($directPerms as $perm)
-                            <span class="badge bg-label-warning rounded-pill mb-1" style="font-size: 0.7rem;">
-                                <i class="bx bx-star me-1"></i>{{ $perm->name }}
-                            </span>
-                        @empty
-                            <small class="text-muted small fst-italic">{{ __('admins.no_permissions') }}</small>
-                        @endforelse
-
-                        @if($admin->getDirectPermissions()->count() > 2)
-                            <small class="text-muted cursor-pointer" data-bs-toggle="tooltip" title="{{ $admin->getDirectPermissions()->skip(2)->pluck('name')->implode(', ') }}">
-                                +{{ $admin->getDirectPermissions()->count() - 2 }}
                             </small>
                         @endif
                     </td>

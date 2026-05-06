@@ -49,4 +49,9 @@ class BusinessAccount extends Model implements HasMedia
     {
         return $this->belongsTo(City::class);
     }
+
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
 }

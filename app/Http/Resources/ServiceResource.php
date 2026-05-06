@@ -20,6 +20,9 @@ class ServiceResource extends JsonResource
             'price_usd' => $this->price_usd,
             'main_image' => $this->getFirstMediaUrl('main_image_service') ?: null,
 
+            'reviews_count' => $this->reviews_count ?? 0,
+            'reviews_avg' => round($this->reviews_avg_rating ?? 0, 1),
+
             'is_favorite' => $this->handleIsFavorite(),
 
             'business_account' => [
@@ -36,6 +39,6 @@ class ServiceResource extends JsonResource
             return (bool) $this->is_favorite_exists;
         }
 
-        return true;
+        return false;
     }
 }

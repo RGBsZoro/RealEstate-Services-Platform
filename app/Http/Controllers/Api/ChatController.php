@@ -17,16 +17,15 @@ class ChatController extends Controller
     public function index()
     {
         $conversations = $this->chatService->getUserConversations(auth('api')->id());
-        return successResponse(ConversationResource::collection($conversations));
+        return successResponse(ConversationResource::collection($conversations)->response()->getData(true));
     }
 
     public function show(Conversation $conversation)
     {
         $messages = $this->chatService->getConversationMessages($conversation, auth('api')->id());
-        return successResponse(MessageResource::collection($messages));
+        return successResponse(MessageResource::collection($messages)->response()->getData(true));
     }
 
-    // إرسال رسالة
     public function store(StoreMessageRequest $request)
     {
         $message = $this->chatService->sendMessage(auth('api')->id(), $request->validated());

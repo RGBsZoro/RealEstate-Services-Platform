@@ -45,8 +45,8 @@ class AdminService
         if (isset($data['roles']))
             $admin->assignRole($data['roles']);
 
-        if (isset($data['permissions']))
-            $admin->givePermissionTo($data['permissions']);
+        // if (isset($data['permissions']))
+        //     $admin->givePermissionTo($data['permissions']);
     }
 
     public function update(Admin $admin, array $data)
@@ -63,11 +63,11 @@ class AdminService
             $admin->syncRoles([]);
         }
 
-        if (isset($data['permissions'])) {
-            $admin->syncPermissions($data['permissions']);
-        } else {
-            $admin->syncPermissions([]);
-        }
+        // if (isset($data['permissions'])) {
+        //     $admin->syncPermissions($data['permissions']);
+        // } else {
+        //     $admin->syncPermissions([]);
+        // }
     }
 
     public function destroy(Admin $admin)

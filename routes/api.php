@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BusinessAccountController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\NotificationController;
@@ -27,23 +28,46 @@ Route::middleware(['auth:api'])->group(function () {
   Route::post('fcm/register-token', [FCMController::class, 'store'])
     ->defaults('guardName', 'api');
 
-  // business accounts
+  // create business accounts
   Route::prefix('business-accounts/')->group(function () {
-    Route::post('', [BusinessAccountController::class, 'store']);
-    Route::post('{businessAccount}/step1', [BusinessAccountController::class, 'step1']);
+    Route::post('step1', [BusinessAccountController::class, 'step1']);
     Route::post('{businessAccount}/step2', [BusinessAccountController::class, 'step2']);
     Route::post('{businessAccount}/step3', [BusinessAccountController::class, 'step3']);
     Route::post('{businessAccount}/step4', [BusinessAccountController::class, 'step4']);
   });
 
+  // my business accounts
+  Route::prefix('my-business-accounts')->group(function () {
+    Route::get('/', [BusinessAccountController::class, 'index']);
+    Route::get('{businessAccount}', [BusinessAccountController::class, 'show']);
+    Route::put('{businessAccount}', [BusinessAccountController::class, 'update']);
+    Route::delete('{businessAccount}', [BusinessAccountController::class, 'destroy']);
+    Route::delete('{businessAccount}/media/{mediaId}', [BusinessAccountController::class, 'deleteMedia']);
+  });
+
+  // show services
+  Route::get('services', [ServiceController::class, 'index']);
+  Route::get('services/{service}', [ServiceController::class, 'show']);
+
+  // routes that require approved business account 
   Route::middleware(['hasApprovedBusinessAccount'])->group(function () {
-    // service
+    // my services
+    Route::prefix('my-services')->group(function () {
+      Route::get('/', [ServiceController::class, 'getMyServices']);
+      Route::get('/{service}', [ServiceController::class, 'showMyService']);
+      Route::put('{service}', [ServiceController::class, 'update']);
+      Route::delete('{service}', [ServiceController::class, 'destroy']);
+      Route::delete('{service}/media/{mediaId}', [ServiceController::class, 'deleteMedia']);
+    });
+
+    // create service
     Route::prefix('services/')->group(function () {
       Route::post('step1', [ServiceController::class, 'initialize']);
       Route::post('{service}/step2', [ServiceController::class, 'updateDetails']);
       Route::post('{service}/step3', [ServiceController::class, 'updateMedia']);
       Route::post('{service}/step4', [ServiceController::class, 'syncDynamicFields']);
       Route::post('{service}/step5', [ServiceController::class, 'submitService']);
+
       // service requests
       Route::prefix('requests/')->group(function () {
         Route::post('', [ServiceRequestController::class, 'store']);
@@ -52,6 +76,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('sent', [ServiceRequestController::class, 'sentRequest']);
         Route::get('received', [ServiceRequestController::class, 'recivedRequest']);
         Route::delete('{serviceRequest}', [ServiceRequestController::class, 'destroy']);
+
         // reviews
         Route::prefix('{service}/reviews/')->group(function () {
           Route::post('', [ReviewController::class, 'store']);
@@ -97,5 +122,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::put('/password', [ProfileController::class, 'updatePassword']);
     Route::post('/phone/request', [ProfileController::class, 'requestPhoneUpdate']);
     Route::post('/phone/verify', [ProfileController::class, 'verifyPhoneUpdate']);
+  });
+
+  // categories 
+  Route::prefix('categories')->group(function () {
+    Route::get('/main', [CategoryController::class, 'mainCategories']);
+    Route::get('/{category}/sub', [CategoryController::class, 'subCategories']);
   });
 });

@@ -14,7 +14,7 @@ class StoreBusinessAccountStep1Request extends FormRequest
      */
     public function authorize(): bool
     {
-        return Gate::allows('update', $this->businessAccount);
+        return true;
     }
 
     /**
@@ -24,8 +24,12 @@ class StoreBusinessAccountStep1Request extends FormRequest
      */
     public function rules(): array
     {
+        $existingDraft = auth('api')->user()->businessAccounts()
+            ->where('status', \App\Enum\StatusEnum::DRAFT->value)
+            ->first();
+
         return [
-            'activity_id' => ['required', 'exists:activities,id', new UniqueBusinessAccountPerActivity($this->businessAccount->id)]
+            'activity_id' => ['required', 'exists:activities,id', new UniqueBusinessAccountPerActivity($existingDraft ? $existingDraft->id : null)]
         ];
     }
 }

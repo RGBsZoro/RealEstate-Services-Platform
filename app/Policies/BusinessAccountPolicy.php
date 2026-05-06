@@ -45,7 +45,7 @@ class BusinessAccountPolicy
      */
     public function delete(User $user, BusinessAccount $businessAccount): bool
     {
-        return false;
+        return $user->id == $businessAccount->user_id;
     }
 
     /**

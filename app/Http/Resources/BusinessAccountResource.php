@@ -14,6 +14,13 @@ class BusinessAccountResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'activity_name' => $this->activity->name ?? null,
+            'status' => $this->status->value ?? $this->status,
+            'current_step' => $this->current_step,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+        ];
     }
 }
