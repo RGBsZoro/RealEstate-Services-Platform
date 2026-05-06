@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\BusinessAccountController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\ServiceReportController;
@@ -87,5 +88,14 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/', [FavoriteController::class, 'index']);
     Route::post('/', [FavoriteController::class, 'store']);
     Route::delete('/{service}', [FavoriteController::class, 'destroy']);
+  });
+
+  // profile
+  Route::prefix('profile')->group(function () {
+    Route::get('/', [ProfileController::class, 'show']);
+    Route::post('/update', [ProfileController::class, 'updateProfile']);
+    Route::put('/password', [ProfileController::class, 'updatePassword']);
+    Route::post('/phone/request', [ProfileController::class, 'requestPhoneUpdate']);
+    Route::post('/phone/verify', [ProfileController::class, 'verifyPhoneUpdate']);
   });
 });

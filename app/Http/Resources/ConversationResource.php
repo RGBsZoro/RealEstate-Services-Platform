@@ -29,7 +29,7 @@ class ConversationResource extends JsonResource
             'other_party' => [
                 'id' => $otherParty->id,
                 'name' => $otherParty->name,
-                'avatar' => $otherParty->getFirstMediaUrl('avatar') ?: null,
+                'avatar' => $otherParty->getFirstMediaUrl('user-avatars') ?: null,
             ],
             'unread_messages_count' => $this->unread_messages_count ?? 0,
             'last_message_at' => $this->last_message_at ? $this->last_message_at->diffForHumans() : null,

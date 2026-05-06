@@ -218,7 +218,13 @@ use Illuminate\Support\Facades\Route;
         <li class="nav-item navbar-dropdown dropdown-user dropdown">
             <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
                 <div class="avatar avatar-online avatar-md">
-                    <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="rounded-circle border border-2 border-primary p-1">
+                    @if(auth('web')->user()->getFirstMediaUrl('admin_avatars'))
+                        <img src="{{ auth('web')->user()->getFirstMediaUrl('admin_avatars') }}" alt class="rounded-circle border border-2 border-primary p-1">
+                    @else
+                        <span class="avatar-initial rounded-circle bg-label-primary border border-2 border-primary">
+                            {{ Str::upper(Str::substr(auth('web')->user()->name, 0, 2)) }}
+                        </span>
+                     @endif
                 </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0">
@@ -227,7 +233,13 @@ use Illuminate\Support\Facades\Route;
                         <div class="d-flex align-items-center">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar avatar-online avatar-md">
-                                    <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="rounded-circle">
+                                    @if(auth('web')->user()->getFirstMediaUrl('admin_avatars'))
+                                        <img src="{{ auth('web')->user()->getFirstMediaUrl('admin_avatars') }}" alt class="rounded-circle border border-2 border-primary p-1">
+                                    @else
+                                        <span class="avatar-initial rounded-circle bg-label-primary border border-2 border-primary">
+                                            {{ Str::upper(Str::substr(auth('web')->user()->name, 0, 2)) }}
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
                             <div class="flex-grow-1">
@@ -239,7 +251,7 @@ use Illuminate\Support\Facades\Route;
                 </li>
                 <li><div class="dropdown-divider my-1"></div></li>
                 <li>
-                    <a class="dropdown-item" href="#"><i class="bx bx-user me-2"></i> {{ __('header.my_profile') }}</a>
+                    <a class="dropdown-item" href="{{ route('profile.index') }}"><i class="bx bx-user me-2"></i> {{ __('header.my_profile') }}</a>
                 </li>
                 <li><div class="dropdown-divider my-1"></div></li>
                 <li>

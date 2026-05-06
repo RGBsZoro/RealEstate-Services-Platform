@@ -122,12 +122,13 @@
                     <hr class="my-6">
 
                     {{-- Password --}}
-                    <div class="row mb-6">
+                    <div class="row mb-6 form-password-toggle">
                         <label class="col-sm-2 col-form-label" for="password">{{ __('admins.new_password') }}</label>
                         <div class="col-sm-10">
                             <div class="input-group input-group-merge">
                                 <span class="input-group-text"><i class="bx bx-lock-alt"></i></span>
-                                <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="{{ __('admins.password_help') }}" />
+                                <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" placeholder="············" />
+                                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                             </div>
                             <div class="form-text text-muted">{{ __('admins.password_help') }}</div>
                             @error('password') <div class="invalid-feedback small">{{ $message }}</div> @enderror
@@ -135,12 +136,13 @@
                     </div>
 
                     {{-- Password Confirmation --}}
-                    <div class="row mb-6">
+                    <div class="row mb-6 form-password-toggle">
                         <label class="col-sm-2 col-form-label" for="password_confirmation">{{ __('admins.confirm_password') }}</label>
                         <div class="col-sm-10">
                             <div class="input-group input-group-merge">
                                 <span class="input-group-text"><i class="bx bx-check-shield"></i></span>
                                 <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="············" />
+                                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                             </div>
                         </div>
                     </div>
@@ -160,4 +162,27 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('page-script')
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // نبحث عن كل حاويات كلمة المرور في الصفحة
+    const passwordToggles = document.querySelectorAll('.form-password-toggle');
+
+    passwordToggles.forEach(container => {
+      const input = container.querySelector('input');
+      const toggleBtn = container.querySelector('.cursor-pointer');
+      const icon = toggleBtn.querySelector('i');
+
+      toggleBtn.addEventListener('click', () => {
+        if (input.type === 'text') {
+          icon.classList.replace('bx-hide', 'bx-show');
+        } else {
+          icon.classList.replace('bx-show', 'bx-hide');
+        }
+      });
+    });
+  });
+</script>
 @endsection

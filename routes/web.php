@@ -53,6 +53,7 @@ use App\Http\Controllers\Web\BusinessAccountController;
 use App\Http\Controllers\Web\CategoryController;
 use App\Http\Controllers\Web\DynamicFieldController;
 use App\Http\Controllers\Web\NotificationController;
+use App\Http\Controllers\Web\ProfileController;
 use App\Http\Controllers\Web\RoleController;
 use App\Http\Controllers\Web\ServiceController;
 use App\Http\Controllers\Web\ServiceReportController;
@@ -230,6 +231,14 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::middleware(['permission:delete-sliders'])->group(function () {
             Route::delete('/{slider}', [SliderController::class, 'destroy'])->name('destroy');
         });
+    });
+
+    // profile
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'index'])->name('index');
+        Route::get('/security', [ProfileController::class, 'security'])->name('security');
+        Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+        Route::put('/avatar', [ProfileController::class, 'updateAvatar'])->name('avatar.update');
     });
 
     // lang

@@ -1,4 +1,4 @@
-<?php $__env->startSection('title', __('admins.add_title')); ?>
+<?php $__env->startSection('title', __('admins.edit_title')); ?>
 
 <?php $__env->startSection('page-style'); ?>
 <style>
@@ -35,12 +35,13 @@
     <div class="col-xxl">
         <div class="card mb-6">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="mb-0"><?php echo e(__('admins.add_title')); ?></h5>
-                <small class="text-muted float-end"><?php echo e(__('admins.system_subtitle')); ?></small>
+                <h5 class="mb-0"><?php echo e(__('admins.edit_title')); ?>: <span class="text-primary"><?php echo e($admin->name); ?></span></h5>
+                <small class="text-muted float-end"><?php echo e(__('admins.edit_subtitle')); ?></small>
             </div>
             <div class="card-body">
-                <form action="<?php echo e(route('admins.store')); ?>" method="POST">
+                <form action="<?php echo e(route('admins.update', $admin->id)); ?>" method="POST">
                     <?php echo csrf_field(); ?>
+                    <?php echo method_field('PUT'); ?>
                     
                     
                     <div class="row mb-6">
@@ -55,7 +56,7 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" id="full-name" placeholder="<?php echo e(__('admins.placeholders.name')); ?>" value="<?php echo e(old('name')); ?>" />
+unset($__errorArgs, $__bag); ?>" id="full-name" value="<?php echo e(old('name', $admin->name)); ?>" />
                             </div>
                             <?php $__errorArgs = ['name'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -81,7 +82,7 @@ if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
-unset($__errorArgs, $__bag); ?>" placeholder="<?php echo e(__('admins.placeholders.email')); ?>" value="<?php echo e(old('email')); ?>" />
+unset($__errorArgs, $__bag); ?>" value="<?php echo e(old('email', $admin->email)); ?>" />
                             </div>
                             <?php $__errorArgs = ['email'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
@@ -105,7 +106,10 @@ unset($__errorArgs, $__bag); ?>
                                     <div class="col-md-4 mb-3">
                                         <div class="role-item">
                                             <div class="form-check form-switch mb-0">
-                                                <input class="form-check-input" type="checkbox" name="roles[]" value="<?php echo e($role->name); ?>" id="role_<?php echo e($role->id); ?>" <?php echo e((collect(old('roles'))->contains($role->name)) ? 'checked':''); ?>>
+                                                <input class="form-check-input" type="checkbox" name="roles[]" 
+                                                    value="<?php echo e($role->name); ?>" 
+                                                    id="role_<?php echo e($role->id); ?>" 
+                                                    <?php echo e((in_array($role->name, old('roles', $adminRoles))) ? 'checked' : ''); ?>>
                                                 <label class="form-check-label fw-bold" for="role_<?php echo e($role->id); ?>">
                                                     <i class="bx bx-shield-quarter me-1"></i> <?php echo e($role->name); ?>
 
@@ -115,14 +119,6 @@ unset($__errorArgs, $__bag); ?>
                                     </div>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </div>
-                            <?php $__errorArgs = ['roles'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?> <div class="text-danger small"><?php echo e($message); ?></div> <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
                         </div>
                     </div>
 
@@ -135,7 +131,10 @@ unset($__errorArgs, $__bag); ?>
                                     <?php $__currentLoopData = $permissions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $permission): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <div class="col-md-6 mb-2">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="permissions[]" value="<?php echo e($permission->name); ?>" id="perm_<?php echo e($permission->id); ?>" <?php echo e((collect(old('permissions'))->contains($permission->name)) ? 'checked':''); ?>>
+                                                <input class="form-check-input" type="checkbox" name="permissions[]" 
+                                                    value="<?php echo e($permission->name); ?>" 
+                                                    id="perm_<?php echo e($permission->id); ?>" 
+                                                    <?php echo e((in_array($permission->name, old('permissions', $adminDirectPermissions))) ? 'checked' : ''); ?>>
                                                 <label class="form-check-label" for="perm_<?php echo e($permission->id); ?>">
                                                     <?php echo e($permission->name); ?>
 
@@ -145,14 +144,6 @@ unset($__errorArgs, $__bag); ?>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </div>
                             </div>
-                            <?php $__errorArgs = ['permissions'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?> <div class="text-danger small"><?php echo e($message); ?></div> <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
                         </div>
                     </div>
 
@@ -160,11 +151,11 @@ unset($__errorArgs, $__bag); ?>
 
                     
                     <div class="row mb-6 form-password-toggle">
-                        <label class="col-sm-2 col-form-label" for="password"><?php echo e(__('admins.password')); ?></label>
+                        <label class="col-sm-2 col-form-label" for="password"><?php echo e(__('admins.new_password')); ?></label>
                         <div class="col-sm-10">
                             <div class="input-group input-group-merge">
                                 <span class="input-group-text"><i class="bx bx-lock-alt"></i></span>
-                                    <input type="password" name="password" id="password" class="form-control <?php $__errorArgs = ['password'];
+                                <input type="password" name="password" id="password" class="form-control <?php $__errorArgs = ['password'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -172,8 +163,9 @@ $message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>" placeholder="············" />
-                                <span class="input-group-text cursor-pointer" id="toggle-password"><i class="bx bx-hide"></i></span>
+                                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                             </div>
+                            <div class="form-text text-muted"><?php echo e(__('admins.password_help')); ?></div>
                             <?php $__errorArgs = ['password'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -192,7 +184,7 @@ unset($__errorArgs, $__bag); ?>
                             <div class="input-group input-group-merge">
                                 <span class="input-group-text"><i class="bx bx-check-shield"></i></span>
                                 <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" placeholder="············" />
-                                <span class="input-group-text cursor-pointer" id="toggle-confirm-password"><i class="bx bx-hide"></i></span>
+                                <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                             </div>
                         </div>
                     </div>
@@ -200,9 +192,13 @@ unset($__errorArgs, $__bag); ?>
                     <div class="row justify-content-end mt-8">
                         <div class="col-sm-10">
                             <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bx bx-save me-1"></i> <?php echo e(__('admins.create_button')); ?>
+                                <i class="bx bx-check me-1"></i> <?php echo e(__('admins.update_button')); ?>
 
                             </button>
+                            <a href="<?php echo e(route('admins.index')); ?>" class="btn btn-outline-secondary btn-lg ms-2">
+                                <?php echo e(__('admins.cancel')); ?>
+
+                            </a>
                         </div>
                     </div>
                 </form>
@@ -224,8 +220,6 @@ unset($__errorArgs, $__bag); ?>
       const icon = toggleBtn.querySelector('i');
 
       toggleBtn.addEventListener('click', () => {
-        // نتحقق من نوع الحقل الآن بعد كبسة القالب التلقائية
-        // إذا أصبح text يعني العين يجب أن تفتح
         if (input.type === 'text') {
           icon.classList.replace('bx-hide', 'bx-show');
         } else {
@@ -236,4 +230,4 @@ unset($__errorArgs, $__bag); ?>
   });
 </script>
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('layouts/contentNavbarLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\RealEstate-Services-Platform\resources\views/dashboard/admins/create.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts/contentNavbarLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\RealEstate-Services-Platform\resources\views/dashboard/admins/edit.blade.php ENDPATH**/ ?>
