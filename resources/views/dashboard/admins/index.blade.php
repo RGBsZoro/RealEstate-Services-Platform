@@ -92,7 +92,13 @@
                         <div class="d-flex justify-content-start align-items-center user-name">
                             <div class="avatar-wrapper me-3">
                                 <div class="avatar avatar-sm">
-                                    <span class="avatar-initial rounded-circle bg-label-info">{{ strtoupper(substr($admin->name, 0, 2)) }}</span>
+                                    @if($admin->getFirstMediaUrl('admin_avatars'))
+                                        <img src="{{ $admin->getFirstMediaUrl('admin_avatars') }}" alt="Avatar" class="rounded-circle">
+                                    @else
+                                        <span class="avatar-initial rounded-circle bg-label-info">
+                                            {{ Str::upper(Str::substr($admin->name, 0, 2)) }}
+                                        </span>
+                                    @endif                                
                                 </div>
                             </div>
                             <div class="d-flex flex-column">

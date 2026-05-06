@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', isset($slider) ? __('sliders.edit') : __('sliders.add_new')); ?>
 
 <?php $__env->startSection('content'); ?>

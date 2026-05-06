@@ -91,7 +91,14 @@
                         <div class="d-flex justify-content-start align-items-center user-name">
                             <div class="avatar-wrapper me-3">
                                 <div class="avatar avatar-sm">
-                                    <span class="avatar-initial rounded-circle bg-label-info"><?php echo e(strtoupper(substr($admin->name, 0, 2))); ?></span>
+                                    <?php if($admin->getFirstMediaUrl('admin_avatars')): ?>
+                                        <img src="<?php echo e($admin->getFirstMediaUrl('admin_avatars')); ?>" alt="Avatar" class="rounded-circle">
+                                    <?php else: ?>
+                                        <span class="avatar-initial rounded-circle bg-label-info">
+                                            <?php echo e(Str::upper(Str::substr($admin->name, 0, 2))); ?>
+
+                                        </span>
+                                    <?php endif; ?>                                
                                 </div>
                             </div>
                             <div class="d-flex flex-column">

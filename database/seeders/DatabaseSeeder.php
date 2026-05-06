@@ -20,53 +20,78 @@ class DatabaseSeeder extends Seeder
 
         $permissions = [
             // Admins
-            'view-admins', 'create-admins', 'edit-admins', 'delete-admins',
-            
+            'view-admins',
+            'create-admins',
+            'edit-admins',
+            'delete-admins',
+
             // Roles
-            'view-roles', 'create-roles', 'edit-roles', 'delete-roles',
-            
+            'view-roles',
+            'create-roles',
+            'edit-roles',
+            'delete-roles',
+
             // Cities
-            'view-cities', 'create-cities', 'edit-cities', 'delete-cities',
-            
+            'view-cities',
+            'create-cities',
+            'edit-cities',
+            'delete-cities',
+
             // Activities
-            'view-activities', 'create-activities', 'edit-activities', 'delete-activities',
-            
+            'view-activities',
+            'create-activities',
+            'edit-activities',
+            'delete-activities',
+
             // Business Accounts 
-            'view-business-accounts', 'manage-business-accounts',
-            
+            'view-business-accounts',
+            'manage-business-accounts',
+
             // Categories 
-            'view-categories', 'create-categories', 'edit-categories', 'delete-categories',
-            
+            'view-categories',
+            'create-categories',
+            'edit-categories',
+            'delete-categories',
+
             // Dynamic Fields
-            'view-dynamic-fields', 'create-dynamic-fields', 'edit-dynamic-fields', 'delete-dynamic-fields',
-            
+            'view-dynamic-fields',
+            'create-dynamic-fields',
+            'edit-dynamic-fields',
+            'delete-dynamic-fields',
+
             // Services 
-            'view-services', 'manage-services',
+            'view-services',
+            'manage-services',
 
             // Service Reports
-            'view-reports', 'manage-reports', 'delete-reports',
+            'view-reports',
+            'manage-reports',
+            'delete-reports',
 
             // Sliders
-            'view-sliders', 'create-sliders', 'edit-sliders', 'delete-sliders',
-            
+            'view-sliders',
+            'create-sliders',
+            'edit-sliders',
+            'delete-sliders',
+
         ];
 
-        
+
         foreach ($permissions as $permission) {
             Permission::firstOrCreate([
                 'name' => $permission,
-                'guard_name' => 'web' 
+                'guard_name' => 'web'
             ]);
         }
 
         $superAdminRole = Role::firstOrCreate(['name' => 'super-admin', 'guard_name' => 'web']);
-        $superAdminRole->syncPermissions(Permission::all()); 
+        $superAdminRole->syncPermissions(Permission::all());
 
         $superAdmin = Admin::firstOrCreate(
             ['email' => 'superadmin@gmail.com'],
             [
                 'name' => 'super-admin',
-                'password' => 'gg', 
+                'password' => 'gg',
             ]
         );
         $superAdmin->assignRole($superAdminRole);

@@ -18,6 +18,7 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'phone' => $this->phone,
+            'avatar' => $this->getFirstMediaUrl('user-avatars'),
         ];
     }
 }
