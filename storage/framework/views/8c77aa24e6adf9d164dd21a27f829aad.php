@@ -83,6 +83,8 @@ $container = ($container ?? 'container-xxl');
         <?php echo $__env->make('_partials.firebase', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
     </div>
+    <?php echo $__env->yieldPushContent('vendor-script'); ?>
+<?php echo $__env->yieldPushContent('page-script'); ?>
     <!-- / Layout wrapper -->
 </div>
 <?php $__env->stopSection(); ?>

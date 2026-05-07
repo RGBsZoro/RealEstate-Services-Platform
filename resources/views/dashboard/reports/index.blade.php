@@ -124,7 +124,7 @@
                 </td>
 
                 <td>
-                    <span class="badge {{ $report->status === \App\Enum\ReportStatusEnum::Resolved ? 'bg-label-success' : 'bg-label-warning' }} rounded-pill">
+                    <span class="badge {{ $report->status === \App\Enum\ReportStatusEnum::RESOLVED ? 'bg-label-success' : 'bg-label-warning' }} rounded-pill">
                         {{ $report->status->label() }}
                     </span>
                 </td>
@@ -144,7 +144,7 @@
                                 <i class="bx bx-show-alt me-1"></i> {{ __('reports.view_details') }}
                             </button>
 
-                            @if($report->status !== \App\Enum\ReportStatusEnum::Resolved)
+                            @if($report->status !== \App\Enum\ReportStatusEnum::RESOLVED)
                                 @can('manage-reports')
                                 <form action="{{ route('reports.resolve', $report->id) }}" method="POST">
                                     @csrf

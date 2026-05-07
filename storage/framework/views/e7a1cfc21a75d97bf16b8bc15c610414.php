@@ -124,7 +124,7 @@
                 </td>
 
                 <td>
-                    <span class="badge <?php echo e($report->status === \App\Enum\ReportStatusEnum::Resolved ? 'bg-label-success' : 'bg-label-warning'); ?> rounded-pill">
+                    <span class="badge <?php echo e($report->status === \App\Enum\ReportStatusEnum::RESOLVED ? 'bg-label-success' : 'bg-label-warning'); ?> rounded-pill">
                         <?php echo e($report->status->label()); ?>
 
                     </span>
@@ -146,7 +146,7 @@
 
                             </button>
 
-                            <?php if($report->status !== \App\Enum\ReportStatusEnum::Resolved): ?>
+                            <?php if($report->status !== \App\Enum\ReportStatusEnum::RESOLVED): ?>
                                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage-reports')): ?>
                                 <form action="<?php echo e(route('reports.resolve', $report->id)); ?>" method="POST">
                                     <?php echo csrf_field(); ?>
