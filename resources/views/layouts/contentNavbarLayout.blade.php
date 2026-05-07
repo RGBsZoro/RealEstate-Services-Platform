@@ -86,6 +86,8 @@ $container = ($container ?? 'container-xxl');
         @include('_partials.firebase')
 
     </div>
+    @stack('vendor-script')
+@stack('page-script')
     <!-- / Layout wrapper -->
 </div>
 @endsection

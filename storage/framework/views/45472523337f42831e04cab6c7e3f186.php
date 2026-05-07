@@ -77,7 +77,6 @@
                 <tr>
                     <th style="width: 25%"><?php echo e(__('admins.column_admin')); ?></th>
                     <th style="width: 20%"><?php echo e(__('admins.column_roles')); ?></th>
-                    
                     <th style="width: 15%"><?php echo e(__('admins.column_joined')); ?></th>
                     <?php if(auth()->user()->can('edit-admins') || auth()->user()->can('delete-admins')): ?>
                         <th style="width: 10%"><?php echo e(__('admins.column_actions')); ?></th>
@@ -122,8 +121,6 @@
                             </small>
                         <?php endif; ?>
                     </td>
-
-                    
 
                     <td>
                         <span class="text-muted small"><?php echo e($admin->created_at->translatedFormat('M d, Y')); ?></span>

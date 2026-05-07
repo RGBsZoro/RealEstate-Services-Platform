@@ -4,8 +4,8 @@ namespace App\Enum;
 
 enum ReportStatusEnum: string
 {
-    case Pending = 'pending';
-    case Resolved = 'resolved';
+    case PENDING = 'pending';
+    case RESOLVED = 'resolved';
 
     public function label(): string
     {
