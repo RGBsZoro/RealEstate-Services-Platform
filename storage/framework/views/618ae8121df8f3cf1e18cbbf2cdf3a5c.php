@@ -3,8 +3,10 @@
 <?php $__env->startSection('content'); ?>
 
 
+
 <div class="row g-4 mb-4">
-    <div class="col-sm-6 col-xl-4">
+    
+    <div class="col-sm-6 col-xl-3">
         <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(255, 171, 0, 0.08);">
             <div class="card-body p-3">
                 <div class="d-flex align-items-center justify-content-between">
@@ -19,9 +21,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-xl-4">
+
+    
+    <div class="col-sm-6 col-xl-3">
         <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(113, 221, 55, 0.08);">
-            <div class="card-body p-3 text-nowrap">
+            <div class="card-body p-3">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <h6 class="mb-1 fw-bold text-success"><?php echo e(__('business.approved_acc')); ?></h6>
@@ -34,9 +38,28 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-xl-4">
+
+    
+    <div class="col-sm-6 col-xl-3">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(133, 146, 163, 0.08);">
+            <div class="card-body p-3">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="mb-1 fw-bold text-secondary"><?php echo e(__('status.inactive')); ?></h6>
+                        <h4 class="mb-0 fw-black"><?php echo e($stats['inactive'] ?? 0); ?></h4>
+                    </div>
+                    <span class="badge bg-secondary rounded-circle p-2">
+                        <i class="bx bx-power-off fs-3"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="col-sm-6 col-xl-3">
         <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(255, 62, 29, 0.08);"> 
-            <div class="card-body p-3 text-nowrap">
+            <div class="card-body p-3">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <h6 class="mb-1 fw-bold text-danger"><?php echo e(__('business.rejected_acc')); ?></h6> 
@@ -66,6 +89,7 @@
                         <option value=""><?php echo e(__('business.all_statuses')); ?></option>
                         <option value="pending" <?php echo e(request('status') == 'pending' ? 'selected' : ''); ?>><?php echo e(__('status.pending')); ?></option>
                         <option value="approved" <?php echo e(request('status') == 'approved' ? 'selected' : ''); ?>><?php echo e(__('status.approved')); ?></option>
+                        <option value="inactive" <?php echo e(request('status') == 'inactive' ? 'selected' : ''); ?>><?php echo e(__('status.inactive')); ?></option>
                         <option value="rejected" <?php echo e(request('status') == 'rejected' ? 'selected' : ''); ?>><?php echo e(__('status.rejected')); ?></option>
                     </select>
                 </div>

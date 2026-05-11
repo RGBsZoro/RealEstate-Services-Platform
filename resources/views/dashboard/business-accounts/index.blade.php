@@ -5,8 +5,10 @@
 @section('content')
 
 {{-- Stats Summary --}}
+{{-- Stats Summary --}}
 <div class="row g-4 mb-4">
-    <div class="col-sm-6 col-xl-4">
+    {{-- Pending Card --}}
+    <div class="col-sm-6 col-xl-3">
         <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(255, 171, 0, 0.08);">
             <div class="card-body p-3">
                 <div class="d-flex align-items-center justify-content-between">
@@ -21,9 +23,11 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-xl-4">
+
+    {{-- Approved Card --}}
+    <div class="col-sm-6 col-xl-3">
         <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(113, 221, 55, 0.08);">
-            <div class="card-body p-3 text-nowrap">
+            <div class="card-body p-3">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <h6 class="mb-1 fw-bold text-success">{{ __('business.approved_acc') }}</h6>
@@ -36,9 +40,28 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-6 col-xl-4">
+
+    {{-- Inactive Card (الحالة الجديدة) --}}
+    <div class="col-sm-6 col-xl-3">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(133, 146, 163, 0.08);">
+            <div class="card-body p-3">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="mb-1 fw-bold text-secondary">{{ __('status.inactive') }}</h6>
+                        <h4 class="mb-0 fw-black">{{ $stats['inactive'] ?? 0 }}</h4>
+                    </div>
+                    <span class="badge bg-secondary rounded-circle p-2">
+                        <i class="bx bx-power-off fs-3"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Rejected Card --}}
+    <div class="col-sm-6 col-xl-3">
         <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(255, 62, 29, 0.08);"> 
-            <div class="card-body p-3 text-nowrap">
+            <div class="card-body p-3">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <h6 class="mb-1 fw-bold text-danger">{{ __('business.rejected_acc') }}</h6> 
@@ -68,6 +91,7 @@
                         <option value="">{{ __('business.all_statuses') }}</option>
                         <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>{{ __('status.pending') }}</option>
                         <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>{{ __('status.approved') }}</option>
+                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>{{ __('status.inactive') }}</option>
                         <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>{{ __('status.rejected') }}</option>
                     </select>
                 </div>

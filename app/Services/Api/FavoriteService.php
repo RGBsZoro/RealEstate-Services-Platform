@@ -14,7 +14,7 @@ class FavoriteService
                 'media',
                 'businessAccount:id,user_id,name'
             ])
-            ->paginate(15);
+            ->cursorPaginate(15);
     }
 
     public function addFavorite(User $user, array $data)

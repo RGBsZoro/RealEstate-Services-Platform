@@ -30,4 +30,8 @@ return [
     'rent' => 'Rent',
     'total' => 'Total',
     'requests' => 'Requests',
+    'cities' => 'Registered Cities',
+    'activities' => 'Business Activities',
+    'categories' => 'Available Categories',
+    'sliders' => 'Sliders',
 ];

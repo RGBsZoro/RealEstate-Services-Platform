@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Enum\ReportStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Models\ServiceReport;
-use App\ServiceReportService;
+use App\Services\ServiceReportService;
 use Illuminate\Http\Request;
 
 class ServiceReportController extends Controller
@@ -24,7 +24,7 @@ class ServiceReportController extends Controller
 
     public function resolve(ServiceReport $report)
     {
-        $report->update(['status' => ReportStatusEnum::Resolved]);
+        $report->update(['status' => ReportStatusEnum::RESOLVED]);
         return back();
     }
 

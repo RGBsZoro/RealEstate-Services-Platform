@@ -13,17 +13,19 @@ class CheckServiceQuantity implements ValidationRule
      *
      * @param  \Closure(string, ?string=): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      */
-    protected $service_id;
-    public function __construct($service_id)
+    protected ?Service $service;
+    public function __construct(Service $service)
     {
-        $this->service_id = $service_id;
+        $this->service = $service;
     }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $service = Service::find($this->service_id);
+        if (!$this->service || is_null($this->service->quantity)) {
+            return;
+        }
 
-        if ($service && $value > $service->quantity)
-            $fail('The requested quantity exceeds the available quantity ({$service->quantity}).');
+        if ($this->service && $value > $this->service->quantity)
+            $fail('The requested quantity exceeds the available quantity ({$this->service->quantity}).');
     }
 }

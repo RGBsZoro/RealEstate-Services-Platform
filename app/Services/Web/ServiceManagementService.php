@@ -2,6 +2,7 @@
 
 namespace App\Services\Web;
 
+use App\Enum\StatusEnum;
 use App\Models\Service;
 use App\Notifications\ServiceRequestStatusNotification;
 use Illuminate\Validation\ValidationException;
@@ -10,12 +11,14 @@ class ServiceManagementService
 {
     public function index(array $data)
     {
-        $baseQuery = Service::where('status', '!=', 'draft');
+        $baseQuery = Service::all();
 
         $stats = [
-            'pending'  => (clone $baseQuery)->where('status', 'pending')->count(),
-            'approved' => (clone $baseQuery)->where('status', 'approved')->count(),
-            'rejected' => (clone $baseQuery)->where('status', 'rejected')->count(),
+            'pending'  => (clone $baseQuery)->where('status', StatusEnum::PENDING->value)->count(),
+            'approved' => (clone $baseQuery)->where('status', StatusEnum::APPROVED->value)->count(),
+            'rejected' => (clone $baseQuery)->where('status', StatusEnum::REJECTED->value)->count(),
+            'inactive' => (clone $baseQuery)->where('status', StatusEnum::INACTIVE->value)->count(),
+
         ];
 
         $query = Service::with(['businessAccount', 'category'])
@@ -48,10 +51,19 @@ class ServiceManagementService
 
     public function actions(Service $service, $newStatus)
     {
-        if ($service->status->value != 'pending')
+        $currentStatus = $service->status->value;
+
+        if ($newStatus === StatusEnum::INACTIVE->value && $currentStatus !== StatusEnum::APPROVED->value) {
             throw ValidationException::withMessages([
-                'status' => ['Only pending accounts can be approved or rejected.']
+                'status' => ['Only approved services can be deactivated.']
             ]);
+        }
+
+        if (in_array($newStatus, [StatusEnum::APPROVED->value, StatusEnum::REJECTED->value]) && $currentStatus !== StatusEnum::PENDING->value && $currentStatus !== StatusEnum::INACTIVE->value) {
+            throw ValidationException::withMessages([
+                'status' => ['Only pending services can be approved or rejected.']
+            ]);
+        }
 
         $service->update(['status' => $newStatus]);
     }

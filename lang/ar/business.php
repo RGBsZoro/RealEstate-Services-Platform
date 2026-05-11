@@ -6,7 +6,7 @@ return [
     'approved_acc' => 'الحسابات المقبولة',
     'rejected_acc' => 'الحسابات المرفوضة',
     'management_card' => 'إدارة الحسابات التجارية',
-    
+
     // Filters
     'search_placeholder' => 'بحث حسب الاسم...',
     'all_statuses' => 'جميع الحالات',
@@ -15,7 +15,7 @@ return [
     'status_rejected' => 'مرفوض',
     'all_cities' => 'جميع المدن',
     'filter_btn' => 'تصفية',
-    
+
     // Table Headers
     'acc_name' => 'اسم الحساب',
     'owner' => 'المستخدم / المالك',
@@ -23,7 +23,7 @@ return [
     'status' => 'الحالة',
     'date_applied' => 'تاريخ التقديم',
     'actions' => 'الإجراءات',
-    
+
     // Actions & Messages
     'view_details' => 'عرض التفاصيل',
     'unknown' => 'غير معروف',
@@ -58,4 +58,10 @@ return [
     'confirm_rejection' => 'تأكيد الرفض',
     'cancel' => 'إلغاء',
     'not_provided' => 'لم يتم توفيره',
+
+    'status_updated_successfully' => 'تم تحديث حالة الحساب بنجاح.',
+    'deactivate_acc' => 'إيقاف الحساب',
+    'activate_acc' => 'تفعيل الحساب',
+    'deactivate_confirm_msg' => 'هل أنت متأكد من إيقاف هذا الحساب؟ سيؤدي ذلك أيضاً لإيقاف جميع الخدمات التابعة له.',
+
 ];

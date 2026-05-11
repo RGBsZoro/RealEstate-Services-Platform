@@ -1,12 +1,16 @@
 <?php
 
-namespace App\Services\Api;
+namespace App\Services\Web;
 
 use App\Enum\StatusEnum;
+use App\Models\Activity;
 use App\Models\BusinessAccount;
+use App\Models\Category;
+use App\Models\City;
 use App\Models\Service;
 use App\Models\ServiceReport;
 use App\Models\ServiceRequest;
+use App\Models\Slider;
 use Illuminate\Support\Facades\DB;
 
 class DashboardService
@@ -20,22 +24,25 @@ class DashboardService
             'total_services' => Service::where('status', StatusEnum::APPROVED->value)->count(),
             'total_service_requests' => ServiceRequest::count(),
             'pending_reports' => ServiceReport::where('status', 'pending')->count(),
-        ];
 
-        $latestPendingServices = Service::with(['businessAccount', 'category'])
-            ->where('status', StatusEnum::PENDING->value)
-            ->latest()->take(5)->get();
+            'total_cities' => City::count(),
+            'total_activities' => Activity::count(),
+            'total_categories' => Category::count(),
+            'total_sliders' => Slider::count(),
+        ];
 
         $latestPendingAccounts = BusinessAccount::with(['user', 'activity'])
             ->where('status', StatusEnum::PENDING->value)
             ->latest()->take(5)->get();
 
-        // توزيع الخدمات
+        $latestPendingServices = Service::with(['businessAccount', 'category'])
+            ->where('status', StatusEnum::PENDING->value)
+            ->latest()->take(5)->get();
+
         $servicesTypeChart = Service::select('type', DB::raw('count(*) as total'))
             ->where('status', StatusEnum::APPROVED->value)
             ->groupBy('type')->pluck('total', 'type')->toArray();
 
-        // منطق متطور لجلب آخر 7 أيام حتى لو كانت البيانات صفرية لضمان ظهور المخطط
         $days = collect(range(6, 0))->map(function ($i) {
             return now()->subDays($i)->format('Y-m-d');
         });

@@ -14,7 +14,9 @@
     .btn-approve:hover { background-color: #24b364 !important; box-shadow: 0 8px 25px -8px #28c76f; }
     .btn-reject { background-color: #ea5455 !important; border-color: #ea5455 !important; color: #fff !important; }
     .btn-reject:hover { background-color: #e03e3e !important; box-shadow: 0 8px 25px -8px #ea5455; }
-    
+    .btn-inactive { background-color: #8592a3 !important; border-color: #8592a3 !important; color: #fff !important; }
+    .btn-inactive:hover { background-color: #717d8c !important; box-shadow: 0 8px 25px -8px #8592a3; }
+
     .card { border-radius: 0.75rem; border: none; }
 </style>
 <?php $__env->stopSection(); ?>
@@ -158,34 +160,62 @@
             </div>
         </div>
 
-        
-        <?php if($businessAccount->status === \App\Enum\StatusEnum::PENDING): ?>
+            
             <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage-business-accounts')): ?> 
                 <div class="card bg-transparent shadow-none border-0 mt-4">
                     <div class="card-body p-0">
                         <div class="row g-3">
-                            <div class="col-12 col-md-6">
-                                <form action="<?php echo e(route('business-accounts.approve', $businessAccount->id)); ?>" method="POST">
-                                    <?php echo csrf_field(); ?>
-                                    <button type="submit" class="btn btn-approve w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm" 
-                                        onclick="return confirm('<?php echo e(__("business.approve_confirm_msg") ?? "Are you sure?"); ?>')">
-                                        <i class="bx bx-check-circle fs-4 me-2"></i> <?php echo e(__('business.approve_req')); ?>
+                            
+                            <?php if($businessAccount->status->value === \App\Enum\StatusEnum::PENDING->value): ?>
+                                <div class="col-12 col-md-6">
+                                    <form action="<?php echo e(route('business-accounts.update-status', $businessAccount->id)); ?>" method="POST">
+                                        <?php echo csrf_field(); ?>
+                                        <input type="hidden" name="status" value="approved">
+                                        <button type="submit" class="btn btn-approve w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm">
+                                            <i class="bx bx-check-circle fs-4 me-2"></i> <?php echo e(__('business.approve_req')); ?>
+
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <button type="button" class="btn btn-reject w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm" 
+                                        data-bs-toggle="modal" data-bs-target="#rejectModal">
+                                        <i class="bx bx-x-circle fs-4 me-2"></i> <?php echo e(__('business.reject_req')); ?>
 
                                     </button>
-                                </form>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <button type="button" class="btn btn-reject w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm" 
-                                    data-bs-toggle="modal" data-bs-target="#rejectModal">
-                                    <i class="bx bx-x-circle fs-4 me-2"></i> <?php echo e(__('business.reject_req')); ?>
+                                </div>
 
-                                </button>
-                            </div>
+                            
+                            <?php elseif($businessAccount->status->value === \App\Enum\StatusEnum::APPROVED->value): ?>
+                                <div class="col-12">
+                                    <form action="<?php echo e(route('business-accounts.update-status', $businessAccount->id)); ?>" method="POST">
+                                        <?php echo csrf_field(); ?>
+                                        <input type="hidden" name="status" value="inactive">
+                                        <button type="submit" class="btn btn-inactive w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm"
+                                            onclick="return confirm('<?php echo e(__("business.deactivate_confirm_msg")); ?>')">
+                                            <i class="bx bx-power-off fs-4 me-2"></i> <?php echo e(__('business.deactivate_acc')); ?>
+
+                                        </button>
+                                    </form>
+                                </div>
+
+                            
+                            <?php elseif($businessAccount->status->value === \App\Enum\StatusEnum::INACTIVE->value): ?>
+                                <div class="col-12">
+                                    <form action="<?php echo e(route('business-accounts.update-status', $businessAccount->id)); ?>" method="POST">
+                                        <?php echo csrf_field(); ?>
+                                        <input type="hidden" name="status" value="approved">
+                                        <button type="submit" class="btn btn-approve w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm">
+                                            <i class="bx bx-play-circle fs-4 me-2"></i> <?php echo e(__('business.activate_acc')); ?>
+
+                                        </button>
+                                    </form>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
             <?php endif; ?>
-        <?php endif; ?>
     </div>
 </div>
 
@@ -197,9 +227,10 @@
                 <h5 class="modal-title text-danger fw-bold fs-4"><?php echo e(__('business.reject_req')); ?></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="<?php echo e(route('business-accounts.reject', $businessAccount->id)); ?>" method="POST">
+            <form action="<?php echo e(route('business-accounts.update-status', $businessAccount->id)); ?>" method="POST">
                 <?php echo csrf_field(); ?>
                 <div class="modal-body p-4">
+                    <input type="hidden" name="status" value="rejected">
                     <label for="rejection_reason" class="form-label fw-bold mb-2"><?php echo e(__('business.rejection_reason')); ?></label>
                     <textarea id="rejection_reason" name="rejection_reason" class="form-control border-2" rows="5" 
                         placeholder="<?php echo e(__('business.rejection_placeholder')); ?>"></textarea>

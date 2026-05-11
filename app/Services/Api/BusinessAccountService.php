@@ -15,52 +15,25 @@ use Illuminate\Support\Facades\Notification;
 
 class BusinessAccountService
 {
-    public function step1(array $data)
-    {
-        return auth('api')->user()->businessAccounts()->updateOrCreate(
-            [
-                'status' => StatusEnum::DRAFT->value,
-            ],
-            [
-                'activity_id' => $data['activity_id'],
-                'current_step' => 1
-            ]
-        );
-    }
 
-    public function step2(array $data, BusinessAccount $businessAccount)
+    public function store(array $data)
     {
-        $this->ensureStep(1, $businessAccount);
-        $businessAccount->update([
-            'license_number' => $data['license_number'],
-            'name' => $data['name'],
-            'activities' => $data['activities'],
-            'details' => $data['details'],
-            'current_step' => 2
-        ]);
-    }
-
-    public function step3(array $data, BusinessAccount $businessAccount)
-    {
-        $this->ensureStep(2, $businessAccount);
-
         $this->validateLocation(
             $data['city_id'],
             $data['latitude'],
             $data['longitude']
         );
 
-        $businessAccount->update([
+        $businessAccount = auth('api')->user()->businessAccounts()->create([
+            'activity_id' => $data['activity_id'],
+            'license_number' => $data['license_number'],
+            'name' => $data['name'],
+            'activities' => $data['activities'],
+            'details' => $data['details'] ?? null,
             'city_id' => $data['city_id'],
             'latitude' => $data['latitude'],
             'longitude' => $data['longitude'],
-            'current_step' => 3
         ]);
-    }
-
-    public function step4(array $data, BusinessAccount $businessAccount)
-    {
-        $this->ensureStep(3, $businessAccount);
 
         if (!empty($data['documents'])) {
             foreach ($data['documents'] as $file) {
@@ -77,17 +50,6 @@ class BusinessAccountService
         // send notification
         $admins = Admin::permission('manage-business-accounts')->get();
         Notification::send($admins, new BusinessAccountRequestNotification($businessAccount));
-
-        $businessAccount->update([
-            'status' => StatusEnum::PENDING->value,
-            'current_step' => null
-        ]);
-    }
-
-    private function ensureStep($current_step, BusinessAccount $businessAccount)
-    {
-        if ($businessAccount->current_step < $current_step)
-            throw new AuthorizationException();
     }
 
     private function validateLocation($cityId, $lat, $lng)
@@ -126,12 +88,12 @@ class BusinessAccountService
         return $angle * $earthRadius;
     }
 
-    public function getMyAccounts($perPage = 10)
+    public function getMyAccounts($perPage = 15)
     {
         return auth('api')->user()->businessAccounts()
             ->with(['activity'])
             ->orderBy('created_at', 'desc')
-            ->paginate($perPage);
+            ->cursorPaginate($perPage);
     }
 
     public function getAccountDetails(BusinessAccount $businessAccount)

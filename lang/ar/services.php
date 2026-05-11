@@ -39,4 +39,11 @@ return [
     'no_description' => 'لا يوجد وصف متاح.',
     'no_media' => 'لم يتم رفع صورة أساسية.',
     'no_location' => 'لا توجد إحداثيات GPS متوفرة.',
+    'inactive_services' => 'خدمات موقوفة',
+    'total_services' => 'إجمالي الخدمات',
+
+    'deactivate' => 'تعطيل الخدمة',
+    'activate' => 'تنشيط الخدمة',
+    'confirm_deactivate' => 'هل أنت متأكد من تعطيل هذه الخدمة؟ لن تظهر للمستخدمين.',
+    'confirm_activate' => 'هل أنت متأكد من إعادة تنشيط الخدمة؟',
 ];

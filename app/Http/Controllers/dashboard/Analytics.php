@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Services\Api\DashboardService;
+use App\Services\Web\DashboardService;
 use Illuminate\Http\Request;
 
 class Analytics extends Controller

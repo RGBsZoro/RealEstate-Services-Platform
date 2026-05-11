@@ -4,6 +4,8 @@ namespace App\Services\Web;
 
 use App\Models\Admin;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class AdminService
 {
@@ -44,9 +46,6 @@ class AdminService
 
         if (isset($data['roles']))
             $admin->assignRole($data['roles']);
-
-        // if (isset($data['permissions']))
-        //     $admin->givePermissionTo($data['permissions']);
     }
 
     public function update(Admin $admin, array $data)
@@ -62,12 +61,28 @@ class AdminService
         } else {
             $admin->syncRoles([]);
         }
+    }
 
-        // if (isset($data['permissions'])) {
-        //     $admin->syncPermissions($data['permissions']);
-        // } else {
-        //     $admin->syncPermissions([]);
-        // }
+    public function rolesPermissions()
+    {
+        $roles = Role::where('name', '!=', 'super-admin')->get();
+        $permissions = Permission::all();
+
+        return ['roles' => $roles, 'permissions' => $permissions];
+    }
+
+    public function edit(Admin $admin)
+    {
+        $rolesPermissions = $this->rolesPermissions();
+        $adminRoles = $admin->roles->pluck('name')->toArray();
+        $adminDirectPermissions = $admin->getDirectPermissions()->pluck('name')->toArray();
+
+        return [
+            'roles' => $rolesPermissions['roles'],
+            'permissions' => $rolesPermissions['permissions'],
+            'adminRoles' => $adminRoles,
+            'adminDirectPermissions' => $adminDirectPermissions
+        ];
     }
 
     public function destroy(Admin $admin)

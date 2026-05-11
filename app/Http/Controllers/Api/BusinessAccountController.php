@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\StoreBusinessAccountRequest;
 use App\Http\Requests\Api\StoreBusinessAccountStep1Request;
 use App\Http\Requests\Api\StoreBusinessAccountStep2Request;
 use App\Http\Requests\Api\StoreBusinessAccountStep3Request;
@@ -18,27 +19,11 @@ class BusinessAccountController extends Controller
 {
     public function __construct(protected BusinessAccountService $businessAccount) {}
 
-    public function step1(StoreBusinessAccountStep1Request $request)
-    {
-        $this->businessAccount->step1($request->validated());
-        return successResponse();
-    }
 
-    public function step2(StoreBusinessAccountStep2Request $request, BusinessAccount $businessAccount)
+    public function store(StoreBusinessAccountRequest $request)
     {
-        $this->businessAccount->step2($request->validated(), $businessAccount);
-        return successResponse();
-    }
+        $this->businessAccount->store($request->validated());
 
-    public function step3(StoreBusinessAccountStep3Request $request, BusinessAccount $businessAccount)
-    {
-        $this->businessAccount->step3($request->validated(), $businessAccount);
-        return successResponse();
-    }
-
-    public function step4(StoreBusinessAccountStep4Request $request, BusinessAccount $businessAccount)
-    {
-        $this->businessAccount->step4($request->validated(), $businessAccount);
         return successResponse();
     }
 

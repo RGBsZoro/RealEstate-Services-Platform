@@ -66,12 +66,11 @@ class UserAndBusinessSeeder extends Seeder
                             'en' => $user->name . " " . $activity->getTranslation('name', 'en') . " Services",
                         ],
                         'details' => "خدمات احترافية مقدمة من قبل " . $user->name . " في مجال " . $activity->getTranslation('name', 'ar') . ". خبرة طويلة ومصداقية عالية في السوق السوري.",
-
+                        'activities' => 'We offer what you want.',
                         'latitude' => $randomCity->latitude + (rand(-100, 100) / 1000),
                         'longitude' => $randomCity->longitude + (rand(-100, 100) / 1000),
 
                         'status' => collect([StatusEnum::PENDING, StatusEnum::APPROVED, StatusEnum::REJECTED])->random(),
-                        'current_step' => null,
                     ]);
 
                     $this->addBusinessMedia($businessAccount, $i);
