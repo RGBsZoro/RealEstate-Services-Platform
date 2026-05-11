@@ -40,4 +40,11 @@ return [
     'no_description' => 'No description provided.',
     'no_media' => 'No main image uploaded.',
     'no_location' => 'No GPS coordinates provided.',
+    'inactive_services' => 'Inactive Services',
+    'total_services' => 'Total Services',
+
+    'deactivate' => 'Deactivate Service',
+    'activate' => 'Activate Service',
+    'confirm_deactivate' => 'Are you sure you want to deactivate this service? It will be hidden from users.',
+    'confirm_activate' => 'Are you sure you want to reactivate this service?',
 ];

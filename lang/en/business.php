@@ -59,4 +59,10 @@ return [
   'cancel' => 'Cancel',
   'not_provided' => 'Not Provided',
   'approve_confirm_msg' => 'Are you sure you want to approve this account?',
+
+  'status_updated_successfully' => 'Account status has been updated successfully.',
+  'deactivate_acc' => 'Deactivate Account',
+  'activate_acc' => 'Activate Account',
+  'deactivate_confirm_msg' => 'Are you sure you want to deactivate this account? This will also deactivate all related services.',
+
 ];

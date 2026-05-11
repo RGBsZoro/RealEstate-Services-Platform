@@ -43,7 +43,6 @@ class ServiceSeeder extends Seeder
                     'price_usd' => $isSale ? rand(50000, 250000) : rand(200, 1500),
                     'latitude' => $account->latitude + (rand(-100, 100) / 20000),
                     'longitude' => $account->longitude + (rand(-100, 100) / 20000),
-                    'current_step' => null,
                     'status' => rand(1, 10) > 2 ? StatusEnum::APPROVED : StatusEnum::PENDING,
                 ]);
 

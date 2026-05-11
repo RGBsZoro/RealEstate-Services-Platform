@@ -4,6 +4,6 @@ return [
     'pending' => 'Pending Review',
     'approved' => 'Approved',
     'rejected' => 'Rejected',
-    'draft' => 'Draft',
     'resolved' => 'Resolved',
+    'inactive' => 'Inactive'
 ];

@@ -22,9 +22,9 @@ class DatabaseSeeder extends Seeder
             ActivitySeeder::class,
             CategorySeeder::class,
             UserAndBusinessSeeder::class,
-            ServiceSeeder::class,
-            SliderSeeder::class,
-            ServiceReportSeeder::class,
+            // ServiceSeeder::class,
+            // SliderSeeder::class,
+            // ServiceReportSeeder::class,
         ]);
     }
 }

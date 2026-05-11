@@ -6,6 +6,7 @@ use App\Rules\UniqueBusinessAccountPerActivity;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 
 class UpdateBusinessAccountRequest extends FormRequest
 {
@@ -27,8 +28,14 @@ class UpdateBusinessAccountRequest extends FormRequest
         return [
             'activity_id' => ['sometimes', 'integer', 'exists:activities,id', new UniqueBusinessAccountPerActivity($this->businessAccount->id)],
             'name' => ['sometimes', 'array'],
-            'name.ar' => ['sometimes', 'string'],
-            'name.en' => ['sometimes', 'string'],
+            'name.ar' => [
+                'required',
+                Rule::unique('business_accounts', 'name->ar')->whereNot('status', 'rejected')
+            ],
+            'name.en' => [
+                'required',
+                Rule::unique('business_accounts', 'name->en')->whereNot('status', 'rejected')
+            ],
             'license_number' => ['sometimes', 'string', 'max:255'],
             'activities' => ['sometimes', 'string'],
             'details' => ['nullable', 'string'],

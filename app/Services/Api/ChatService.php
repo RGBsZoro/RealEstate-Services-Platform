@@ -24,7 +24,7 @@ class ChatService
                 $query->where('sender_id', '!=', $userId)->where('is_read', false);
             }])
             ->orderByDesc('last_message_at')
-            ->paginate(15);
+            ->cursorPaginate(15);
     }
 
     public function sendMessage(int $userId, array $data)
@@ -66,6 +66,6 @@ class ChatService
 
         return $conversation->messages()
             ->orderByDesc('created_at')
-            ->paginate(30);
+            ->cursorPaginate(30);
     }
 }

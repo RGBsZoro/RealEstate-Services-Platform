@@ -36,6 +36,6 @@ class ReviewService
 
     public function allReviewsOnService(Service $service)
     {
-        return $service->reviews()->with('user')->latest()->paginate(15);
+        return $service->reviews()->with('user')->latest()->cursorPaginate(15);
     }
 }

@@ -148,8 +148,7 @@ Route::group(['middleware' => ['auth:web']], function () {
         Route::get('business-accounts/{businessAccount}', [BusinessAccountController::class, 'show'])->name('business-accounts.show');
     });
     Route::group(['middleware' => ['permission:manage-business-accounts']], function () {
-        Route::post('business-accounts/{businessAccount}/approve', [BusinessAccountController::class, 'approve'])->name('business-accounts.approve');
-        Route::post('business-accounts/{businessAccount}/reject', [BusinessAccountController::class, 'reject'])->name('business-accounts.reject');
+        Route::post('business-accounts/update/{businessAccount}', [BusinessAccountController::class, 'updateStatus'])->name('business-accounts.update-status');
     });
 
 
@@ -196,8 +195,7 @@ Route::group(['middleware' => ['auth:web']], function () {
             Route::get('/{service}', [ServiceController::class, 'show'])->name('services.show');
         });
         Route::group(['middleware' => ['permission:manage-services']], function () {
-            Route::post('/{service}/approve', [ServiceController::class, 'approve'])->name('services.approve');
-            Route::post('/{service}/reject', [ServiceController::class, 'reject'])->name('services.reject');
+            Route::post('update/{service}', [ServiceController::class, 'updateStatus'])->name('services.update-status');
         });
     });
 

@@ -34,18 +34,14 @@ class ServiceRequestController extends Controller
         return successResponse();
     }
 
-    public function sentRequest()
+    public function index()
     {
-        $sentRequest = $this->serviceRequest->sentRequest();
+        $requests = $this->serviceRequest->getAllMyRequests();
 
-        return successResponse(ServiceRequestResource::collection($sentRequest));
-    }
-
-    public function recivedRequest()
-    {
-        $recivedRequest = $this->serviceRequest->recivedRequest();
-
-        return successResponse(ServiceRequestResource::collection($recivedRequest));
+        return successResponse([
+            'sent_requests'     => ServiceRequestResource::collection($requests['sent'])->response()->getData(true),
+            'received_requests' => ServiceRequestResource::collection($requests['received'])->response()->getData(true),
+        ]);
     }
 
     public function destroy(ServiceRequest $serviceRequest)

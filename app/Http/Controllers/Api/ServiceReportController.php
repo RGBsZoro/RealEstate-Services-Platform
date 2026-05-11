@@ -5,9 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreServiceReportRequest;
 use App\Models\Service;
-use App\ServiceReportService;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\HttpCache\Store;
+use App\Services\ServiceReportService;
 
 class ServiceReportController extends Controller
 {

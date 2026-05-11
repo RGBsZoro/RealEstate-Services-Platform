@@ -25,6 +25,9 @@ class StoreServiceRequestOrder extends FormRequest
      */
     public function rules(): array
     {
+        $service = Service::find($this->service_id);
+        $isQuantityRequired = $service && !is_null($service->quantity);
+
         return [
 
             'requester_business_account_id' => [
@@ -38,7 +41,7 @@ class StoreServiceRequestOrder extends FormRequest
             'service_id' => ['required', 'exists:services,id,status,approved', new IsMyService()],
 
             'required_at' => 'required|date|after_or_equal:today',
-            'quantity'    => ['required', 'integer', 'min:1', new CheckServiceQuantity($this->service_id)],
+            'quantity'    => [$isQuantityRequired ? 'required' : 'nullable', 'integer', 'min:1', $service ? new CheckServiceQuantity($service) : 'nullable'],
             'details'     => 'nullable|string|max:2000',
 
         ];

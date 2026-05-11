@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Web\UpdateStatusRequest;
 use App\Models\Service;
 use App\Services\Web\ServiceManagementService;
 use Illuminate\Http\Request;
@@ -25,15 +26,10 @@ class ServiceController extends Controller
         return view('dashboard.services.show', compact('service'));
     }
 
-    public function approve(Service $service)
+    public function updateStatus(UpdateStatusRequest $request, Service $service)
     {
-        $this->service->actions($service, 'approved');
-        return redirect()->route('services.index');
-    }
+        $this->service->actions($service, $request->status);
 
-    public function reject(Service $service)
-    {
-        $this->service->actions($service, 'rejected');
         return redirect()->route('services.index');
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enum\StatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,22 +16,20 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
 
-            $table->foreignId('activity_id')->nullable()->constrained();
+            $table->foreignId('activity_id')->constrained();
 
-            $table->string('license_number')->nullable();
-            $table->json('name')->nullable();
+            $table->string('license_number');
+            $table->json('name');
 
-            $table->text('activities')->nullable();
+            $table->text('activities');
             $table->text('details')->nullable();
 
-            $table->foreignId('city_id')->nullable()->constrained();
-            $table->decimal('latitude', 10, 7)->nullable();
-            $table->decimal('longitude', 10, 7)->nullable();
+            $table->foreignId('city_id')->constrained();
+            $table->decimal('latitude', 10, 7);
+            $table->decimal('longitude', 10, 7);
 
-            $table->string('status')->default('draft');
+            $table->string('status')->default(StatusEnum::PENDING->value);
 
-            $table->integer('current_step')->nullable()->default(1);
-            $table->unique(['user_id', 'activity_id']);
             $table->softDeletes();
             $table->timestamps();
         });

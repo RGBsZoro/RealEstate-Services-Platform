@@ -6,20 +6,21 @@ use App\Enum\StatusEnum;
 use App\Models\BusinessAccount;
 use App\Models\City;
 use App\Notifications\BusinessAccountStatusNotification;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class BusinessAccountService
 {
     public function index(array $data)
     {
-        $query = BusinessAccount::with(['user', 'activity', 'city'])
-            ->where('status', '!=', StatusEnum::DRAFT->value);
+        $query = BusinessAccount::with(['user', 'activity', 'city']);
 
 
         $stats = [
             'pending'  => (clone $query)->where('status', StatusEnum::PENDING->value)->count(),
             'approved' => (clone $query)->where('status', StatusEnum::APPROVED->value)->count(),
             'rejected' => (clone $query)->where('status', StatusEnum::REJECTED->value)->count(),
+            'inactive' => (clone $query)->where('status', StatusEnum::INACTIVE->value)->count(),
         ];
 
         if (!empty($data['status'])) {
@@ -49,14 +50,41 @@ class BusinessAccountService
 
     public function actions(BusinessAccount $businessAccount, $newStatus)
     {
-        if ($businessAccount->status->value != 'pending')
+        $currentStatus = $businessAccount->status->value;
+
+        if ($newStatus === StatusEnum::INACTIVE->value && $currentStatus !== StatusEnum::APPROVED->value) {
             throw ValidationException::withMessages([
-                'status' => ['Only pending services can be approved or rejected.']
+                'status' => ['Only approved accounts can be deactivated.']
             ]);
+        }
+
+        if (in_array($newStatus, [StatusEnum::APPROVED->value, StatusEnum::REJECTED->value]) && $currentStatus !== StatusEnum::PENDING->value && $currentStatus !== StatusEnum::INACTIVE->value) {
+            throw ValidationException::withMessages([
+                'status' => ['Only pending accounts can be approved or rejected.']
+            ]);
+        }
+
+        DB::transaction(function () use ($businessAccount, $newStatus) {
+            $businessAccount->update(['status' => $newStatus]);
+
+            if ($newStatus === StatusEnum::INACTIVE->value) {
+                $businessAccount->services()
+                    ->where('status', StatusEnum::APPROVED->value)
+                    ->update(['status' => StatusEnum::INACTIVE->value]);
+
+                $businessAccount->services()
+                    ->where('status', StatusEnum::PENDING->value)
+                    ->update(['status' => StatusEnum::REJECTED->value]);
+            }
+
+            if ($newStatus === StatusEnum::APPROVED->value) {
+                $businessAccount->services()
+                    ->where('status', StatusEnum::INACTIVE->value)
+                    ->update(['status' => StatusEnum::APPROVED->value]);
+            }
+        });
 
         // send notification
         $businessAccount->user->notify(new BusinessAccountStatusNotification($businessAccount));
-
-        $businessAccount->update(['status' => $newStatus]);
     }
 }

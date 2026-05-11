@@ -28,9 +28,15 @@ class AdminController extends Controller
 
     public function create()
     {
-        $roles = Role::where('name', '!=', 'super-admin')->get();
-        $permissions = Permission::all();
-        return view('dashboard.admins.create', compact('roles', 'permissions'));
+        $data = $this->admin->rolesPermissions();
+
+        return view(
+            'dashboard.admins.create',
+            [
+                'roles' => $data['roles'],
+                'permissions' => $data['permissions']
+            ]
+        );
     }
 
     public function store(StoreAdminRequest $request)
@@ -42,14 +48,18 @@ class AdminController extends Controller
 
     public function edit(Admin $admin)
     {
-        $roles = Role::where('name', '!=', 'super-admin')->get();
-        $permissions = Permission::all();
+        $data = $this->admin->edit($admin);
 
-        $adminRoles = $admin->roles->pluck('name')->toArray();
-
-        $adminDirectPermissions = $admin->getDirectPermissions()->pluck('name')->toArray();
-
-        return view('dashboard.admins.edit', compact('admin', 'roles', 'permissions', 'adminRoles', 'adminDirectPermissions'));
+        return view(
+            'dashboard.admins.edit',
+            [
+                'admin' => $admin,
+                'roles' => $data['roles'],
+                'permissions' => $data['permissions'],
+                'adminRoles' => $data['adminRoles'],
+                'adminDirectPermissions' => $data['adminDirectPermissions']
+            ]
+        );
     }
 
     public function update(UpdateAdminRequest $reqeust, Admin $admin)

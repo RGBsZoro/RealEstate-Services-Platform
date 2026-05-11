@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Web\UpdateStatusRequest;
 use App\Models\BusinessAccount;
 use App\Models\City;
 use App\Services\Web\BusinessAccountService;
@@ -27,15 +28,10 @@ class BusinessAccountController extends Controller
         return view('dashboard.business-accounts.show', compact('businessAccount'));
     }
 
-    public function approve(BusinessAccount $businessAccount)
+    public function updateStatus(UpdateStatusRequest $request, BusinessAccount $businessAccount)
     {
-        $this->businessAccount->actions($businessAccount, 'approved');
-        return redirect()->route('business-accounts.index');
-    }
+        $this->businessAccount->actions($businessAccount, $request->status);
 
-    public function reject(BusinessAccount $businessAccount)
-    {
-        $this->businessAccount->actions($businessAccount, 'rejected');
         return redirect()->route('business-accounts.index');
     }
 }
