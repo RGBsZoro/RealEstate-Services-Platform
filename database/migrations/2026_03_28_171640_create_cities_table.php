@@ -17,6 +17,7 @@ return new class extends Migration
             $table->decimal('latitude', 10, 7);
             $table->decimal('longitude', 10, 7);
             $table->decimal('radius', 10, 2);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

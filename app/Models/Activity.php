@@ -9,11 +9,12 @@ use Spatie\Translatable\HasTranslations;
 
 class Activity extends Model implements HasMedia
 {
-    use HasTranslations , InteractsWithMedia;
+    use HasTranslations, InteractsWithMedia;
     public array $translatable = ['name'];
 
     protected $fillable = [
         'name',
+        'is_active',
     ];
 
     public function businessAccounts()

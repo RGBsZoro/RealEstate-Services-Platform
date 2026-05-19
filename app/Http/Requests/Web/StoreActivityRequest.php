@@ -23,6 +23,7 @@ class StoreActivityRequest extends FormRequest
     {
         return [
             'name' => 'required|array',
+            'is_active' => 'required|boolean',
             'name.en' => 'required|string|max:255|unique:activities,name->en',
             'name.ar' => 'required|string|max:255|unique:activities,name->ar',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',

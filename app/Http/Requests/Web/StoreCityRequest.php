@@ -25,6 +25,7 @@ class StoreCityRequest extends FormRequest
             'name' => 'required|array',
             'name.en' => 'required|string|max:255|unique:cities,name->en',
             'name.ar' => 'required|string|max:255|unique:cities,name->ar',
+            'is_active' => 'required|boolean',
             'latitude' => ['required', 'regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
             'longitude' => ['required', 'regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],
             'radius' => 'required|numeric|min:0.5',

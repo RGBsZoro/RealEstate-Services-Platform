@@ -15,14 +15,14 @@ class ActivityService
             $search = $data['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('name->en', 'like', "%{$search}%")
-                ->orWhere('name->ar', 'like', "%{$search}%");
+                    ->orWhere('name->ar', 'like', "%{$search}%");
             });
         }
 
         $stats = [
-            'total_activities'  => (clone $query)->count(),           
+            'total_activities'  => (clone $query)->count(),
             'active_usage'      => (clone $query)->has('businessAccounts')->count(),
-            'total_assignments' => cache()->remember('total_business_assignments', 3600, function() {
+            'total_assignments' => cache()->remember('total_business_assignments', 3600, function () {
                 return DB::table('business_accounts')->count();
             }),
         ];
@@ -37,13 +37,19 @@ class ActivityService
 
     public function store(array $data)
     {
-        $activity = Activity::create(['name' => $data['name']]);
+        $activity = Activity::create([
+            'name' => $data['name'],
+            'is_active' => $data['is_active'] ?? true,
+        ]);
         $activity->addMedia($data['image'])->toMediaCollection('Activities');
     }
 
     public function update(Activity $activity, array $data)
     {
-        $activity->update(['name' => $data['name']]);
+        $activity->update([
+            'name' => $data['name'],
+            'is_active' => $data['is_active'],
+        ]);
 
         if (isset($data['image'])) {
             $activity->clearMediaCollection('Activities');

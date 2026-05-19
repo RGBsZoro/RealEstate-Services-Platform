@@ -10,6 +10,32 @@
     .avatar-initial { font-weight: 600; }
     .border-dashed { border-style: dashed !important; }
     .stat-card:hover { transform: translateY(-3px); }
+
+    /* تحسينات الجداول وحالات الـ Empty State */
+    .table-custom-hover tbody tr { transition: all 0.2s ease-in-out; }
+    .table-custom-hover tbody tr:hover { transform: scale(1.01); z-index: 10; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+    
+    .empty-state-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 220px;
+        text-align: center;
+        padding: 2rem;
+    }
+    .empty-state-icon {
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background-color: rgba(105, 108, 255, 0.08); /* لون أزرق خفيف وشفاف */
+        color: #696cff;
+        margin-bottom: 1rem;
+    }
+    .empty-state-icon i { font-size: 2.25rem; }
 </style>
 @endpush
 
@@ -121,38 +147,60 @@
 </div>
 
 <div class="row mb-4">
+    {{-- جدول حسابات الأعمال --}}
     @can('manage-business-accounts')
     <div class="col-md-6 mb-4 mb-md-0">
         <div class="card h-100">
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between align-items-center border-bottom pb-3">
                 <h5 class="card-title mb-0">{{ __('dashboard.pending_business_accounts') }}</h5>
-                <a href="{{ route('business-accounts.index') }}" class="btn btn-sm btn-label-primary">{{ __('dashboard.view_all') }}</a>
+                {{-- زر View All بتصميم واضح --}}
+                <a href="{{ route('business-accounts.index') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="bx bx-list-ul me-1"></i> {{ __('dashboard.view_all') }}
+                </a>
             </div>
-            <div class="table-responsive text-nowrap">
-                <table class="table table-hover">
+            <div class="table-responsive text-nowrap" style="min-height: 350px;">
+                <table class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
                             <th>{{ __('dashboard.name_user') }}</th>
                             <th>{{ __('dashboard.date') }}</th>
-                            <th>{{ __('dashboard.action') }}</th>
+                            <th class="text-center">{{ __('dashboard.action') }}</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach($stats['latest_pending_accounts'] as $account)
+                    <tbody class="table-border-bottom-0">
+                        @forelse($stats['latest_pending_accounts'] as $account)
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <div class="avatar avatar-sm me-3"><img src="{{ $account->getFirstMediaUrl('images') ?: asset('assets/img/avatars/1.png') }}" class="rounded-circle"></div>
+                                    <div class="avatar avatar-sm me-3">
+                                        <img src="{{ $account->getFirstMediaUrl('images') ?: asset('assets/img/avatars/1.png') }}" class="rounded-circle object-fit-cover">
+                                    </div>
                                     <div class="d-flex flex-column">
-                                        <span class="fw-medium small">{{ $account->getTranslation('name', app()->getLocale()) }}</span>
-                                        <small class="text-muted" style="font-size: 0.7rem;">{{ $account->user->name }}</small>
+                                        <span class="fw-medium text-heading small">{{ $account->getTranslation('name', app()->getLocale()) }}</span>
+                                        <small class="text-muted" style="font-size: 0.75rem;">{{ $account->user->name }}</small>
                                     </div>
                                 </div>
                             </td>
-                            <td><span class="small text-muted">{{ $account->created_at->format('Y-m-d') }}</span></td>
-                            <td><a href="{{ route('business-accounts.show', $account->id) }}" class="btn btn-icon btn-sm btn-outline-secondary"><i class="bx bx-show"></i></a></td>
+                            <td><span class="badge bg-label-secondary small">{{ $account->created_at->format('Y-m-d') }}</span></td>
+                            <td class="text-center">
+                                <a href="{{ route('business-accounts.show', $account->id) }}" class="btn btn-icon btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="{{ __('dashboard.view_details') }}">
+                                    <i class="bx bx-show"></i>
+                                </a>
+                            </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="3" class="p-0 border-0">
+                                <div class="empty-state-container">
+                                    <div class="empty-state-icon">
+                                        <i class="bx bx-buildings"></i>
+                                    </div>
+                                    <h6 class="fw-bold mb-1">{{ __('dashboard.empty_accounts_title') }}</h6>
+                                    <p class="text-muted small mb-0">{{ __('dashboard.empty_accounts_desc') }}</p>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -160,32 +208,62 @@
     </div>
     @endcan
 
+    {{-- جدول الخدمات/العقارات (تم توحيد التنسيق مع الجدول السابق) --}}
     @can('manage-services')
     <div class="col-md-6">
         <div class="card h-100">
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="card-header d-flex justify-content-between align-items-center border-bottom pb-3">
                 <h5 class="card-title mb-0">{{ __('dashboard.latest_pending_services') }}</h5>
+                {{-- زر View All إضافي للخدمات --}}
+                <a href="{{ route('services.index') }}" class="btn btn-outline-primary btn-sm">
+                    <i class="bx bx-list-ul me-1"></i> {{ __('dashboard.view_all') }}
+                </a>
             </div>
-            <div class="table-responsive">
-                <table class="table table-borderless table-sm align-middle">
-                    <thead>
-                        <tr class="text-muted small border-bottom">
-                            <th class="ps-4">{{ __('dashboard.property') }}</th>
-                            <th class="text-end pe-4">{{ __('dashboard.price') }}</th>
+            <div class="table-responsive text-nowrap" style="min-height: 350px;">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>{{ __('dashboard.property') }}</th>
+                            <th>{{ __('dashboard.price') }}</th>
+                            <th class="text-center">{{ __('dashboard.action') }}</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach($stats['latest_pending_services'] as $service)
-                        <tr class="border-bottom">
-                            <td class="py-3 ps-4">
+                    <tbody class="table-border-bottom-0">
+                        @forelse($stats['latest_pending_services'] as $service)
+                        <tr>
+                            <td>
                                 <div class="d-flex align-items-center">
-                                    <img src="{{ $service->getFirstMediaUrl('main_image_service') ?: asset('assets/img/elements/1.jpg') }}" width="40" height="40" class="rounded me-3 object-fit-cover">
-                                    <span class="fw-medium small">{{ $service->title }}</span>
+                                    <div class="avatar avatar-sm me-3">
+                                        <img src="{{ $service->getFirstMediaUrl('main_image_service') ?: asset('assets/img/elements/1.jpg') }}" class="rounded-3 object-fit-cover">
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <span class="fw-medium text-heading small">{{ Str::limit($service->title, 25) }}</span>
+                                        <small class="text-muted" style="font-size: 0.75rem;">{{ $service->created_at->diffForHumans() }}</small>
+                                    </div>
                                 </div>
                             </td>
-                            <td class="text-end pe-4 fw-bold text-dark">{{ number_format($service->price_syp) }}</td>
+                            <td>
+                                <span class="fw-semibold text-primary">{{ number_format($service->price_syp) }}</span>
+                            </td>
+                            <td class="text-center">
+                                <a href="{{ route('services.show', $service->id) }}" class="btn btn-icon btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="{{ __('dashboard.view_details') }}">
+                                    <i class="bx bx-show"></i>
+                                </a>
+                            </td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="3" class="p-0 border-0">
+                                <div class="empty-state-container">
+                                    <div class="empty-state-icon">
+                                        <i class="bx bx-home-smile"></i>
+                                    </div>
+                                    <h6 class="fw-bold mb-1">{{ __('dashboard.empty_services_title') }}</h6>
+                                    <p class="text-muted small mb-0">{{ __('dashboard.empty_services_desc') }}</p>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

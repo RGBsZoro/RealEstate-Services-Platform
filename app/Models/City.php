@@ -14,7 +14,8 @@ class City extends Model
         'name',
         'latitude',
         'longitude',
-        'radius'
+        'radius',
+        'is_active',
     ];
 
     public function businessAccounts()

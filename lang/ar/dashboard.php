@@ -34,4 +34,10 @@ return [
     'activities' => 'الأنشطة التجارية',
     'categories' => 'التصنيفات المتاحة',
     'sliders' => 'الصور المتحركة (Sliders)',
+    'view_details' => 'عرض التفاصيل',
+    'empty_accounts_title' => 'لا يوجد حسابات معلقة',
+    'empty_accounts_desc' => 'جميع طلبات الانضمام تم التعامل معها ولا يوجد طلبات جديدة.',
+
+    'empty_services_title' => 'لا يوجد عروض معلقة',
+    'empty_services_desc' => 'لم يتم إضافة أي عقارات أو خدمات جديدة بانتظار الموافقة.',
 ];

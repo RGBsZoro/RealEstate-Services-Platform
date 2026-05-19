@@ -2,6 +2,7 @@
 
 <?php $__env->startSection('content'); ?>
 
+
 <div class="row g-4 mb-4">
     <div class="col-sm-6 col-xl-4">
         <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(105, 108, 255, 0.08);">
@@ -52,17 +53,12 @@
     </div>
 </div>
 
+
 <div class="card rounded-4 overflow-hidden">
-    <div class="card-header border-bottom d-flex flex-column flex-md-row align-items-md-center justify-content-between pb-3 gap-3">
-        <h5 class="card-title mb-0"><?php echo e(__('activities.management_header')); ?></h5>
+    <div class="card-header border-bottom">
         
-        <div class="d-flex flex-column flex-sm-row align-items-center gap-3">
-            <form action="<?php echo e(route('activities.index')); ?>" method="GET" class="d-flex w-100">
-                <div class="input-group input-group-merge">
-                    <span class="input-group-text"><i class="bx bx-search"></i></span>
-                    <input type="text" name="search" value="<?php echo e(request('search')); ?>" class="form-control" placeholder="<?php echo e(__('activities.search_placeholder')); ?>">
-                </div>
-            </form>
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h5 class="card-title mb-0"><?php echo e(__('activities.management_header')); ?></h5>
             <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('create-activities')): ?>
                 <a href="<?php echo e(route('activities.create')); ?>" class="btn btn-primary text-nowrap rounded-pill">
                     <i class="bx bx-plus-circle me-1"></i> <?php echo e(__('activities.add_activity')); ?>
@@ -70,15 +66,28 @@
                 </a>
             <?php endif; ?>
         </div>
+        
+        
+        <form action="<?php echo e(route('activities.index')); ?>" method="GET" id="activities-filter-form">
+            <div class="row">
+                <div class="col-12">
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text text-muted"><i class="bx bx-search"></i></span>
+                        <input type="text" name="search" id="search-activity-input" value="<?php echo e(request('search')); ?>" class="form-control" placeholder="<?php echo e(__('activities.search_placeholder')); ?>" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 
     <div class="table-responsive text-nowrap">
         <table class="table table-hover mb-0">
             <thead class="table-light text-uppercase">
                 <tr>
-                    <th style="width: 40%"><?php echo e(__('activities.column_name')); ?></th>
-                    <th style="width: 25%"><?php echo e(__('activities.column_accounts')); ?></th>
-                    <th style="width: 20%"><?php echo e(__('activities.column_date')); ?></th>
+                    <th style="width: 35%"><?php echo e(__('activities.column_name')); ?></th>
+                    <th style="width: 20%"><?php echo e(__('activities.column_accounts')); ?></th>
+                    <th style="width: 15%"><?php echo e(__('activities.column_status')); ?></th>
+                    <th style="width: 15%"><?php echo e(__('activities.column_date')); ?></th>
                     <?php if(auth()->user()->can('edit-activities') || auth()->user()->can('delete-activities')): ?>
                         <th style="width: 15%" class="text-center"><?php echo e(__('activities.column_actions')); ?></th>
                     <?php endif; ?>
@@ -101,7 +110,7 @@
                             
                             <div class="d-flex flex-column">
                                 <span class="fw-bold text-heading"><?php echo e($activity->getTranslation('name', 'en')); ?></span>
-                                <small class="text-muted"><?php echo e($activity->getTranslation('name', 'ar')); ?></small>
+                                <small class="text-muted small"><?php echo e($activity->getTranslation('name', 'ar')); ?></small>
                             </div>
                         </div>
                     </td>
@@ -114,6 +123,14 @@
 
                             </span>
                         </div>
+                    </td>
+
+                    <td>
+                        <?php if($activity->is_active): ?>
+                            <span class="badge bg-label-success rounded-pill"><?php echo e(__('activities.status_enabled')); ?></span>
+                        <?php else: ?>
+                            <span class="badge bg-label-secondary rounded-pill"><?php echo e(__('activities.status_disabled')); ?></span>
+                        <?php endif; ?>
                     </td>
 
                     <td>
@@ -132,9 +149,9 @@
 
                                         </a>
                                     <?php endif; ?>
-                                    <div class="dropdown-divider"></div>
                                     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('delete-activities')): ?>
-                                        <form action="<?php echo e(route('activities.destroy', $activity->id)); ?>" method="POST" onsubmit="return confirm('<?php echo e(__('activities.delete_confirmation')); ?>')">
+                                        <div class="dropdown-divider"></div>
+                                        <form action="<?php echo e(route('activities.destroy', $activity->id)); ?>" method="POST" class="delete-activity-form">
                                             <?php echo csrf_field(); ?>
                                             <?php echo method_field('DELETE'); ?>
                                             <button type="submit" class="dropdown-item text-danger">
@@ -150,7 +167,7 @@
                 </tr>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <tr>
-                    <td colspan="4" class="text-center py-5">
+                    <td colspan="5" class="text-center py-5">
                         <div class="text-muted">
                             <i class="bx bx-search-alt-2 mb-2" style="font-size: 3rem;"></i>
                             <p class="mb-0"><?php echo e(__('activities.no_results')); ?></p>
@@ -169,11 +186,47 @@
 
         </div>
         <div class="pagination-wrapper">
-            <?php echo e($activities->links('pagination::bootstrap-5')); ?>
+            <?php echo e($activities->appends(request()->query())->links('pagination::bootstrap-5')); ?>
 
         </div>
     </div>
     <?php endif; ?>
 </div>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('page-script'); ?>
+<script>
+    window.onload = function() {
+        if (window.jQuery) {
+            $(function() {
+                const $form = $('#activities-filter-form');
+                let searchActivitiesTimeout;
+
+                // 1. البحث الفوري أثناء الكتابة (Debounce 500ms)
+                $(document).on('input', '#search-activity-input', function() {
+                    clearTimeout(searchActivitiesTimeout);
+                    
+                    searchActivitiesTimeout = setTimeout(function() {
+                        $form.submit();
+                    }, 500);
+                });
+
+                // 2. منع الـ Submit العشوائي عند ضغط Enter داخل حقل البحث
+                $form.on('submit', function(e) {
+                    if (e.originalEvent && e.originalEvent.submitter === undefined) {
+                        e.preventDefault();
+                    }
+                });
+
+                // 3. تأكيد الحذف
+                $(document).on('submit', '.delete-activity-form', function(e) {
+                    if(!confirm("<?php echo e(__('activities.delete_confirmation')); ?>")) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        }
+    };
+</script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts/contentNavbarLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\RealEstate-Services-Platform\resources\views/dashboard/activities/index.blade.php ENDPATH**/ ?>

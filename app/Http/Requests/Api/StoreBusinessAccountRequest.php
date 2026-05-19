@@ -38,7 +38,7 @@ class StoreBusinessAccountRequest extends FormRequest
             ],
             'activities' => 'required',
             'details' => 'nullable',
-            'city_id' => 'required|exists:cities,id',
+            'city_id' => 'required|exists:cities,id,is_active,1',
             'latitude' => 'required',
             'longitude' => 'required',
             'documents' => 'nullable|array',

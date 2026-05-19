@@ -34,4 +34,9 @@ return [
     'activities' => 'Business Activities',
     'categories' => 'Available Categories',
     'sliders' => 'Sliders',
+    'view_details' => 'View Details',
+    'empty_accounts_title' => 'No Pending Accounts',
+    'empty_accounts_desc' => 'All join requests have been processed. No new requests at the moment.',
+    'empty_services_title' => 'No Pending Properties',
+    'empty_services_desc' => 'No new properties or services have been added awaiting approval.',
 ];

@@ -26,6 +26,7 @@ class UpdateActivityRequest extends FormRequest
             'name.en' => 'sometimes|string|max:255|unique:activities,name->en,' . $this->activity->id,
             'name.ar' => 'sometimes|string|max:255|unique:activities,name->ar,' . $this->activity->id,
             'image' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'is_active' => 'sometimes|boolean',
 
         ];
     }

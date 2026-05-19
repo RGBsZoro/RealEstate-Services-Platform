@@ -178,7 +178,7 @@ class ServiceManagementService
 
     public function deleteMedia(Service $service, int $mediaId)
     {
-        Gate::allows('update', $service) || throw new AuthorizationException();
+        Gate::authorize('update', $service);
 
         $media = $service->media()->where('collection_name', 'gallery_services')->findOrFail($mediaId);
 
@@ -187,7 +187,7 @@ class ServiceManagementService
 
     public function deleteService(Service $service)
     {
-        Gate::allows('delete', $service) || throw new AuthorizationException();
+        Gate::authorize('delete', $service);
 
         $service->delete();
     }

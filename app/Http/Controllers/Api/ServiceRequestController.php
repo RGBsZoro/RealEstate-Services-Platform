@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\StoreServiceRequestOrder;
+use App\Http\Requests\Api\UpdateServiceRequestOrderRequest;
 use App\Http\Resources\ServiceRequestResource;
 use App\Models\Service;
 use App\Models\ServiceRequest;
@@ -14,9 +15,43 @@ class ServiceRequestController extends Controller
 {
     public function __construct(protected ServiceRequestService $serviceRequest) {}
 
+    public function index()
+    {
+        $requests = $this->serviceRequest->getAllMyRequests();
+
+        return successResponse([
+            'sent_requests'     => ServiceRequestResource::collection($requests['sent'])->response()->getData(true),
+            'received_requests' => ServiceRequestResource::collection($requests['received'])->response()->getData(true),
+        ]);
+    }
+
+    public function getBookedTimeSlots(Service $service)
+    {
+        $timeSlots = $this->serviceRequest->getBookedTimeSlots($service);
+
+        return successResponse($timeSlots);
+    }
+
+    public function getMyCalendarEvents(Request $request)
+    {
+        $startDate = $request->query('start_date', now()->startOfMonth()->toDateString());
+        $endDate = $request->query('end_date', now()->endOfMonth()->toDateString());
+
+        $calender = $this->serviceRequest->getMyCalendarEvents($startDate, $endDate);
+
+        return successResponse($calender);
+    }
+
     public function store(StoreServiceRequestOrder $request)
     {
         $this->serviceRequest->store($request->validated());
+
+        return successResponse();
+    }
+
+    public function update(UpdateServiceRequestOrderRequest $request, ServiceRequest $serviceRequest)
+    {
+        $this->serviceRequest->update($request->validated(), $serviceRequest);
 
         return successResponse();
     }
@@ -34,19 +69,10 @@ class ServiceRequestController extends Controller
         return successResponse();
     }
 
-    public function index()
-    {
-        $requests = $this->serviceRequest->getAllMyRequests();
 
-        return successResponse([
-            'sent_requests'     => ServiceRequestResource::collection($requests['sent'])->response()->getData(true),
-            'received_requests' => ServiceRequestResource::collection($requests['received'])->response()->getData(true),
-        ]);
-    }
-
-    public function destroy(ServiceRequest $serviceRequest)
+    public function cancel(ServiceRequest $serviceRequest)
     {
-        $this->serviceRequest->destroy($serviceRequest);
+        $this->serviceRequest->cancel($serviceRequest);
 
         return successResponse();
     }

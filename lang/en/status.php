@@ -5,5 +5,8 @@ return [
     'approved' => 'Approved',
     'rejected' => 'Rejected',
     'resolved' => 'Resolved',
-    'inactive' => 'Inactive'
+    'inactive' => 'Inactive',
+    'completed' => 'Completed',
+    'cancelled' => 'cancelled',
+    'expired' => 'expired'
 ];

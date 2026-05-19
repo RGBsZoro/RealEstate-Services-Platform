@@ -37,7 +37,8 @@ class CityService
       'name' => $data['name'],
       'longitude' => $data['longitude'],
       'latitude' => $data['latitude'],
-      'radius' => $data['radius']
+      'radius' => $data['radius'],
+      'is_active' => $data['is_active'] ?? true,
     ]);
   }
 
@@ -47,7 +48,8 @@ class CityService
       'name' => $data['name'],
       'longitude' => $data['longitude'],
       'latitude' => $data['latitude'],
-      'radius' => $data['radius']
+      'radius' => $data['radius'],
+      'is_active' => $data['is_active'],
     ]);
   }
 

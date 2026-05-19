@@ -17,15 +17,21 @@ class MessageSent implements ShouldBroadcastNow
 
 
     public $message;
-
-    public function __construct($message)
+    public $senderId;
+    public $receiverId;
+    public function __construct($message, $senderId, $receiverId)
     {
         $this->message = $message;
+        $this->senderId = $senderId;
+        $this->receiverId = $receiverId;
     }
 
     public function broadcastOn()
     {
-        return new PrivateChannel('chat');
+        $ids = [$this->senderId, $this->receiverId];
+        sort($ids);
+
+        return new PrivateChannel('chat.' . $ids[0] . '.' . $ids[1]);
     }
 
     public function broadcastAs()
