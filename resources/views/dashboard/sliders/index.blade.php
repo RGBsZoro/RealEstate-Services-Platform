@@ -25,7 +25,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <h6 class="mb-1 fw-bold">{{ __('sliders.live_now') }}</h6>
-                        <h4 class="mb-0 fw-black">{{ $stats['live'] }}</h4>
+                        <h4 class="mb-0 fw-black" id="stats-live">{{ $stats['live'] }}</h4>
                     </div>
                     <span class="badge bg-success rounded-circle p-2"><i class="bx bx-broadcast fs-3"></i></span>
                 </div>
@@ -47,14 +47,17 @@
     </div>
 </div>
 
-{{-- الفلترة والبحث --}}
+{{-- الفلترة والبحث الفوري --}}
 <div class="card mb-4 rounded-4 overflow-hidden shadow-sm">
     <div class="card-header border-bottom d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
         <h5 class="mb-0 fw-bold">{{ __('sliders.management_card') }}</h5>
         <div class="d-flex flex-column flex-sm-row gap-3 w-100 w-md-auto">
-            <form action="{{ route('sliders.index') }}" method="GET" class="d-flex gap-2 flex-grow-1">
-                <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="{{ __('sliders.search_placeholder') }}">
-                <select name="status" class="form-select" onchange="this.form.submit()">
+            
+            {{-- إضافة id للفورم للتحكم به برمجياً عبر الـ JS --}}
+            <form action="{{ route('sliders.index') }}" method="GET" id="sliders-filter-form" class="d-flex gap-2 flex-grow-1">
+                <input type="text" name="search" id="search-slider-input" value="{{ request('search') }}" class="form-control" placeholder="{{ __('sliders.search_placeholder') }}" autocomplete="off">
+                
+                <select name="status" class="form-select immediate-select">
                     <option value="">{{ __('sliders.all_statuses') }}</option>
                     <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ __('sliders.live_now') }}</option>
                     <option value="scheduled" {{ request('status') == 'scheduled' ? 'selected' : '' }}>{{ __('sliders.scheduled') }}</option>
@@ -62,7 +65,6 @@
                 </select>
             </form>
             
-            {{-- فحص صلاحية الإنشاء --}}
             @can('create-sliders')
             <a href="{{ route('sliders.create') }}" class="btn btn-primary text-nowrap">
                 <i class="bx bx-plus me-1"></i> {{ __('sliders.add_new') }}
@@ -77,25 +79,25 @@
     @forelse($sliders as $slider)
     <div class="col-md-6 col-lg-4">
         <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden position-relative hover-shadow-lg transition">
-            <div class="position-absolute top-0 start-0 m-3 z-index-2">
+            
+            <div class="position-absolute top-0 start-0 m-3 z-index-2 status-badge-container" data-slider-id="{{ $slider->id }}">
                 @php
-                    // نوحد التاريخ للصيغة YYYY-MM-DD لتجنب أي مشاكل متعلقة بالساعات
                     $todayDate = now()->toDateString();
                     $startDate = $slider->start_date ? $slider->start_date->toDateString() : null;
                     $endDate   = $slider->end_date ? $slider->end_date->toDateString() : null;
                 @endphp
 
                 @if($endDate && $endDate < $todayDate)
-                    <span class="badge bg-danger rounded-pill shadow-sm">{{ __('sliders.expired') }}</span>
+                    <span class="badge bg-danger rounded-pill shadow-sm text-badge">{{ __('sliders.expired') }}</span>
                     
                 @elseif($startDate && $startDate > $todayDate)
-                    <span class="badge bg-warning rounded-pill shadow-sm">{{ __('sliders.scheduled') }}</span>
+                    <span class="badge bg-warning rounded-pill shadow-sm text-badge">{{ __('sliders.scheduled') }}</span>
                     
                 @elseif($slider->is_active)
-                    <span class="badge bg-success rounded-pill shadow-sm">{{ __('sliders.active') }}</span>
+                    <span class="badge bg-success rounded-pill shadow-sm text-badge">{{ __('sliders.active') }}</span>
                     
                 @else
-                    <span class="badge bg-secondary rounded-pill shadow-sm">{{ __('sliders.not_active') }}</span>
+                    <span class="badge bg-secondary rounded-pill shadow-sm text-badge">{{ __('sliders.not_active') }}</span>
                 @endif
             </div>
 
@@ -112,11 +114,13 @@
                         {{ $slider->title ?: __('sliders.no_title')}}
                     </h5>
                     
-                    {{-- فحص صلاحية التعديل لتغيير الحالة --}}
                     @can('edit-sliders')
                     <div class="form-check form-switch">
                         <input class="form-check-input status-toggle" type="checkbox" 
-                               data-id="{{ $slider->id }}" {{ $slider->is_active ? 'checked' : '' }}>
+                               data-id="{{ $slider->id }}" 
+                               data-is-scheduled="{{ ($startDate && $startDate > $todayDate) ? 'true' : 'false' }}"
+                               data-is-expired="{{ ($endDate && $endDate < $todayDate) ? 'true' : 'false' }}"
+                               {{ $slider->is_active ? 'checked' : '' }}>
                     </div>
                     @endcan
                 </div>
@@ -146,7 +150,6 @@
                         @endif
                     </span>
 
-                    {{-- فحص صلاحيات التعديل أو الحذف لإظهار القائمة --}}
                     @if(auth()->user()->can('edit-sliders') || auth()->user()->can('delete-sliders'))
                     <div class="dropdown">
                         <button class="btn p-0" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded fs-4"></i></button>
@@ -217,17 +220,60 @@
     window.onload = function() {
         if (window.jQuery) {
             $(function() {
-                // تحديث الحالة AJAX (فقط إذا كان للمستخدم صلاحية التعديل، والـ HTML يضمن ذلك بعدم وجود الـ Checkbox أصلاً)
+                const $form = $('#sliders-filter-form');
+                let searchSlidersTimeout;
+
+                // 1. الفلترة الفورية عند تغيير القائمة المنسدلة (الحالة)
+                $(document).on('change', '.immediate-select', function() {
+                    $form.submit();
+                });
+
+                // 2. الفلترة الفورية أثناء الكتابة في حقل البحث (Debounce 500ms)
+                $(document).on('input', '#search-slider-input', function() {
+                    clearTimeout(searchSlidersTimeout);
+                    
+                    searchSlidersTimeout = setTimeout(function() {
+                        $form.submit();
+                    }, 500);
+                });
+
+                // تحديث الحالة AJAX الأصلي
                 $(document).on('change', '.status-toggle', function() {
                     const checkbox = $(this);
                     const id = checkbox.data('id');
                     const isActive = checkbox.is(':checked');
+                    const isScheduled = checkbox.data('is-scheduled');
+                    const isExpired = checkbox.data('is-expired');
+                    
+                    const badgeContainer = $(`.status-badge-container[data-slider-id="${id}"]`);
                     const url = "{{ url('sliders') }}/" + id + "/toggle-status";
+
+                    if (isExpired === true) {
+                        badgeContainer.html(`<span class="badge bg-danger rounded-pill shadow-sm">${"{{ __('sliders.expired') }}"}</span>`);
+                    } else if (isActive) {
+                        if (isScheduled === true) {
+                            badgeContainer.html(`<span class="badge bg-warning rounded-pill shadow-sm">${"{{ __('sliders.scheduled') }}"}</span>`);
+                        } else {
+                            badgeContainer.html(`<span class="badge bg-success rounded-pill shadow-sm">${"{{ __('sliders.active') }}"}</span>`);
+                        }
+                    } else {
+                        badgeContainer.html(`<span class="badge bg-secondary rounded-pill shadow-sm">${"{{ __('sliders.not_active') }}"}</span>`);
+                    }
 
                     $.ajax({
                         url: url,
                         type: 'POST',
                         data: { _token: '{{ csrf_token() }}' },
+                        success: function(response) {
+                            if(response && response.live_count !== undefined) {
+                                $('#stats-live').text(response.live_count);
+                            }
+                        },
+                        error: function() {
+                            checkbox.prop('checked', !isActive);
+                            alert('شيء ما تعطل! لم يتم تحديث الحالة بنجاح.');
+                            window.location.reload();
+                        }
                     });
                 });
 

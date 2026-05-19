@@ -6,27 +6,29 @@ use App\Models\Service;
 use App\Rules\CheckServiceQuantity;
 use App\Rules\IsMyService;
 use App\Rules\ServiceNotBooked;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
-class StoreServiceRequestOrder extends FormRequest
+class UpdateServiceRequestOrderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return Gate::allows('update', $this->serviceRequest);
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
-        $service = Service::find($this->service_id);
+        $service = Service::find($this->serviceRequest->service_id);
         $isQuantityRequired = $service && !is_null($service->quantity);
 
         return [
@@ -39,9 +41,7 @@ class StoreServiceRequestOrder extends FormRequest
                 }),
             ],
 
-            'service_id' => ['required', 'exists:services,id,status,approved', $service ? new IsMyService($service) : 'nullable'],
-
-            'required_at' => ['required', 'date_format:Y-m-d H:i', 'after_or_equal:today', $service ? new ServiceNotBooked($service) : 'nullable'],
+            'required_at' => ['required', 'date_format:Y-m-d H:i', 'after_or_equal:today', $service ? new ServiceNotBooked($service, $this->serviceRequest->id) : 'nullable'],
             'quantity'    => [$isQuantityRequired ? 'required' : 'nullable', 'integer', 'min:1', $service ? new CheckServiceQuantity($service) : 'nullable'],
             'details'     => 'nullable|string|max:2000',
 

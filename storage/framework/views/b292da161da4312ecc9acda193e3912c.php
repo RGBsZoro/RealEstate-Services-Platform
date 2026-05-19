@@ -3,7 +3,6 @@
 <?php $__env->startSection('content'); ?>
 
 
-
 <div class="row g-4 mb-4">
     
     <div class="col-sm-6 col-xl-3">
@@ -70,16 +69,18 @@
 <div class="card rounded-4 overflow-hidden shadow-sm">
     <div class="card-header border-bottom">
         <h5 class="card-title mb-3"><?php echo e(__('services.management_card')); ?></h5>
-        <form action="<?php echo e(route('services.index')); ?>" method="GET">
+        
+        
+        <form action="<?php echo e(route('services.index')); ?>" method="GET" id="services-filter-form">
             <div class="row g-3">
                 <div class="col-12 col-md-4">
                     <div class="input-group input-group-merge">
                         <span class="input-group-text"><i class="bx bx-search"></i></span>
-                        <input type="text" name="search" value="<?php echo e(request('search')); ?>" class="form-control" placeholder="<?php echo e(__('services.search_placeholder')); ?>">
+                        <input type="text" name="search" id="search-service-input" value="<?php echo e(request('search')); ?>" class="form-control" placeholder="<?php echo e(__('services.search_placeholder')); ?>" autocomplete="off">
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <select name="status" class="form-select text-capitalize">
+                <div class="col-6 col-md-4">
+                    <select name="status" class="form-select text-capitalize immediate-select">
                         <option value=""><?php echo e(__('services.all_statuses')); ?></option>
                         <option value="pending" <?php echo e(request('status') == 'pending' ? 'selected' : ''); ?>><?php echo e(__('status.pending')); ?></option>
                         <option value="approved" <?php echo e(request('status') == 'approved' ? 'selected' : ''); ?>><?php echo e(__('status.approved')); ?></option>
@@ -87,15 +88,12 @@
                         <option value="rejected" <?php echo e(request('status') == 'rejected' ? 'selected' : ''); ?>><?php echo e(__('status.rejected')); ?></option>
                     </select>
                 </div>
-                <div class="col-6 col-md-3">
-                    <select name="type" class="form-select">
+                <div class="col-6 col-md-4">
+                    <select name="type" class="form-select immediate-select">
                         <option value=""><?php echo e(__('services.all_types')); ?></option>
                         <option value="sale" <?php echo e(request('type') == 'sale' ? 'selected' : ''); ?>><?php echo e(__('services.sale')); ?></option>
                         <option value="rent" <?php echo e(request('type') == 'rent' ? 'selected' : ''); ?>><?php echo e(__('services.rent')); ?></option>
                     </select>
-                </div>
-                <div class="col-12 col-md-2">
-                    <button type="submit" class="btn btn-primary w-100 rounded-pill"><?php echo e(__('services.filter_btn')); ?></button>
                 </div>
             </div>
         </form>
@@ -198,5 +196,32 @@
     </div>
     <?php endif; ?>
 </div>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('page-script'); ?>
+<script>
+    window.onload = function() {
+        if (window.jQuery) {
+            $(function() {
+                const $form = $('#services-filter-form');
+                let searchFilterTimeout;
+
+                // 1. الفلترة الفورية بمجرد تغيير القوائم المنسدلة (الحالة / نوع الخدمة)
+                $(document).on('change', '.immediate-select', function() {
+                    $form.submit();
+                });
+
+                // 2. الفلترة الفورية أثناء الكتابة في حقل البحث بعد التوقف بـ 500 ملي ثانية
+                $(document).on('input', '#search-service-input', function() {
+                    clearTimeout(searchFilterTimeout);
+                    
+                    searchFilterTimeout = setTimeout(function() {
+                        $form.submit();
+                    }, 500);
+                });
+            });
+        }
+    };
+</script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts/contentNavbarLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\RealEstate-Services-Platform\resources\views/dashboard/services/index.blade.php ENDPATH**/ ?>

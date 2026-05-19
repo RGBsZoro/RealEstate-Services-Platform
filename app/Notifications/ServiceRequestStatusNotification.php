@@ -13,11 +13,14 @@ class ServiceRequestStatusNotification extends Notification implements ShouldQue
 
     public int $tries = 3;
     public int $backoff = 60;
-    protected ServiceRequest $serviceRequest;
 
-    public function __construct(ServiceRequest $serviceRequest)
+    protected ServiceRequest $serviceRequest;
+    protected string $action;
+
+    public function __construct(ServiceRequest $serviceRequest, string $action = 'created')
     {
         $this->serviceRequest = $serviceRequest;
+        $this->action = $action;
     }
 
     public function via(object $notifiable): array
@@ -27,18 +30,47 @@ class ServiceRequestStatusNotification extends Notification implements ShouldQue
 
     protected function getNotificationData(): array
     {
-        return [
-            'title_key' => 'notifications.new_request_title',
-            'body_key'  => 'notifications.new_request_body',
-            'body_args' => [
-                'service' => $this->serviceRequest->service->title ?? 'N/A',
-                'user'    => $this->serviceRequest->user->name ?? 'Guest',
+        $serviceTitle = $this->serviceRequest->service->title ?? 'N/A';
+        $userName = $this->serviceRequest->user->name ?? 'Guest';
+
+        return match ($this->action) {
+            'created' => [
+                'title_key' => 'notifications.request_created_title',
+                'body_key'  => 'notifications.request_created_body',
+                'body_args' => ['user' => $userName, 'service' => $serviceTitle],
+                'icon'      => 'bx-list-plus',
+                'type'      => 'new_incoming_request',
             ],
-            'icon' => 'bx-list-plus',
-            'id'   => (string) $this->serviceRequest->id,
-            'type' => 'new_incoming_request',
-            'url'  => route('service-requests.show', $this->serviceRequest->id),
-        ];
+            'updated' => [
+                'title_key' => 'notifications.request_updated_title',
+                'body_key'  => 'notifications.request_updated_body',
+                'body_args' => ['user' => $userName, 'service' => $serviceTitle],
+                'icon'      => 'bx-edit',
+                'type'      => 'request_updated',
+            ],
+            'approved' => [
+                'title_key' => 'notifications.request_approved_title',
+                'body_key'  => 'notifications.request_approved_body',
+                'body_args' => ['service' => $serviceTitle],
+                'icon'      => 'bx-check-circle',
+                'type'      => 'request_approved',
+            ],
+            'rejected' => [
+                'title_key' => 'notifications.request_rejected_title',
+                'body_key'  => 'notifications.request_rejected_body',
+                'body_args' => ['service' => $serviceTitle],
+                'icon'      => 'bx-x-circle',
+                'type'      => 'request_rejected',
+            ],
+            'cancelled' => [
+                'title_key' => 'notifications.request_cancelled_title',
+                'body_key'  => 'notifications.request_cancelled_body',
+                'body_args' => ['user' => $userName, 'service' => $serviceTitle],
+                'icon'      => 'bx-minus-circle',
+                'type'      => 'request_cancelled',
+            ],
+            default => throw new \InvalidArgumentException("Invalid notification action: {$this->action}"),
+        };
     }
 
     public function toDatabase(object $notifiable): array
@@ -51,11 +83,11 @@ class ServiceRequestStatusNotification extends Notification implements ShouldQue
             'body_args' => $data['body_args'],
             'icon'      => $data['icon'],
             'data'      => [
-                'id'         => $data['id'],
+                'id'         => (string) $this->serviceRequest->id,
                 'service_id' => $this->serviceRequest->service_id,
                 'user_id'    => $this->serviceRequest->user_id,
                 'type'       => $data['type'],
-                'url'        => $data['url'],
+                'url'        => route('service-requests.show', $this->serviceRequest->id),
             ],
         ];
     }

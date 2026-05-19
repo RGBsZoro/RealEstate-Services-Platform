@@ -117,6 +117,33 @@ unset($__errorArgs, $__bag); ?>
                         </div>
                     </div>
 
+                    
+                    <div class="row mb-6">
+                        <label class="col-sm-2 col-form-label" for="is_active"><?php echo e(__('activities.label_status')); ?></label>
+                        <div class="col-sm-10 d-flex align-items-center">
+                            <div class="form-check form-switch mb-0">
+                                <input type="hidden" name="is_active" value="0">
+                                <input class="form-check-input <?php $__errorArgs = ['is_active'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" type="checkbox" name="is_active" id="is_active" value="1" <?php echo e(old('is_active', $activity->is_active) == '1' ? 'checked' : ''); ?>>
+                                <label class="form-check-label" for="is_active"><?php echo e(__('activities.status_active')); ?></label>
+                            </div>
+                            <?php $__errorArgs = ['is_active'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="invalid-feedback d-block small mt-1"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                        </div>
+                    </div>
+
                     <hr class="my-6">
                     
                     

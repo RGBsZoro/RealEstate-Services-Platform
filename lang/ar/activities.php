@@ -8,20 +8,20 @@ return [
     'management_header' => 'إدارة الأنشطة',
     'search_placeholder' => 'بحث عن نشاط...',
     'add_activity' => 'إضافة نشاط',
-    
+
     // الجدول
     'column_name' => 'اسم النشاط',
     'column_accounts' => 'الحسابات التجارية',
     'column_date' => 'تاريخ الإنشاء',
     'column_actions' => 'العمليات',
-    
+
     // الإجراءات
     'edit' => 'تعديل',
     'remove' => 'حذف',
     'accounts_count' => 'حساب(ات)',
     'delete_confirmation' => 'تنبيه: حذف هذا النشاط قد يؤثر على الحسابات المرتبطة به. هل تريد الاستمرار؟',
     'no_results' => 'لم يتم العثور على أنشطة تجارية.',
-    
+
     // الترقيم (Pagination)
     'showing' => 'عرض',
     'to' => 'إلى',
@@ -45,4 +45,11 @@ return [
     'current_image' => 'الصورة الحالية',
     'image_constraints' => 'الصيغ المسموحة JPG أو PNG أو SVG. الحد الأقصى 2 ميجابايت.',
     'update_button' => 'تحديث النشاط',
+
+    'label_status'  => 'حالة التفعيل',
+    'status_active' => 'نشط ومتاح في النظام',
+
+    'column_status'   => 'الحالة',
+    'status_enabled'  => 'نشط',
+    'status_disabled' => 'غير نشط',
 ];

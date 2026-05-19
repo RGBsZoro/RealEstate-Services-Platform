@@ -56,16 +56,18 @@
             </a>
         </div>
 
-        <form action="<?php echo e(route('categories.sub.index')); ?>" method="GET">
-            <div class="row g-2">
-                <div class="col-12 col-md-4">
+        <form action="<?php echo e(route('categories.sub.index')); ?>" method="GET" id="sub-categories-filter-form">
+            <div class="row g-3">
+                
+                <div class="col-12 col-md-6">
                     <div class="input-group input-group-merge">
                         <span class="input-group-text"><i class="bx bx-search"></i></span>
-                        <input type="text" name="search" value="<?php echo e(request('search')); ?>" class="form-control" placeholder="<?php echo e(__('categories.search_placeholder')); ?>">
+                        <input type="text" name="search" id="search-sub-category-input" value="<?php echo e(request('search')); ?>" class="form-control" placeholder="<?php echo e(__('categories.search_placeholder')); ?>" autocomplete="off">
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <select name="parent_id" class="form-select">
+                
+                <div class="col-12 col-sm-6 col-md-3">
+                    <select name="parent_id" class="form-select immediate-sub-select">
                         <option value=""><?php echo e(__('categories.all_parents')); ?></option>
                         <?php $__currentLoopData = $mainCategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $main): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <option value="<?php echo e($main->id); ?>" <?php echo e(request('parent_id') == $main->id ? 'selected' : ''); ?>>
@@ -75,15 +77,13 @@
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </select>
                 </div>
-                <div class="col-6 col-md-3">
-                    <select name="status" class="form-select">
+                
+                <div class="col-12 col-sm-6 col-md-3">
+                    <select name="status" class="form-select immediate-sub-select">
                         <option value=""><?php echo e(__('categories.all_statuses')); ?></option>
                         <option value="1" <?php echo e(request('status') === '1' ? 'selected' : ''); ?>><?php echo e(__('categories.active_only')); ?></option>
                         <option value="0" <?php echo e(request('status') === '0' ? 'selected' : ''); ?>><?php echo e(__('categories.inactive_only')); ?></option>
                     </select>
-                </div>
-                <div class="col-12 col-md-2">
-                    <button type="submit" class="btn btn-outline-primary w-100 rounded-pill"><?php echo e(__('categories.filter_btn')); ?></button>
                 </div>
             </div>
         </form>
@@ -141,6 +141,7 @@
                     </td>
                     <td><span class="text-muted small"><?php echo e($category->created_at->format('M d, Y')); ?></span></td>
 
+                    <?php if(auth()->user()->can('edit-categories') || auth()->user()->can('delete-categories') || auth()->user()->can('view-dynamic-fields')): ?>
                     <td class="text-center">
                         <div class="dropdown">
                             <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded fs-4"></i></button>
@@ -153,7 +154,7 @@
                                 <?php endif; ?>
                                 <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('delete-categories')): ?>
                                     <div class="dropdown-divider"></div>
-                                    <form action="<?php echo e(route('categories.destroy', $category->id)); ?>" method="POST" onsubmit="return confirm('<?php echo e(__('categories.confirm_delete')); ?>')">
+                                    <form action="<?php echo e(route('categories.destroy', $category->id)); ?>" method="POST" class="delete-sub-category-form">
                                         <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
                                         <button type="submit" class="dropdown-item text-danger"><i class="bx bx-trash me-2"></i> <?php echo e(__('categories.delete')); ?></button>
                                     </form>
@@ -161,6 +162,7 @@
                             </div>
                         </div>
                     </td>
+                    <?php endif; ?>
                 </tr>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <tr>
@@ -177,12 +179,49 @@
     <?php if($categories->hasPages() || $categories->total() > 0): ?>
     <div class="card-footer border-top d-flex align-items-center justify-content-between py-3">
         <span class="text-muted small">
-            <?php echo e(__('categories.showing_count', ['first' => $categories->firstItem(), 'last' => $categories->lastItem(), 'total' => $categories->total()])); ?>
+            <?php echo e(__('categories.showing_count', ['first' => $categories->firstItem() ?? 0, 'last' => $categories->lastItem() ?? 0, 'total' => $categories->total()])); ?>
 
         </span>
-        <div><?php echo e($categories->links('pagination::bootstrap-5')); ?></div>
+        <div>
+            <?php echo e($categories->appends(request()->query())->links('pagination::bootstrap-5')); ?>
+
+        </div>
     </div>
     <?php endif; ?>
 </div>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('page-script'); ?>
+<script>
+    window.onload = function() {
+        if (window.jQuery) {
+            $(function() {
+                const $form = $('#sub-categories-filter-form');
+                let searchSubCategoriesTimeout;
+
+                // 1. الفلترة الفورية بمجرد تغيير خيارات الـ Select
+                $(document).on('change', '.immediate-sub-select', function() {
+                    $form.submit();
+                });
+
+                // 2. البحث التلقائي الفوري أثناء الكتابة بخاصية الـ Debounce (500ms)
+                $(document).on('input', '#search-sub-category-input', function() {
+                    clearTimeout(searchSubCategoriesTimeout);
+                    
+                    searchSubCategoriesTimeout = setTimeout(function() {
+                        $form.submit();
+                    }, 500);
+                });
+
+                // 3. تأكيد الحذف
+                $(document).on('submit', '.delete-sub-category-form', function(e) {
+                    if(!confirm("<?php echo e(__('categories.confirm_delete')); ?>")) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        }
+    };
+</script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts/contentNavbarLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\RealEstate-Services-Platform\resources\views/dashboard/categories/sub/index.blade.php ENDPATH**/ ?>

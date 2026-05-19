@@ -3,7 +3,6 @@
 <?php $__env->startSection('content'); ?>
 
 
-
 <div class="row g-4 mb-4">
     
     <div class="col-sm-6 col-xl-3">
@@ -76,16 +75,18 @@
 <div class="card rounded-4 overflow-hidden">
     <div class="card-header border-bottom">
         <h5 class="card-title mb-3"><?php echo e(__('business.management_card')); ?></h5>
-        <form action="<?php echo e(route('business-accounts.index')); ?>" method="GET">
+        
+        
+        <form action="<?php echo e(route('business-accounts.index')); ?>" method="GET" id="filter-form">
             <div class="row g-3">
                 <div class="col-12 col-md-4">
                     <div class="input-group input-group-merge">
                         <span class="input-group-text"><i class="bx bx-search"></i></span>
-                        <input type="text" name="search" value="<?php echo e(request('search')); ?>" class="form-control" placeholder="<?php echo e(__('business.search_placeholder')); ?>">
+                        <input type="text" name="search" id="search-input" value="<?php echo e(request('search')); ?>" class="form-control" placeholder="<?php echo e(__('business.search_placeholder')); ?>" autocomplete="off">
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <select name="status" class="form-select text-capitalize">
+                <div class="col-6 col-md-4">
+                    <select name="status" class="form-select text-capitalize filter-select">
                         <option value=""><?php echo e(__('business.all_statuses')); ?></option>
                         <option value="pending" <?php echo e(request('status') == 'pending' ? 'selected' : ''); ?>><?php echo e(__('status.pending')); ?></option>
                         <option value="approved" <?php echo e(request('status') == 'approved' ? 'selected' : ''); ?>><?php echo e(__('status.approved')); ?></option>
@@ -93,8 +94,8 @@
                         <option value="rejected" <?php echo e(request('status') == 'rejected' ? 'selected' : ''); ?>><?php echo e(__('status.rejected')); ?></option>
                     </select>
                 </div>
-                <div class="col-6 col-md-3">
-                    <select name="city_id" class="form-select">
+                <div class="col-6 col-md-4">
+                    <select name="city_id" class="form-select filter-select">
                         <option value=""><?php echo e(__('business.all_cities')); ?></option>
                         <?php $__currentLoopData = $cities; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $city): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <option value="<?php echo e($city->id); ?>" <?php echo e(request('city_id') == $city->id ? 'selected' : ''); ?>>
@@ -103,12 +104,6 @@
                             </option>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </select>
-                </div>
-                <div class="col-12 col-md-2">
-                    <button type="submit" class="btn btn-outline-primary w-100 rounded-pill">
-                        <?php echo e(__('business.filter_btn')); ?>
-
-                    </button>
                 </div>
             </div>
         </form>
@@ -195,5 +190,33 @@
     </div>
     <?php endif; ?>
 </div>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('page-script'); ?>
+<script>
+    window.onload = function() {
+        if (window.jQuery) {
+            $(function() {
+                const $form = $('#filter-form');
+                let searchTimeout;
+
+                // 1. الفلترة الفورية عند تغيير القوائم المنسدلة (الحالة أو المدينة)
+                $(document).on('change', '.filter-select', function() {
+                    $form.submit();
+                });
+
+                // 2. الفلترة الفورية الذكية عند الكتابة داخل حقل البحث (Debounce 500ms)
+                $(document).on('input', '#search-input', function() {
+                    clearTimeout(searchTimeout);
+                    
+                    // ننتظر 500 ملي ثانية بعد توقف المستخدم عن الضغط على الأزرار قبل إرسال الفورم
+                    searchTimeout = setTimeout(function() {
+                        $form.submit();
+                    }, 500); 
+                });
+            });
+        }
+    };
+</script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts/contentNavbarLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\RealEstate-Services-Platform\resources\views/dashboard/business-accounts/index.blade.php ENDPATH**/ ?>

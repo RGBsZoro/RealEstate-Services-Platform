@@ -57,16 +57,18 @@
             </a>
         </div>
 
-        <form action="{{ route('categories.sub.index') }}" method="GET">
-            <div class="row g-2">
-                <div class="col-12 col-md-4">
+        <form action="{{ route('categories.sub.index') }}" method="GET" id="sub-categories-filter-form">
+            <div class="row g-3">
+                {{-- حقل البحث يستحوذ على نصف مساحة السطر كاملاً --}}
+                <div class="col-12 col-md-6">
                     <div class="input-group input-group-merge">
                         <span class="input-group-text"><i class="bx bx-search"></i></span>
-                        <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="{{ __('categories.search_placeholder') }}">
+                        <input type="text" name="search" id="search-sub-category-input" value="{{ request('search') }}" class="form-control" placeholder="{{ __('categories.search_placeholder') }}" autocomplete="off">
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <select name="parent_id" class="form-select">
+                {{-- قائمة الأقسام الأب تأخذ الربع --}}
+                <div class="col-12 col-sm-6 col-md-3">
+                    <select name="parent_id" class="form-select immediate-sub-select">
                         <option value="">{{ __('categories.all_parents') }}</option>
                         @foreach($mainCategories as $main)
                             <option value="{{ $main->id }}" {{ request('parent_id') == $main->id ? 'selected' : '' }}>
@@ -75,15 +77,13 @@
                         @endforeach
                     </select>
                 </div>
-                <div class="col-6 col-md-3">
-                    <select name="status" class="form-select">
+                {{-- قائمة الحالة تأخذ الربع المتبقي ليقفل السطر تماماً --}}
+                <div class="col-12 col-sm-6 col-md-3">
+                    <select name="status" class="form-select immediate-sub-select">
                         <option value="">{{ __('categories.all_statuses') }}</option>
                         <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>{{ __('categories.active_only') }}</option>
                         <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>{{ __('categories.inactive_only') }}</option>
                     </select>
-                </div>
-                <div class="col-12 col-md-2">
-                    <button type="submit" class="btn btn-outline-primary w-100 rounded-pill">{{ __('categories.filter_btn') }}</button>
                 </div>
             </div>
         </form>
@@ -138,6 +138,7 @@
                     </td>
                     <td><span class="text-muted small">{{ $category->created_at->format('M d, Y') }}</span></td>
 
+                    @if(auth()->user()->can('edit-categories') || auth()->user()->can('delete-categories') || auth()->user()->can('view-dynamic-fields'))
                     <td class="text-center">
                         <div class="dropdown">
                             <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded fs-4"></i></button>
@@ -150,7 +151,7 @@
                                 @endcan
                                 @can('delete-categories')
                                     <div class="dropdown-divider"></div>
-                                    <form action="{{ route('categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('{{ __('categories.confirm_delete') }}')">
+                                    <form action="{{ route('categories.destroy', $category->id) }}" method="POST" class="delete-sub-category-form">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="dropdown-item text-danger"><i class="bx bx-trash me-2"></i> {{ __('categories.delete') }}</button>
                                     </form>
@@ -158,6 +159,7 @@
                             </div>
                         </div>
                     </td>
+                    @endif
                 </tr>
                 @empty
                 <tr>
@@ -174,10 +176,46 @@
     @if($categories->hasPages() || $categories->total() > 0)
     <div class="card-footer border-top d-flex align-items-center justify-content-between py-3">
         <span class="text-muted small">
-            {{ __('categories.showing_count', ['first' => $categories->firstItem(), 'last' => $categories->lastItem(), 'total' => $categories->total()]) }}
+            {{ __('categories.showing_count', ['first' => $categories->firstItem() ?? 0, 'last' => $categories->lastItem() ?? 0, 'total' => $categories->total()]) }}
         </span>
-        <div>{{ $categories->links('pagination::bootstrap-5') }}</div>
+        <div>
+            {{ $categories->appends(request()->query())->links('pagination::bootstrap-5') }}
+        </div>
     </div>
     @endif
 </div>
+@endsection
+
+@section('page-script')
+<script>
+    window.onload = function() {
+        if (window.jQuery) {
+            $(function() {
+                const $form = $('#sub-categories-filter-form');
+                let searchSubCategoriesTimeout;
+
+                // 1. الفلترة الفورية بمجرد تغيير خيارات الـ Select
+                $(document).on('change', '.immediate-sub-select', function() {
+                    $form.submit();
+                });
+
+                // 2. البحث التلقائي الفوري أثناء الكتابة بخاصية الـ Debounce (500ms)
+                $(document).on('input', '#search-sub-category-input', function() {
+                    clearTimeout(searchSubCategoriesTimeout);
+                    
+                    searchSubCategoriesTimeout = setTimeout(function() {
+                        $form.submit();
+                    }, 500);
+                });
+
+                // 3. تأكيد الحذف
+                $(document).on('submit', '.delete-sub-category-form', function(e) {
+                    if(!confirm("{{ __('categories.confirm_delete') }}")) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        }
+    };
+</script>
 @endsection

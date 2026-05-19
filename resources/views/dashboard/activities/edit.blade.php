@@ -78,6 +78,19 @@
                         </div>
                     </div>
 
+                    {{-- Activation Status --}}
+                    <div class="row mb-6">
+                        <label class="col-sm-2 col-form-label" for="is_active">{{ __('activities.label_status') }}</label>
+                        <div class="col-sm-10 d-flex align-items-center">
+                            <div class="form-check form-switch mb-0">
+                                <input type="hidden" name="is_active" value="0">
+                                <input class="form-check-input @error('is_active') is-invalid @enderror" type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', $activity->is_active) == '1' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="is_active">{{ __('activities.status_active') }}</label>
+                            </div>
+                            @error('is_active') <div class="invalid-feedback d-block small mt-1">{{ $message }}</div> @enderror
+                        </div>
+                    </div>
+
                     <hr class="my-6">
                     
                     {{-- Buttons --}}

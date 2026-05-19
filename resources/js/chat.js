@@ -4,13 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initEcho() {
-  if (!window.Echo) {
-    console.error('Echo not ready');
-    return;
-  }
+  const ids = [window.chatConfig.myId, window.chatConfig.receiverId].sort((a, b) => a - b);
+  const channelName = `chat.${ids[0]}.${ids[1]}`;
 
-  window.Echo.private('chat').listen('.message.sent', data => {
-    appendMessage(data.message);
+  window.Echo.private(channelName).listen('.message.sent', data => {
+    if (data.senderId != window.chatConfig.myId) {
+      appendMessage(data.message, 'others');
+    }
   });
 }
 
@@ -26,6 +26,7 @@ function initForm() {
     const message = input.value.trim();
     if (!message) return;
 
+    const receiverId = window.chatConfig.receiverId; // جلب المعرف من الكونفيج
     input.value = '';
 
     appendMessage(message, 'mine');
@@ -38,10 +39,13 @@ function initForm() {
           'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
           'X-Socket-ID': window.Echo.socketId()
         },
-        body: JSON.stringify({ message })
+        body: JSON.stringify({
+          message: message,
+          receiver_id: receiverId // إرسال المعرف للسيرفر
+        })
       });
     } catch (error) {
-      console.error('error');
+      console.error('Connection Error');
     }
   });
 }
@@ -50,11 +54,19 @@ function appendMessage(message, type = 'others') {
   const ul = document.getElementById('messages');
   if (!ul) return;
 
-  const li = document.createElement('li');
-  li.classList.add('message-item');
+  const wrapper = document.createElement('div');
+  wrapper.classList.add('message-wrapper');
+  wrapper.classList.add(type === 'mine' ? 'mine-wrapper' : 'others-wrapper');
 
-  li.classList.add(type === 'mine' ? 'message-mine' : 'message-others');
+  const now = new Date();
+  const timeStr = now.getHours() + ':' + now.getMinutes().toString().padStart(2, '0');
 
-  li.textContent = message;
-  ul.prepend(li);
+  wrapper.innerHTML = `
+        <li class="message-item ${type === 'mine' ? 'message-mine' : 'message-others'}">
+            ${message}
+        </li>
+        <span class="message-time">${timeStr}</span>
+    `;
+
+  ul.prepend(wrapper);
 }

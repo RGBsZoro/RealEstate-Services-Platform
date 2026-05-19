@@ -1,6 +1,7 @@
 <?php $__env->startSection('title', __('categories.main_title')); ?>
 
 <?php $__env->startSection('content'); ?>
+
 <div class="row g-4 mb-4">
     <div class="col-sm-6 col-xl-4">
         <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(105, 108, 255, 0.08);">
@@ -55,26 +56,22 @@
             <?php endif; ?>
         </div>
         
-        <form action="<?php echo e(route('categories.main.index')); ?>" method="GET">
+        <form action="<?php echo e(route('categories.main.index')); ?>" method="GET" id="categories-filter-form">
             <div class="row g-3">
-                <div class="col-12 col-md-6">
+                
+                <div class="col-12 col-md-8">
                     <div class="input-group input-group-merge">
                         <span class="input-group-text text-muted"><i class="bx bx-search"></i></span>
-                        <input type="text" name="search" value="<?php echo e(request('search')); ?>" class="form-control" placeholder="<?php echo e(__('categories.search_placeholder')); ?>">
+                        <input type="text" name="search" id="search-category-input" value="<?php echo e(request('search')); ?>" class="form-control" placeholder="<?php echo e(__('categories.search_placeholder')); ?>" autocomplete="off">
                     </div>
                 </div>
-                <div class="col-6 col-md-4">
-                    <select name="status" class="form-select">
+                
+                <div class="col-12 col-md-4">
+                    <select name="status" class="form-select immediate-category-select">
                         <option value=""><?php echo e(__('categories.all_statuses')); ?></option>
                         <option value="1" <?php echo e(request('status') === '1' ? 'selected' : ''); ?>><?php echo e(__('categories.active_only')); ?></option>
                         <option value="0" <?php echo e(request('status') === '0' ? 'selected' : ''); ?>><?php echo e(__('categories.inactive_only')); ?></option>
                     </select>
-                </div>
-                <div class="col-6 col-md-2">
-                    <button type="submit" class="btn btn-outline-primary w-100 rounded-pill">
-                        <?php echo e(__('categories.filter_btn')); ?>
-
-                    </button>
                 </div>
             </div>
         </form>
@@ -162,7 +159,7 @@
                                     <?php endif; ?>
                                     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('delete-categories')): ?>
                                     <div class="dropdown-divider"></div>
-                                        <form action="<?php echo e(route('categories.destroy', $category->id)); ?>" method="POST" onsubmit="return confirm('<?php echo e(__('categories.delete_confirm')); ?>')">
+                                        <form action="<?php echo e(route('categories.destroy', $category->id)); ?>" method="POST" class="delete-category-form">
                                             <?php echo csrf_field(); ?>
                                             <?php echo method_field('DELETE'); ?>
                                             <button type="submit" class="dropdown-item text-danger">
@@ -199,11 +196,45 @@
 
         </div>
         <div class="pagination-wrapper">
-            <?php echo e($categories->links('pagination::bootstrap-5')); ?>
+            <?php echo e($categories->appends(request()->query())->links('pagination::bootstrap-5')); ?>
 
         </div>
     </div>
     <?php endif; ?>
 </div>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('page-script'); ?>
+<script>
+    window.onload = function() {
+        if (window.jQuery) {
+            $(function() {
+                const $form = $('#categories-filter-form');
+                let searchCategoriesTimeout;
+
+                // 1. الفلترة الفورية بمجرد تغيير خيار قائمة الحالة
+                $(document).on('change', '.immediate-category-select', function() {
+                    $form.submit();
+                });
+
+                // 2. البحث التلقائي الفوري أثناء الكتابة بخاصية الـ Debounce (500ms) لمنع إرهاق الخادم
+                $(document).on('input', '#search-category-input', function() {
+                    clearTimeout(searchCategoriesTimeout);
+                    
+                    searchCategoriesTimeout = setTimeout(function() {
+                        $form.submit();
+                    }, 500);
+                });
+
+                // 3. تأكيد الحذف
+                $(document).on('submit', '.delete-category-form', function(e) {
+                    if(!confirm("<?php echo e(__('categories.delete_confirm')); ?>")) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        }
+    };
+</script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts/contentNavbarLayout', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\RealEstate-Services-Platform\resources\views/dashboard/categories/main/index.blade.php ENDPATH**/ ?>

@@ -23,7 +23,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
                         <h6 class="mb-1 fw-bold"><?php echo e(__('sliders.live_now')); ?></h6>
-                        <h4 class="mb-0 fw-black"><?php echo e($stats['live']); ?></h4>
+                        <h4 class="mb-0 fw-black" id="stats-live"><?php echo e($stats['live']); ?></h4>
                     </div>
                     <span class="badge bg-success rounded-circle p-2"><i class="bx bx-broadcast fs-3"></i></span>
                 </div>
@@ -50,16 +50,18 @@
     <div class="card-header border-bottom d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
         <h5 class="mb-0 fw-bold"><?php echo e(__('sliders.management_card')); ?></h5>
         <div class="d-flex flex-column flex-sm-row gap-3 w-100 w-md-auto">
-            <form action="<?php echo e(route('sliders.index')); ?>" method="GET" class="d-flex gap-2 flex-grow-1">
-                <input type="text" name="search" value="<?php echo e(request('search')); ?>" class="form-control" placeholder="<?php echo e(__('sliders.search_placeholder')); ?>">
-                <select name="status" class="form-select" onchange="this.form.submit()">
+            
+            
+            <form action="<?php echo e(route('sliders.index')); ?>" method="GET" id="sliders-filter-form" class="d-flex gap-2 flex-grow-1">
+                <input type="text" name="search" id="search-slider-input" value="<?php echo e(request('search')); ?>" class="form-control" placeholder="<?php echo e(__('sliders.search_placeholder')); ?>" autocomplete="off">
+                
+                <select name="status" class="form-select immediate-select">
                     <option value=""><?php echo e(__('sliders.all_statuses')); ?></option>
                     <option value="active" <?php echo e(request('status') == 'active' ? 'selected' : ''); ?>><?php echo e(__('sliders.live_now')); ?></option>
                     <option value="scheduled" <?php echo e(request('status') == 'scheduled' ? 'selected' : ''); ?>><?php echo e(__('sliders.scheduled')); ?></option>
                     <option value="expired" <?php echo e(request('status') == 'expired' ? 'selected' : ''); ?>><?php echo e(__('sliders.expired')); ?></option>
                 </select>
             </form>
-            
             
             <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('create-sliders')): ?>
             <a href="<?php echo e(route('sliders.create')); ?>" class="btn btn-primary text-nowrap">
@@ -76,25 +78,25 @@
     <?php $__empty_1 = true; $__currentLoopData = $sliders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $slider): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
     <div class="col-md-6 col-lg-4">
         <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden position-relative hover-shadow-lg transition">
-            <div class="position-absolute top-0 start-0 m-3 z-index-2">
+            
+            <div class="position-absolute top-0 start-0 m-3 z-index-2 status-badge-container" data-slider-id="<?php echo e($slider->id); ?>">
                 <?php
-                    // نوحد التاريخ للصيغة YYYY-MM-DD لتجنب أي مشاكل متعلقة بالساعات
                     $todayDate = now()->toDateString();
                     $startDate = $slider->start_date ? $slider->start_date->toDateString() : null;
                     $endDate   = $slider->end_date ? $slider->end_date->toDateString() : null;
                 ?>
 
                 <?php if($endDate && $endDate < $todayDate): ?>
-                    <span class="badge bg-danger rounded-pill shadow-sm"><?php echo e(__('sliders.expired')); ?></span>
+                    <span class="badge bg-danger rounded-pill shadow-sm text-badge"><?php echo e(__('sliders.expired')); ?></span>
                     
                 <?php elseif($startDate && $startDate > $todayDate): ?>
-                    <span class="badge bg-warning rounded-pill shadow-sm"><?php echo e(__('sliders.scheduled')); ?></span>
+                    <span class="badge bg-warning rounded-pill shadow-sm text-badge"><?php echo e(__('sliders.scheduled')); ?></span>
                     
                 <?php elseif($slider->is_active): ?>
-                    <span class="badge bg-success rounded-pill shadow-sm"><?php echo e(__('sliders.active')); ?></span>
+                    <span class="badge bg-success rounded-pill shadow-sm text-badge"><?php echo e(__('sliders.active')); ?></span>
                     
                 <?php else: ?>
-                    <span class="badge bg-secondary rounded-pill shadow-sm"><?php echo e(__('sliders.not_active')); ?></span>
+                    <span class="badge bg-secondary rounded-pill shadow-sm text-badge"><?php echo e(__('sliders.not_active')); ?></span>
                 <?php endif; ?>
             </div>
 
@@ -112,11 +114,13 @@
 
                     </h5>
                     
-                    
                     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('edit-sliders')): ?>
                     <div class="form-check form-switch">
                         <input class="form-check-input status-toggle" type="checkbox" 
-                               data-id="<?php echo e($slider->id); ?>" <?php echo e($slider->is_active ? 'checked' : ''); ?>>
+                               data-id="<?php echo e($slider->id); ?>" 
+                               data-is-scheduled="<?php echo e(($startDate && $startDate > $todayDate) ? 'true' : 'false'); ?>"
+                               data-is-expired="<?php echo e(($endDate && $endDate < $todayDate) ? 'true' : 'false'); ?>"
+                               <?php echo e($slider->is_active ? 'checked' : ''); ?>>
                     </div>
                     <?php endif; ?>
                 </div>
@@ -149,7 +153,6 @@
                         <?php endif; ?>
                     </span>
 
-                    
                     <?php if(auth()->user()->can('edit-sliders') || auth()->user()->can('delete-sliders')): ?>
                     <div class="dropdown">
                         <button class="btn p-0" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded fs-4"></i></button>
@@ -225,17 +228,60 @@
     window.onload = function() {
         if (window.jQuery) {
             $(function() {
-                // تحديث الحالة AJAX (فقط إذا كان للمستخدم صلاحية التعديل، والـ HTML يضمن ذلك بعدم وجود الـ Checkbox أصلاً)
+                const $form = $('#sliders-filter-form');
+                let searchSlidersTimeout;
+
+                // 1. الفلترة الفورية عند تغيير القائمة المنسدلة (الحالة)
+                $(document).on('change', '.immediate-select', function() {
+                    $form.submit();
+                });
+
+                // 2. الفلترة الفورية أثناء الكتابة في حقل البحث (Debounce 500ms)
+                $(document).on('input', '#search-slider-input', function() {
+                    clearTimeout(searchSlidersTimeout);
+                    
+                    searchSlidersTimeout = setTimeout(function() {
+                        $form.submit();
+                    }, 500);
+                });
+
+                // تحديث الحالة AJAX الأصلي
                 $(document).on('change', '.status-toggle', function() {
                     const checkbox = $(this);
                     const id = checkbox.data('id');
                     const isActive = checkbox.is(':checked');
+                    const isScheduled = checkbox.data('is-scheduled');
+                    const isExpired = checkbox.data('is-expired');
+                    
+                    const badgeContainer = $(`.status-badge-container[data-slider-id="${id}"]`);
                     const url = "<?php echo e(url('sliders')); ?>/" + id + "/toggle-status";
+
+                    if (isExpired === true) {
+                        badgeContainer.html(`<span class="badge bg-danger rounded-pill shadow-sm">${"<?php echo e(__('sliders.expired')); ?>"}</span>`);
+                    } else if (isActive) {
+                        if (isScheduled === true) {
+                            badgeContainer.html(`<span class="badge bg-warning rounded-pill shadow-sm">${"<?php echo e(__('sliders.scheduled')); ?>"}</span>`);
+                        } else {
+                            badgeContainer.html(`<span class="badge bg-success rounded-pill shadow-sm">${"<?php echo e(__('sliders.active')); ?>"}</span>`);
+                        }
+                    } else {
+                        badgeContainer.html(`<span class="badge bg-secondary rounded-pill shadow-sm">${"<?php echo e(__('sliders.not_active')); ?>"}</span>`);
+                    }
 
                     $.ajax({
                         url: url,
                         type: 'POST',
                         data: { _token: '<?php echo e(csrf_token()); ?>' },
+                        success: function(response) {
+                            if(response && response.live_count !== undefined) {
+                                $('#stats-live').text(response.live_count);
+                            }
+                        },
+                        error: function() {
+                            checkbox.prop('checked', !isActive);
+                            alert('شيء ما تعطل! لم يتم تحديث الحالة بنجاح.');
+                            window.location.reload();
+                        }
                     });
                 });
 

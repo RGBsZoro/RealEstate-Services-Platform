@@ -5,7 +5,6 @@
 @section('content')
 
 {{-- Stats Summary --}}
-{{-- Stats Summary --}}
 <div class="row g-4 mb-4">
     {{-- Pending Card --}}
     <div class="col-sm-6 col-xl-3">
@@ -41,7 +40,7 @@
         </div>
     </div>
 
-    {{-- Inactive Card (الحالة الجديدة) --}}
+    {{-- Inactive Card --}}
     <div class="col-sm-6 col-xl-3">
         <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(133, 146, 163, 0.08);">
             <div class="card-body p-3">
@@ -78,16 +77,18 @@
 <div class="card rounded-4 overflow-hidden">
     <div class="card-header border-bottom">
         <h5 class="card-title mb-3">{{ __('business.management_card') }}</h5>
-        <form action="{{ route('business-accounts.index') }}" method="GET">
+        
+        {{-- تم إضافة id="filter-form" للفورم وكلاسات الجريد تم تحسينها لتوزيع المساحة بعد حذف الزر --}}
+        <form action="{{ route('business-accounts.index') }}" method="GET" id="filter-form">
             <div class="row g-3">
                 <div class="col-12 col-md-4">
                     <div class="input-group input-group-merge">
                         <span class="input-group-text"><i class="bx bx-search"></i></span>
-                        <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="{{ __('business.search_placeholder') }}">
+                        <input type="text" name="search" id="search-input" value="{{ request('search') }}" class="form-control" placeholder="{{ __('business.search_placeholder') }}" autocomplete="off">
                     </div>
                 </div>
-                <div class="col-6 col-md-3">
-                    <select name="status" class="form-select text-capitalize">
+                <div class="col-6 col-md-4">
+                    <select name="status" class="form-select text-capitalize filter-select">
                         <option value="">{{ __('business.all_statuses') }}</option>
                         <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>{{ __('status.pending') }}</option>
                         <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>{{ __('status.approved') }}</option>
@@ -95,8 +96,8 @@
                         <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>{{ __('status.rejected') }}</option>
                     </select>
                 </div>
-                <div class="col-6 col-md-3">
-                    <select name="city_id" class="form-select">
+                <div class="col-6 col-md-4">
+                    <select name="city_id" class="form-select filter-select">
                         <option value="">{{ __('business.all_cities') }}</option>
                         @foreach($cities as $city)
                             <option value="{{ $city->id }}" {{ request('city_id') == $city->id ? 'selected' : '' }}>
@@ -104,11 +105,6 @@
                             </option>
                         @endforeach
                     </select>
-                </div>
-                <div class="col-12 col-md-2">
-                    <button type="submit" class="btn btn-outline-primary w-100 rounded-pill">
-                        {{ __('business.filter_btn') }}
-                    </button>
                 </div>
             </div>
         </form>
@@ -191,4 +187,32 @@
     </div>
     @endif
 </div>
+@endsection
+
+@section('page-script')
+<script>
+    window.onload = function() {
+        if (window.jQuery) {
+            $(function() {
+                const $form = $('#filter-form');
+                let searchTimeout;
+
+                // 1. الفلترة الفورية عند تغيير القوائم المنسدلة (الحالة أو المدينة)
+                $(document).on('change', '.filter-select', function() {
+                    $form.submit();
+                });
+
+                // 2. الفلترة الفورية الذكية عند الكتابة داخل حقل البحث (Debounce 500ms)
+                $(document).on('input', '#search-input', function() {
+                    clearTimeout(searchTimeout);
+                    
+                    // ننتظر 500 ملي ثانية بعد توقف المستخدم عن الضغط على الأزرار قبل إرسال الفورم
+                    searchTimeout = setTimeout(function() {
+                        $form.submit();
+                    }, 500); 
+                });
+            });
+        }
+    };
+</script>
 @endsection

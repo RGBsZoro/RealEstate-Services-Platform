@@ -48,24 +48,34 @@
                         </div>
                     </div>
 
+                    {{-- تم توزيع الحقول هنا ليصبح السويتش في نفس الصف بشكل متناسق مع واجهة الـ Create --}}
                     <div class="row">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label class="form-label">{{ __('cities.latitude') }}</label>
                             <input type="text" id="lat_input" name="latitude" class="form-control bg-light" 
                                 value="{{ old('latitude', $city->latitude) }}" readonly required>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label class="form-label">{{ __('cities.longitude') }}</label>
                             <input type="text" id="lng_input" name="longitude" class="form-control bg-light" 
                                 value="{{ old('longitude', $city->longitude) }}" readonly required>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label class="form-label">{{ __('cities.radius_label') }}</label>
                             <div class="input-group">
                                 <input type="number" id="radius_input" name="radius" class="form-control" 
                                     value="{{ old('radius', $city->radius) }}" step="0.5" min="1" required>
                                 <span class="input-group-text">{{ __('cities.km') }}</span>
                             </div>
+                        </div>
+                        {{-- حقل التفعيل المضاف مع جلب الحالة المخزنة تلقائياً --}}
+                        <div class="col-md-3 mb-3 d-flex flex-column justify-content-center pt-md-4">
+                            <div class="form-check form-switch mb-0">
+                                <input type="hidden" name="is_active" value="0">
+                                <input class="form-check-input @error('is_active') is-invalid @enderror" type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', $city->is_active) == '1' ? 'checked' : '' }}>
+                                <label class="form-check-label fw-semibold" for="is_active">{{ __('cities.status_active') }}</label>
+                            </div>
+                            @error('is_active') <div class="invalid-feedback d-block small mt-1">{{ $message }}</div> @enderror
                         </div>
                     </div>
 

@@ -28,6 +28,7 @@ class UpdateCityRequest extends FormRequest
             'latitude' => ['sometimes', 'regex:/^[-]?(([0-8]?[0-9])\.(\d+))|(90(\.0+)?)$/'],
             'longitude' => ['sometimes', 'regex:/^[-]?((((1[0-7][0-9])|([0-9]?[0-9]))\.(\d+))|180(\.0+)?)$/'],
             'radius' => 'sometimes|numeric|min:0.5',
+            'is_active' => 'sometimes|boolean',
         ];
     }
 }

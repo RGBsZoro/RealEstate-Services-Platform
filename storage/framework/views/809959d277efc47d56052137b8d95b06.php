@@ -1,5 +1,3 @@
-
-
 <?php $__env->startSection('title', __('cities.edit_title')); ?>
 
 <?php $__env->startSection('content'); ?>
@@ -78,24 +76,48 @@ unset($__errorArgs, $__bag); ?>
                         </div>
                     </div>
 
+                    
                     <div class="row">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label class="form-label"><?php echo e(__('cities.latitude')); ?></label>
                             <input type="text" id="lat_input" name="latitude" class="form-control bg-light" 
                                 value="<?php echo e(old('latitude', $city->latitude)); ?>" readonly required>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label class="form-label"><?php echo e(__('cities.longitude')); ?></label>
                             <input type="text" id="lng_input" name="longitude" class="form-control bg-light" 
                                 value="<?php echo e(old('longitude', $city->longitude)); ?>" readonly required>
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label class="form-label"><?php echo e(__('cities.radius_label')); ?></label>
                             <div class="input-group">
                                 <input type="number" id="radius_input" name="radius" class="form-control" 
                                     value="<?php echo e(old('radius', $city->radius)); ?>" step="0.5" min="1" required>
                                 <span class="input-group-text"><?php echo e(__('cities.km')); ?></span>
                             </div>
+                        </div>
+                        
+                        <div class="col-md-3 mb-3 d-flex flex-column justify-content-center pt-md-4">
+                            <div class="form-check form-switch mb-0">
+                                <input type="hidden" name="is_active" value="0">
+                                <input class="form-check-input <?php $__errorArgs = ['is_active'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> is-invalid <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>" type="checkbox" name="is_active" id="is_active" value="1" <?php echo e(old('is_active', $city->is_active) == '1' ? 'checked' : ''); ?>>
+                                <label class="form-check-label fw-semibold" for="is_active"><?php echo e(__('cities.status_active')); ?></label>
+                            </div>
+                            <?php $__errorArgs = ['is_active'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div class="invalid-feedback d-block small mt-1"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
                     </div>
 

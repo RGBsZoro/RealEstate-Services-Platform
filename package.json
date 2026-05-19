@@ -93,6 +93,7 @@
     "@popperjs/core": "^2.11.8",
     "apexcharts": "~4.2.0",
     "bootstrap": "~5.3.3",
+    "fg-emoji-picker": "^1.0.1",
     "highlight.js": "~11.10.0",
     "jquery": "~3.7.1",
     "laravel-echo": "^2.3.4",

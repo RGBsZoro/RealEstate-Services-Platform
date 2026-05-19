@@ -50,4 +50,10 @@ return [
     'cancel' => 'Cancel',
     'placeholder_en' => 'e.g. Damascus',
     'placeholder_ar' => 'e.g. Damascus (Arabic)',
+
+    'status_active' => 'City Active and Available',
+
+    'th_status' => 'Status',
+    'active' => 'Active',
+    'inactive' => 'Inactive',
 ];

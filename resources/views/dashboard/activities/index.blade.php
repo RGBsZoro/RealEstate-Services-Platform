@@ -4,6 +4,7 @@
 
 @section('content')
 
+{{-- الإحصائيات الملونة --}}
 <div class="row g-4 mb-4">
     <div class="col-sm-6 col-xl-4">
         <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(105, 108, 255, 0.08);">
@@ -54,32 +55,40 @@
     </div>
 </div>
 
+{{-- جدول البيانات --}}
 <div class="card rounded-4 overflow-hidden">
-    <div class="card-header border-bottom d-flex flex-column flex-md-row align-items-md-center justify-content-between pb-3 gap-3">
-        <h5 class="card-title mb-0">{{ __('activities.management_header') }}</h5>
-        
-        <div class="d-flex flex-column flex-sm-row align-items-center gap-3">
-            <form action="{{ route('activities.index') }}" method="GET" class="d-flex w-100">
-                <div class="input-group input-group-merge">
-                    <span class="input-group-text"><i class="bx bx-search"></i></span>
-                    <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="{{ __('activities.search_placeholder') }}">
-                </div>
-            </form>
+    <div class="card-header border-bottom">
+        {{-- السطر العلوي: العنوان وزر الإضافة في الزاوية --}}
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h5 class="card-title mb-0">{{ __('activities.management_header') }}</h5>
             @can('create-activities')
                 <a href="{{ route('activities.create') }}" class="btn btn-primary text-nowrap rounded-pill">
                     <i class="bx bx-plus-circle me-1"></i> {{ __('activities.add_activity') }}
                 </a>
             @endcan
         </div>
+        
+        {{-- السطر السفلي: حقل البحث ممتد على كامل السطر --}}
+        <form action="{{ route('activities.index') }}" method="GET" id="activities-filter-form">
+            <div class="row">
+                <div class="col-12">
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text text-muted"><i class="bx bx-search"></i></span>
+                        <input type="text" name="search" id="search-activity-input" value="{{ request('search') }}" class="form-control" placeholder="{{ __('activities.search_placeholder') }}" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 
     <div class="table-responsive text-nowrap">
         <table class="table table-hover mb-0">
             <thead class="table-light text-uppercase">
                 <tr>
-                    <th style="width: 40%">{{ __('activities.column_name') }}</th>
-                    <th style="width: 25%">{{ __('activities.column_accounts') }}</th>
-                    <th style="width: 20%">{{ __('activities.column_date') }}</th>
+                    <th style="width: 35%">{{ __('activities.column_name') }}</th>
+                    <th style="width: 20%">{{ __('activities.column_accounts') }}</th>
+                    <th style="width: 15%">{{ __('activities.column_status') }}</th>
+                    <th style="width: 15%">{{ __('activities.column_date') }}</th>
                     @if(auth()->user()->can('edit-activities') || auth()->user()->can('delete-activities'))
                         <th style="width: 15%" class="text-center">{{ __('activities.column_actions') }}</th>
                     @endif
@@ -102,7 +111,7 @@
                             
                             <div class="d-flex flex-column">
                                 <span class="fw-bold text-heading">{{ $activity->getTranslation('name', 'en') }}</span>
-                                <small class="text-muted">{{ $activity->getTranslation('name', 'ar') }}</small>
+                                <small class="text-muted small">{{ $activity->getTranslation('name', 'ar') }}</small>
                             </div>
                         </div>
                     </td>
@@ -114,6 +123,14 @@
                                 {{ $activity->business_accounts_count }} {{ __('activities.accounts_count') }}
                             </span>
                         </div>
+                    </td>
+
+                    <td>
+                        @if($activity->is_active)
+                            <span class="badge bg-label-success rounded-pill">{{ __('activities.status_enabled') }}</span>
+                        @else
+                            <span class="badge bg-label-secondary rounded-pill">{{ __('activities.status_disabled') }}</span>
+                        @endif
                     </td>
 
                     <td>
@@ -131,9 +148,9 @@
                                             <i class="bx bx-edit-alt me-1"></i> {{ __('activities.edit') }}
                                         </a>
                                     @endcan
-                                    <div class="dropdown-divider"></div>
                                     @can('delete-activities')
-                                        <form action="{{ route('activities.destroy', $activity->id) }}" method="POST" onsubmit="return confirm('{{ __('activities.delete_confirmation') }}')">
+                                        <div class="dropdown-divider"></div>
+                                        <form action="{{ route('activities.destroy', $activity->id) }}" method="POST" class="delete-activity-form">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="dropdown-item text-danger">
@@ -148,7 +165,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="4" class="text-center py-5">
+                    <td colspan="5" class="text-center py-5">
                         <div class="text-muted">
                             <i class="bx bx-search-alt-2 mb-2" style="font-size: 3rem;"></i>
                             <p class="mb-0">{{ __('activities.no_results') }}</p>
@@ -166,9 +183,45 @@
             {{ __('activities.showing') }} <strong>{{ $activities->firstItem() ?? 0 }}</strong> {{ __('activities.to') }} <strong>{{ $activities->lastItem() ?? 0 }}</strong> {{ __('activities.of') }} <strong>{{ $activities->total() }}</strong> {{ __('activities.results') }}
         </div>
         <div class="pagination-wrapper">
-            {{ $activities->links('pagination::bootstrap-5') }}
+            {{ $activities->appends(request()->query())->links('pagination::bootstrap-5') }}
         </div>
     </div>
     @endif
 </div>
+@endsection
+
+@section('page-script')
+<script>
+    window.onload = function() {
+        if (window.jQuery) {
+            $(function() {
+                const $form = $('#activities-filter-form');
+                let searchActivitiesTimeout;
+
+                // 1. البحث الفوري أثناء الكتابة (Debounce 500ms)
+                $(document).on('input', '#search-activity-input', function() {
+                    clearTimeout(searchActivitiesTimeout);
+                    
+                    searchActivitiesTimeout = setTimeout(function() {
+                        $form.submit();
+                    }, 500);
+                });
+
+                // 2. منع الـ Submit العشوائي عند ضغط Enter داخل حقل البحث
+                $form.on('submit', function(e) {
+                    if (e.originalEvent && e.originalEvent.submitter === undefined) {
+                        e.preventDefault();
+                    }
+                });
+
+                // 3. تأكيد الحذف
+                $(document).on('submit', '.delete-activity-form', function(e) {
+                    if(!confirm("{{ __('activities.delete_confirmation') }}")) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        }
+    };
+</script>
 @endsection

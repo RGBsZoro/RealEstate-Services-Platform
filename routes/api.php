@@ -61,11 +61,14 @@ Route::middleware(['auth:api'])->group(function () {
 
       // service requests
       Route::prefix('requests/')->group(function () {
+        Route::get('wallet', [ServiceRequestController::class, 'index']);
+        Route::get('calendar', [ServiceRequestController::class, 'getMyCalendarEvents']);
         Route::post('', [ServiceRequestController::class, 'store']);
+        Route::get('{service}/booked-time-slots', [ServiceRequestController::class, 'getBookedTimeSlots']);
+        Route::put('{serviceRequest}', [ServiceRequestController::class, 'update']);
         Route::put('{serviceRequest}/approve', [ServiceRequestController::class, 'approve']);
         Route::put('{serviceRequest}/reject', [ServiceRequestController::class, 'reject']);
-        Route::get('wallet', [ServiceRequestController::class, 'index']);
-        Route::delete('{serviceRequest}', [ServiceRequestController::class, 'destroy']);
+        Route::post('{serviceRequest}/cancel', [ServiceRequestController::class, 'cancel']);
 
         // reviews
         Route::prefix('{service}/reviews/')->group(function () {
@@ -80,8 +83,8 @@ Route::middleware(['auth:api'])->group(function () {
   Route::prefix('notifications')->group(function () {
     Route::get('/', [NotificationController::class, 'index']);
     Route::get('/unread', [NotificationController::class, 'getUnreadNotifications']);
-    Route::post('/{notification}/read', [NotificationController::class, 'markAsRead']);
     Route::post('/read-all', [NotificationController::class, 'markAllAsRead']);
+    Route::post('/{notification}/read', [NotificationController::class, 'markAsRead']);
     Route::delete('/{notification}', [NotificationController::class, 'destroy']);
   });
 

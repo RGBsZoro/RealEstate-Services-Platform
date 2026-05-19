@@ -21,8 +21,6 @@ return [
     'pagination_of' => 'of',
 
     // --- Notification Content ---
-    'new_request_title' => 'New Service Request 🔔',
-    'new_request_body'  => ':user has requested a new service: :service.',
 
     'business_account_approved_title' => 'Business Account Approved 🎉',
     'business_account_approved_body'  => 'Congratulations! Your business account ":name" has been activated. You can now start adding services.',
@@ -35,4 +33,22 @@ return [
 
     'new_service_request_title' => 'New Service/Property Request 🏠',
     'new_service_request_body'  => 'Business :business has added a new listing: :title. Please review and approve.',
+
+    'request_created_title'   => 'New Request Received',
+    'request_created_body'    => ':user has requested the service: :service.',
+
+    'request_updated_title'   => 'Request Updated',
+    'request_updated_body'    => ':user has updated their request details for: :service.',
+
+    'request_approved_title'  => 'Request Approved 🎉',
+    'request_approved_body'   => 'Your request for the service (:service) has been accepted.',
+
+    'request_rejected_title'  => 'Request Declined',
+    'request_rejected_body'   => 'Your request for the service (:service) has been declined.',
+
+    'request_cancelled_title' => 'Request Cancelled',
+    'request_cancelled_body'  => ':user has cancelled their request for: :service.',
+
+    'new_service_report_title' => 'New Service Report',
+    'new_service_report_body'  => 'The user :user has reported the service: :service.',
 ];

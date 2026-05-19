@@ -11,3 +11,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('cleanup:unverified')->daily();
+Schedule::command('service-requests:update-status')->everyMinute();

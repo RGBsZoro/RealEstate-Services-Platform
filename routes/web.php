@@ -58,7 +58,10 @@ use App\Http\Controllers\Web\RoleController;
 use App\Http\Controllers\Web\ServiceController;
 use App\Http\Controllers\Web\ServiceReportController;
 use App\Http\Controllers\Web\SliderController;
+use App\Models\Admin;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 // Login 
 Route::get('login', [AuthController::class, 'loginForm'])->name('login');
@@ -333,11 +336,28 @@ Route::group(['middleware' => ['auth:web']], function () {
 });
 
 
+
+
+// chat (private channel)
+
 Route::post("/send-message", function (Request $request) {
-    broadcast(new MessageSent($request->message))->toOthers();
-    return response()->json(["status" => "Message Sent!"]);
+    $message = $request->message;
+    $receiverId = $request->receiver_id;
+
+    broadcast(new MessageSent($message, auth('web')->id(), $receiverId))->toOthers();
+
+    return response()->json(['status' => 'Message Sent!']);
 });
 
-Route::get('chat', function () {
-    return view('chat');
+Route::get('chat/{id}', function (int $id) {
+    $receiver = Admin::with('media')->findOrFail($id);
+    $sender = auth('web')->user();
+
+    return view('chat', compact('receiver'));
 })->middleware('auth:web')->name('chat');
+
+Route::get('login/{id}', function (int $id) {
+    $user = Admin::findOrFail($id);
+
+    Auth::login($user);
+});

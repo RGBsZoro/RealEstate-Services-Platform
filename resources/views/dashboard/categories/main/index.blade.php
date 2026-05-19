@@ -3,6 +3,7 @@
 @section('title', __('categories.main_title'))
 
 @section('content')
+{{-- Stats Summary --}}
 <div class="row g-4 mb-4">
     <div class="col-sm-6 col-xl-4">
         <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(105, 108, 255, 0.08);">
@@ -56,25 +57,22 @@
             @endcan
         </div>
         
-        <form action="{{ route('categories.main.index') }}" method="GET">
+        <form action="{{ route('categories.main.index') }}" method="GET" id="categories-filter-form">
             <div class="row g-3">
-                <div class="col-12 col-md-6">
+                {{-- حقل البحث يأخذ ثلثي مساحة السطر بالكامل --}}
+                <div class="col-12 col-md-8">
                     <div class="input-group input-group-merge">
                         <span class="input-group-text text-muted"><i class="bx bx-search"></i></span>
-                        <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="{{ __('categories.search_placeholder') }}">
+                        <input type="text" name="search" id="search-category-input" value="{{ request('search') }}" class="form-control" placeholder="{{ __('categories.search_placeholder') }}" autocomplete="off">
                     </div>
                 </div>
-                <div class="col-6 col-md-4">
-                    <select name="status" class="form-select">
+                {{-- قائمة الحالة المنسدلة تأخذ الثلث المتبقي لتغطية كامل مساحة السطر --}}
+                <div class="col-12 col-md-4">
+                    <select name="status" class="form-select immediate-category-select">
                         <option value="">{{ __('categories.all_statuses') }}</option>
                         <option value="1" {{ request('status') === '1' ? 'selected' : '' }}>{{ __('categories.active_only') }}</option>
                         <option value="0" {{ request('status') === '0' ? 'selected' : '' }}>{{ __('categories.inactive_only') }}</option>
                     </select>
-                </div>
-                <div class="col-6 col-md-2">
-                    <button type="submit" class="btn btn-outline-primary w-100 rounded-pill">
-                        {{ __('categories.filter_btn') }}
-                    </button>
                 </div>
             </div>
         </form>
@@ -158,7 +156,7 @@
                                     @endcan
                                     @can('delete-categories')
                                     <div class="dropdown-divider"></div>
-                                        <form action="{{ route('categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('{{ __('categories.delete_confirm') }}')">
+                                        <form action="{{ route('categories.destroy', $category->id) }}" method="POST" class="delete-category-form">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="dropdown-item text-danger">
@@ -193,9 +191,43 @@
             {{ __('categories.of') }} <strong>{{ $categories->total() }}</strong> {{ __('categories.entries') }}
         </div>
         <div class="pagination-wrapper">
-            {{ $categories->links('pagination::bootstrap-5') }}
+            {{ $categories->appends(request()->query())->links('pagination::bootstrap-5') }}
         </div>
     </div>
     @endif
 </div>
+@endsection
+
+@section('page-script')
+<script>
+    window.onload = function() {
+        if (window.jQuery) {
+            $(function() {
+                const $form = $('#categories-filter-form');
+                let searchCategoriesTimeout;
+
+                // 1. الفلترة الفورية بمجرد تغيير خيار قائمة الحالة
+                $(document).on('change', '.immediate-category-select', function() {
+                    $form.submit();
+                });
+
+                // 2. البحث التلقائي الفوري أثناء الكتابة بخاصية الـ Debounce (500ms) لمنع إرهاق الخادم
+                $(document).on('input', '#search-category-input', function() {
+                    clearTimeout(searchCategoriesTimeout);
+                    
+                    searchCategoriesTimeout = setTimeout(function() {
+                        $form.submit();
+                    }, 500);
+                });
+
+                // 3. تأكيد الحذف
+                $(document).on('submit', '.delete-category-form', function(e) {
+                    if(!confirm("{{ __('categories.delete_confirm') }}")) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        }
+    };
+</script>
 @endsection
