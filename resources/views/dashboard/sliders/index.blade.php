@@ -7,7 +7,7 @@
 {{-- إحصائيات السلايدر --}}
 <div class="row g-4 mb-4">
     <div class="col-sm-6 col-xl-4">
-        <div class="card shadow-none border-0 rounded-4 bg-label-primary">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="col-sm-6 col-xl-4">
-        <div class="card shadow-none border-0 rounded-4 bg-label-success">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
@@ -33,7 +33,7 @@
         </div>
     </div>
     <div class="col-sm-6 col-xl-4">
-        <div class="card shadow-none border-0 rounded-4 bg-label-danger">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>

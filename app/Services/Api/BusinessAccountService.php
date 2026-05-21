@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Validation\ValidationException;
 
 class BusinessAccountService
 {
@@ -63,7 +64,9 @@ class BusinessAccountService
             $lng
         );
         if ($distance > $city->radius) {
-            throw new \Exception('Location is outside selected city.');
+            throw ValidationException::withMessages([
+                'Location' => ['Location is outside selected city.']
+            ]);
         }
     }
 
@@ -98,7 +101,7 @@ class BusinessAccountService
 
     public function getAccountDetails(BusinessAccount $businessAccount)
     {
-        Gate::allows('update', $businessAccount) || throw new AuthorizationException();
+        Gate::authorize('update', $businessAccount);
 
         $businessAccount->load(['activity', 'city', 'media']);
         return $businessAccount;
@@ -141,7 +144,7 @@ class BusinessAccountService
 
     public function deleteMedia(BusinessAccount $businessAccount, int $mediaId)
     {
-        Gate::allows('update', $businessAccount) || throw new AuthorizationException();
+        Gate::authorize('update', $businessAccount);
 
         $media = $businessAccount->media()
             ->whereIn('collection_name', ['documents', 'images'])
@@ -152,8 +155,13 @@ class BusinessAccountService
 
     public function deleteAccount(BusinessAccount $businessAccount)
     {
-        Gate::allows('update', $businessAccount) || throw new AuthorizationException();
+        Gate::authorize('update', $businessAccount);
 
         $businessAccount->delete();
+    }
+
+    public function getAllCities()
+    {
+        return City::all();
     }
 }

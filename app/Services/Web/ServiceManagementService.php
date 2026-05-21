@@ -5,6 +5,8 @@ namespace App\Services\Web;
 use App\Enum\StatusEnum;
 use App\Models\Service;
 use App\Notifications\ServiceRequestStatusNotification;
+use App\Notifications\ServiceStatusNotification;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class ServiceManagementService
@@ -49,8 +51,9 @@ class ServiceManagementService
         ];
     }
 
-    public function actions(Service $service, $newStatus)
+    public function actions(Service $service, array $data)
     {
+        $newStatus = $data['status'];
         $currentStatus = $service->status->value;
 
         if ($newStatus === StatusEnum::INACTIVE->value && $currentStatus !== StatusEnum::APPROVED->value) {
@@ -65,6 +68,12 @@ class ServiceManagementService
             ]);
         }
 
-        $service->update(['status' => $newStatus]);
+        DB::transaction(function () use ($service, $newStatus, $data) {
+            $service->update(['status' => $newStatus]);
+
+            DB::afterCommit(function () use ($service, $data) {
+                $service->businessAccount->user->notify(new ServiceStatusNotification($service, $data['reason'] ?? null));
+            });
+        });
     }
 }

@@ -2,23 +2,24 @@
 
 namespace App\Notifications;
 
-use App\Models\BusinessAccount;
+use App\Models\Service;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class BusinessAccountStatusNotification extends Notification implements ShouldQueue
+class ServiceStatusNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     public int $tries = 3;
     public int $backoff = 60;
-    protected BusinessAccount $businessAccount;
+    protected Service $service;
     protected ?string $reason;
 
-    public function __construct(BusinessAccount $businessAccount, ?string $reason = null)
+
+    public function __construct(Service $service, ?string $reason = null)
     {
-        $this->businessAccount = $businessAccount;
+        $this->service = $service;
         $this->reason = $reason;
     }
 
@@ -29,18 +30,25 @@ class BusinessAccountStatusNotification extends Notification implements ShouldQu
 
     protected function getNotificationData(): array
     {
-        $status = $this->businessAccount->status->value;
+        $status = $this->service->status->value;
+
+        $icon = match ($status) {
+            'approved' => 'bx-check-circle',
+            'rejected' => 'bx-x-circle',
+            'inactive' => 'bx-minus-circle',
+            default    => 'bx-info-circle'
+        };
 
         return [
-            'title_key' => "notifications.business_account_{$status}_title",
-            'body_key'  => "notifications.business_account_{$status}_body",
+            'title_key' => "notifications.service_{$status}_title",
+            'body_key'  => "notifications.service_{$status}_body",
             'body_args' => [
-                'name' => $this->businessAccount->name,
+                'title' => $this->service->title,
             ],
-            'icon' => $status === 'approved' ? 'bx-check-circle' : 'bx-x-circle',
-            'id'   => (string) $this->businessAccount->id,
-            'type' => 'business_status_update',
-            'url'  => route('business-accounts.show', $this->businessAccount->id),
+            'icon' => $icon,
+            'id'   => (string) $this->service->id,
+            'type' => 'service_status_update',
+            'url'  => route('services.show', $this->service->id),
         ];
     }
 
@@ -55,7 +63,7 @@ class BusinessAccountStatusNotification extends Notification implements ShouldQu
             'icon'      => $data['icon'],
             'data'      => [
                 'id'     => $data['id'],
-                'status' => $this->businessAccount->status,
+                'status' => $this->service->status->value,
                 'type'   => $data['type'],
                 'url'    => $data['url'],
                 'reason' => $this->reason,

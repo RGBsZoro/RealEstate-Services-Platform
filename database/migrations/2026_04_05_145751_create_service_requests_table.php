@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreignId('provider_business_account_id')->constrained('business_accounts')->cascadeOnDelete();
 
             $table->dateTime('required_at');
-            $table->integer('quantity');
+            $table->integer('quantity')->nullable();
             $table->text('details')->nullable();
 
             $table->decimal('price_usd_at_request', 15, 2)->nullable();

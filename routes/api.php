@@ -16,13 +16,29 @@ use App\Http\Controllers\FCMController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// add middlleware for spam 
-Route::post('register', [AuthController::class, 'register']);
-Route::post('register/verify', [AuthController::class, 'verifyRegister']);
-Route::post('login', [AuthController::class, 'login']);
+// auth routes with rate limiting
+Route::middleware(['guest'])->prefix('auth')->group(function () {
 
+  // login & register routes with rate limiting
+  Route::middleware('throttle:login_register')->group(function () {
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login']);
+  });
+
+  // OTP verification route with its own rate limiting
+  Route::post('register/verify', [AuthController::class, 'verifyRegister'])->middleware('throttle:verify_otp');
+
+  // password reset routes with appropriate rate limiting
+  Route::prefix('password')->group(function () {
+    Route::post('forgot', [AuthController::class, 'forgotPassword'])->middleware('throttle:forgot_password');
+    Route::post('verify-otp', [AuthController::class, 'verifyForgotPasswordOtp'])->middleware('throttle:verify_otp');
+    Route::post('reset', [AuthController::class, 'resetPassword'])->middleware('throttle:login_register');
+  });
+});
+
+// protected routes
 Route::middleware(['auth:api'])->group(function () {
-  Route::delete('logout', [AuthController::class, 'logout']);
+  Route::delete('auth/logout', [AuthController::class, 'logout']);
 
   // store fcm token 
   Route::post('fcm/register-token', [FCMController::class, 'store'])
@@ -111,15 +127,19 @@ Route::middleware(['auth:api'])->group(function () {
   // profile
   Route::prefix('profile')->group(function () {
     Route::get('/', [ProfileController::class, 'show']);
-    Route::post('/update', [ProfileController::class, 'updateProfile']);
-    Route::put('/password', [ProfileController::class, 'updatePassword']);
+    Route::post('/update', [ProfileController::class, 'updateProfile'])->middleware('throttle:profile_update');
+    Route::put('/password', [ProfileController::class, 'updatePassword'])->middleware('throttle:password_update');
     Route::post('/phone/request', [ProfileController::class, 'requestPhoneUpdate']);
-    Route::post('/phone/verify', [ProfileController::class, 'verifyPhoneUpdate']);
+    Route::post('/phone/verify', [ProfileController::class, 'verifyPhoneUpdate'])->middleware('throttle:verify_otp');
   });
 
-  // categories 
+  // categories & dynamic fields
   Route::prefix('categories')->group(function () {
     Route::get('/main', [CategoryController::class, 'mainCategories']);
     Route::get('/{category}/sub', [CategoryController::class, 'subCategories']);
+    Route::get('/{category}/dynamic-fields', [CategoryController::class, 'getDynamicFildes']);
   });
+
+  // cities
+  Route::get('cities', [BusinessAccountController::class, 'getAllCities']);
 });

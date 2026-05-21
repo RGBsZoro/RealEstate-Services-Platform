@@ -163,64 +163,57 @@
             </div>
         </div>
 
-        
-        <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage-services')): ?> 
-            <div class="card bg-transparent shadow-none border-0 mt-4">
-                <div class="card-body p-0">
-                    <div class="row g-3">
-                        
-                        <?php if($service->status->value === \App\Enum\StatusEnum::PENDING->value): ?>
-                            <div class="col-12 col-md-6">
-                                <form action="<?php echo e(route('services.update-status', $service->id)); ?>" method="POST">
-                                    <?php echo csrf_field(); ?>
-                                    <input type="hidden" name="status" value="approved">
-                                    <button type="submit" class="btn btn-approve w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm">
-                                        <i class="bx bx-check-circle fs-4 me-2"></i> <?php echo e(__('services.approve')); ?>
+<?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('manage-services')): ?> 
+    <div class="card bg-transparent shadow-none border-0 mt-4">
+        <div class="card-body p-0">
+            <div class="row g-3">
+                
+                <?php if($service->status->value === \App\Enum\StatusEnum::PENDING->value): ?>
+                    <div class="col-12 col-md-6">
+                        <form action="<?php echo e(route('services.update-status', $service->id)); ?>" method="POST" onsubmit="return confirm('<?php echo e(__("services.approve_confirm_msg")); ?>')">
+                            <?php echo csrf_field(); ?>
+                            <input type="hidden" name="status" value="approved">
+                            <button type="submit" class="btn btn-approve w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm">
+                                <i class="bx bx-check-circle fs-4 me-2"></i> <?php echo e(__('services.approve')); ?>
 
-                                    </button>
-                                </form>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <button type="button" class="btn btn-reject w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm" 
-                                    data-bs-toggle="modal" data-bs-target="#rejectModal">
-                                    <i class="bx bx-x-circle fs-4 me-2"></i> <?php echo e(__('services.reject')); ?>
-
-                                </button>
-                            </div>
-
-                        
-                        <?php elseif($service->status->value === \App\Enum\StatusEnum::APPROVED->value): ?>
-                            <div class="col-12">
-                                <form action="<?php echo e(route('services.update-status', $service->id)); ?>" method="POST">
-                                    <?php echo csrf_field(); ?>
-                                    <input type="hidden" name="status" value="inactive">
-                                    <button type="submit" class="btn btn-inactive w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm"
-                                        onclick="return confirm('<?php echo e(__("services.confirm_deactivate")); ?>')">
-                                        <i class="bx bx-power-off fs-4 me-2"></i> <?php echo e(__('services.deactivate')); ?>
-
-                                    </button>
-                                </form>
-                            </div>
-
-                        
-                        <?php elseif($service->status->value === \App\Enum\StatusEnum::INACTIVE->value): ?>
-                            <div class="col-12">
-                                <form action="<?php echo e(route('services.update-status', $service->id)); ?>" method="POST">
-                                    <?php echo csrf_field(); ?>
-                                    <input type="hidden" name="status" value="approved">
-                                    <button type="submit" class="btn btn-approve w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm">
-                                        <i class="bx bx-play-circle fs-4 me-2"></i> <?php echo e(__('services.activate')); ?>
-
-                                    </button>
-                                </form>
-                            </div>
-                        <?php endif; ?>
+                            </button>
+                        </form>
                     </div>
-                </div>
+                    <div class="col-12 col-md-6">
+                        <button type="button" class="btn btn-reject w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm" 
+                            data-bs-toggle="modal" data-bs-target="#rejectModal">
+                            <i class="bx bx-x-circle fs-4 me-2"></i> <?php echo e(__('services.reject')); ?>
+
+                        </button>
+                    </div>
+
+                
+                <?php elseif($service->status->value === \App\Enum\StatusEnum::APPROVED->value): ?>
+                    <div class="col-12">
+                        <button type="button" class="btn btn-inactive w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm"
+                            data-bs-toggle="modal" data-bs-target="#deactivateModal">
+                            <i class="bx bx-power-off fs-4 me-2"></i> <?php echo e(__('services.deactivate')); ?>
+
+                        </button>
+                    </div>
+
+                
+                <?php elseif($service->status->value === \App\Enum\StatusEnum::INACTIVE->value): ?>
+                    <div class="col-12">
+                        <form action="<?php echo e(route('services.update-status', $service->id)); ?>" method="POST" onsubmit="return confirm('<?php echo e(__("services.activate_confirm_msg")); ?>')">
+                            <?php echo csrf_field(); ?>
+                            <input type="hidden" name="status" value="approved">
+                            <button type="submit" class="btn btn-approve w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm">
+                                <i class="bx bx-play-circle fs-4 me-2"></i> <?php echo e(__('services.activate')); ?>
+
+                            </button>
+                        </form>
+                    </div>
+                <?php endif; ?>
             </div>
-        <?php endif; ?>
+        </div>
     </div>
-</div>
+<?php endif; ?>
 
 
 <div class="modal fade" id="rejectModal" tabindex="-1" aria-hidden="true">
@@ -233,13 +226,37 @@
             <form action="<?php echo e(route('services.update-status', $service->id)); ?>" method="POST">
                 <?php echo csrf_field(); ?>
                 <div class="modal-body p-4">
-                    <label class="form-label fw-bold mb-2"><?php echo e(__('services.rejection_reason')); ?></label>
-                    <textarea name="rejection_reason" class="form-control border-2" rows="5" 
-                        placeholder="<?php echo e(__('services.rejection_reason')); ?>..."></textarea>
+                    <input type="hidden" name="status" value="rejected">
+                    <label for="rejection_reason" class="form-label fw-bold mb-2"><?php echo e(__('services.rejection_reason')); ?></label>
+                    <textarea id="rejection_reason" name="reason" class="form-control border-2" rows="4" placeholder="<?php echo e(__('services.rejection_placeholder')); ?>"></textarea>
                 </div>
                 <div class="modal-footer border-top p-4">
-                    <button type="button" class="btn btn-label-secondary px-4 py-2" data-bs-dismiss="modal"><?php echo e(__('categories.cancel')); ?></button>
-                    <button type="submit" class="btn btn-danger px-4 py-2 fw-bold"><?php echo e(__('services.confirm_rejection')); ?></button>
+                    <button type="button" class="btn btn-label-secondary px-4 py-2" data-bs-dismiss="modal"><?php echo e(__('services.cancel')); ?></button>
+                    <button type="submit" class="btn btn-danger px-4 py-2 fw-bold shadow-sm"><?php echo e(__('services.confirm_rejection')); ?></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="deactivateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header border-bottom p-4">
+                <h5 class="modal-title text-warning fw-bold fs-4"><?php echo e(__('services.deactivate')); ?></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="<?php echo e(route('services.update-status', $service->id)); ?>" method="POST">
+                <?php echo csrf_field(); ?>
+                <div class="modal-body p-4">
+                    <input type="hidden" name="status" value="inactive">
+                    <label for="deactivation_reason" class="form-label fw-bold mb-2"><?php echo e(__('services.deactivation_reason')); ?></label>
+                    <textarea id="deactivation_reason" name="reason" class="form-control border-2" rows="4" placeholder="<?php echo e(__('services.deactivation_placeholder')); ?>"></textarea>
+                </div>
+                <div class="modal-footer border-top p-4">
+                    <button type="button" class="btn btn-label-secondary px-4 py-2" data-bs-dismiss="modal"><?php echo e(__('services.cancel')); ?></button>
+                    <button type="submit" class="btn btn-warning text-white px-4 py-2 fw-bold shadow-sm"><?php echo e(__('services.confirm_deactivation')); ?></button>
                 </div>
             </form>
         </div>

@@ -28,7 +28,7 @@ class ServiceController extends Controller
 
     public function updateStatus(UpdateStatusRequest $request, Service $service)
     {
-        $this->service->actions($service, $request->status);
+        $this->service->actions($service, $request->validated());
 
         return redirect()->route('services.index');
     }

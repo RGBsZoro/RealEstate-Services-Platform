@@ -51,4 +51,13 @@ return [
 
     'new_service_report_title' => 'New Service Report',
     'new_service_report_body'  => 'The user :user has reported the service: :service.',
+
+    'service_approved_title' => 'Service Approved',
+    'service_approved_body'  => 'Congratulations, your listing ":title" has been approved and published.',
+
+    'service_rejected_title' => 'Service Rejected',
+    'service_rejected_body'  => 'Sorry, your listing ":title" has been rejected because it does not meet our guidelines.',
+
+    'service_inactive_title' => 'Service Deactivated',
+    'service_inactive_body'  => 'The listing ":title" has been marked as inactive based on the latest update.',
 ];

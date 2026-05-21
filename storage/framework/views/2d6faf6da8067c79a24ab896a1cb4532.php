@@ -51,7 +51,7 @@ use Illuminate\Support\Facades\Route;
     
     /* تنسيق للترحيب الجديد */
     .navbar-greeting {
-        font-size: 0.95rem;
+        font-size: 1.05rem;
         font-weight: 500;
     }
 </style>
@@ -90,13 +90,13 @@ use Illuminate\Support\Facades\Route;
 
     
     <li class="nav-item dropdown-language dropdown">
-        <a class="nav-link dropdown-toggle hide-arrow position-relative p-2 d-flex align-items-center" href="javascript:void(0);" data-bs-toggle="dropdown" title="<?php echo e(__('header.language') ?? 'Language'); ?>">
+        <a class="nav-link dropdown-toggle hide-arrow position-relative d-flex align-items-center" href="javascript:void(0);" data-bs-toggle="dropdown" title="<?php echo e(__('header.language') ?? 'Language'); ?>" style="padding: 16px 16px !important; margin-top: -4px;">
         <?php if(app()->getLocale() === 'ar'): ?>
             
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARMAAAC3CAMAAAAGjUrGAAAAkFBMVEUAAAAAej3////OESYAfD739/dERETODiTOAB/LAADODCPMABHNABrNAB399vfMAAr77u/MABXZX2jPFSrqrbHvwsXnoKXVR1Lkk5nQIzT33+Hdc3vba3PlmZ7WTVj55ufYWGHUPUreeH/yzM/01NbSMD712dvgf4bxyMvijJLhh43uu7/rsbXpqK3fdX7QIjO4JqQaAAAFxUlEQVR4nO2baXPiOBCGWTy7dls+MEcIhHAk5CRM/v+/W5/AuH1Iak/t1tT7fJti6sV+pJbbEhn9BeqM/usL+B8CJxw44cAJB044cMKBEw6ccOCEAyccOOHACQdOOHDCgRMOnHDghAMnHDjhwAkHTjhwwoETDpxw4IQDJxw44cAJB044cMKBEw6ccOCEAyccOOHACQdOOHDCgRMOnHDghAMnHDjhwAkHTjhwwoETDpxw4IQDJxw44cAJB044cMKBEw6ccOCEAyccOOGMfoA6ozGoAyccOOHACQdOOHDCgRPOIE6iPytkECefQ1zKZoCM6HOAkGGczE7yjAlN5CGnmTxjGCdrGmCM5zSXh2xoJw8ZxMmjInnINtnKQ0g9ykMGcfLi00KaEZFD4lVpQf6LNGM8iJMdOcGDNOQrduIvachD4AxRPAM4uVOOm0hD9qET7qUhieuoO2nIIE4OnuPQuywjLR1HXDzvaYh3kGVkyJ1MstsJnmQhpzgNiYWP9KcgEyt/pMudnFV6Ja6ShUzDNCScykKUm4aosyxkPISTZVo66fA8SzIiym7HlRXPczZhHW8pycgRO8lLJy2eN0lIXjrS4nkL8hB58YidzFV+Ja4nCdmEhVhRPxy6eYgS98NiJ9u8dNLhOQpCirmWhggynssQT9wPS51E1e0kglfSRVw5EfTDn0kVIu2HpU6+qtvxBa+km6AMkRSP45chsbR4pE72ZemIiidxywxBP3ysJqzjSfthMyc/KfRqVFfiuPWPYtX4fJ4c6iGhfwnx6x/RofExckzi2reF7iWkfokhmb2OGc6TRRy4v+Bc+fUDn1o7sHvyNEM8um8LmZKvGRLEhquUae1MlrGjg0cd/eTRSfoTUgKnox7n5PUnpMRL04bFfD25J7//QtSq+519Sm5vhts+03J2L6r/Qvz2mdaKxRp7nPWNsktPfSH9o+z1b0a+9ZpNumZaG1bPnZ5RDpVGAfeNsnrR2B1aqLAro2+mtWD3LP7qGuV4qdc0dY2yS3rvT9GSWjN0Zlojlv1J+yj7pL1N/K6ClpBAae9RPbYub1ozrQnrnq1llBPnVT8j2jaPMm0N2vPX5uVNd6Y1YN/HvscNtWx60tM0ygYzrWDTYDaM7XdDBb19tGWLijLeel+v6lL8lcFMKzixQvZMZlodyfvOE1sOLPZzvrkT44wJmyii/WGJk4StKOYnCa983pPxPLlj80R0uCJw8s5vx/wk4YMvkMmHaciBdwaSwxWBE146FsXDSictnm/DDF46suIROFEND2PTk4R108OY1mYh54ZeSXK4Yu/k+Xo71w0Q05OE+2vpXGddYvjatryUjn9tDwSHK/ZO3qqbcOlhdrkhw+J5qWz69HZpVQx/HHAtnWD2cOkkBYcr9k7c8hY8Oo2jfXVdZpuhl9JJZuvx+vuyy2zUlM8vO9z7aHyq3sR81+x2brB2Uu1/xsXm4LkcZbOThEdVzbT8n9Uom/2ypmwdfcobgcmhVGS/P2ztpDg68Kl6cK5Xxf0ZnSQUpZPNtIJylI2KpzxNUatqZf4ohsf+cMXaySz74iC4WcmKUTb5Zc2ObmZaTjnKJsWTn6a4t9vQz2G2vNkfrtg6yfvPrIBvOGVvhSa/rMn6z+tMK8i3Nk364X32pbWT5nzTy7wfLrF1kvaffBs638A2KJ60/wy8+jPz6Acm/XBWOnwb+pwWoXk/XGLrZOZfC/iGdJT1fxwwIbc203KidJT1H+mnuD7TctLlzbp4LJ28Ev1s/ODoxtp7oHfUcuBxbvuggWnsNz9gnsi2eCydfLSfdk+1i+fQeuCxW+kWT9S+Db1omj86WDrZdsztO80nz65rT26j+eSZd6zGE8uD49/xtyqa86T7vw0SYgf+focDJxw44cAJB044cMIZ/Q3qjAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABM+QfU+Rfc9g3GKAkqZgAAAABJRU5ErkJggg==" alt="Syria" class="rounded-1 shadow-sm border" style="width: 26px; height: 18px; object-fit: cover;">
+            <img src="data:image/png;base64,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" alt="Syria" class="rounded-1 shadow-sm border" style="width: 32px; height: 22px; object-fit: cover;">
         <?php else: ?>
             
-            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" alt="English" class="rounded-1 shadow-sm border" style="width: 26px; height: 18px; object-fit: cover;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg" alt="English" class="rounded-1 shadow-sm border" style="width: 32px; height: 22px; object-fit: cover;">
         <?php endif; ?>
     </a>
         <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3 mt-2">
@@ -121,7 +121,7 @@ use Illuminate\Support\Facades\Route;
             $notifications = ($latestNotifications ?? collect())->take(5);
         ?>
 
-        <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-2">
+        <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-4">
             <a class="nav-link dropdown-toggle hide-arrow position-relative p-2" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                 <i class="bx bx-bell <?php echo e($unreadCount > 0 ? 'bell-shake text-primary' : ''); ?>" style="font-size: 1.5rem;"></i>
                 <?php if($unreadCount > 0): ?>

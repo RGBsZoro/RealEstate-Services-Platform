@@ -30,7 +30,7 @@ class BusinessAccountController extends Controller
 
     public function updateStatus(UpdateStatusRequest $request, BusinessAccount $businessAccount)
     {
-        $this->businessAccount->actions($businessAccount, $request->status);
+        $this->businessAccount->actions($businessAccount, $request->validated());
 
         return redirect()->route('business-accounts.index');
     }

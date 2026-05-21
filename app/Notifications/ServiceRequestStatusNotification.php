@@ -87,7 +87,7 @@ class ServiceRequestStatusNotification extends Notification implements ShouldQue
                 'service_id' => $this->serviceRequest->service_id,
                 'user_id'    => $this->serviceRequest->user_id,
                 'type'       => $data['type'],
-                'url'        => route('service-requests.show', $this->serviceRequest->id),
+                'url'        => route('services.show', $this->serviceRequest->id),
             ],
         ];
     }

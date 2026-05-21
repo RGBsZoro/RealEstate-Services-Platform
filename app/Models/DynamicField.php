@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\FieldTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
@@ -18,9 +19,11 @@ class DynamicField extends Model
         'category_id'
     ];
 
-    public function casts(){
+    public function casts()
+    {
         return [
             'options' => 'array',
+            'type' => FieldTypeEnum::class
         ];
     }
 

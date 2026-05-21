@@ -48,8 +48,10 @@ class BusinessAccountService
         ];
     }
 
-    public function actions(BusinessAccount $businessAccount, $newStatus)
+    public function actions(BusinessAccount $businessAccount, array $data)
     {
+        $newStatus = $data['status'];
+
         $currentStatus = $businessAccount->status->value;
 
         if ($newStatus === StatusEnum::INACTIVE->value && $currentStatus !== StatusEnum::APPROVED->value) {
@@ -85,6 +87,6 @@ class BusinessAccountService
         });
 
         // send notification
-        $businessAccount->user->notify(new BusinessAccountStatusNotification($businessAccount));
+        $businessAccount->user->notify(new BusinessAccountStatusNotification($businessAccount, $data['reason'] ?? null));
     }
 }

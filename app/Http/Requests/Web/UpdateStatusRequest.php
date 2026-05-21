@@ -26,6 +26,7 @@ class UpdateStatusRequest extends FormRequest
     {
         return [
             'status' => ['required', 'string', new Enum(StatusEnum::class)],
+            'reason' => ['nullable','string', 'max:1000'],
         ];
     }
 }

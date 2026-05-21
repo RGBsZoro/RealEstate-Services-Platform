@@ -6,11 +6,11 @@
 {{-- Stats Summary --}}
 <div class="row g-4 mb-4">
     <div class="col-sm-6 col-xl-4">
-        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(105, 108, 255, 0.08);">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body p-3">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <h6 class="mb-1 fw-bold text-primary">{{ __('categories.total_main') }}</h6>
+                        <h6 class="mb-1 fw-bold">{{ __('categories.total_main') }}</h6>
                         <h4 class="mb-0 fw-black">{{ $stats['total'] }}</h4>
                     </div>
                     <span class="badge bg-primary rounded-circle p-2"><i class="bx bx-grid-alt fs-3"></i></span>
@@ -19,11 +19,11 @@
         </div>
     </div>
     <div class="col-sm-6 col-xl-4">
-        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(113, 221, 55, 0.08);">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body p-3">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <h6 class="mb-1 fw-bold text-success">{{ __('categories.active_main') }}</h6>
+                        <h6 class="mb-1 fw-bold">{{ __('categories.active_main') }}</h6>
                         <h4 class="mb-0 fw-black">{{ $stats['active'] }}</h4>
                     </div>
                     <span class="badge bg-success rounded-circle p-2"><i class="bx bx-check-circle fs-3"></i></span>
@@ -32,11 +32,11 @@
         </div>
     </div>
     <div class="col-sm-6 col-xl-4">
-        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(255, 62, 29, 0.08);">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body p-3">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <h6 class="mb-1 fw-bold text-danger">{{ __('categories.inactive_main') }}</h6>
+                        <h6 class="mb-1 fw-bold">{{ __('categories.inactive_main') }}</h6>
                         <h4 class="mb-0 fw-black">{{ $stats['inactive'] }}</h4>
                     </div>
                     <span class="badge bg-danger rounded-circle p-2"><i class="bx bx-x-circle fs-3"></i></span>

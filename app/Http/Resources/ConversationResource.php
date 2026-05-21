@@ -33,6 +33,7 @@ class ConversationResource extends JsonResource
             ],
             'unread_messages_count' => $this->unread_messages_count ?? 0,
             'last_message_at' => $this->last_message_at ? $this->last_message_at->diffForHumans() : null,
+            'last_message' => $this->messages->last()->body ?? null,
         ];
     }
 }

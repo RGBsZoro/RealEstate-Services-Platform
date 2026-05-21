@@ -15,6 +15,6 @@ class SliderController extends Controller
     {
         $sliders = $this->slider->getAllSlidersForApi();
 
-        return successResponse(SliderResource::collection($sliders));
+        return successResponse(SliderResource::collection($sliders)->response()->getData(true));
     }
 }

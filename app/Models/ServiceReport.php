@@ -11,7 +11,8 @@ class ServiceReport extends Model
         'user_id',
         'service_id',
         'reason',
-        'status'
+        'status',
+        'description'
     ];
 
     protected $casts = [

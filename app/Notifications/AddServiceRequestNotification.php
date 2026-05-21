@@ -8,12 +8,13 @@ use App\Models\Service;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
+use Illuminate\Queue\SerializesModels;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification as MessagingNotification;
 
 class AddServiceRequestNotification extends Notification implements ShouldQueue, FcmNotification
 {
-    use Queueable;
+    use Queueable, SerializesModels;
 
     public int $tries = 3;
     public int $backoff = 60;
@@ -29,7 +30,7 @@ class AddServiceRequestNotification extends Notification implements ShouldQueue,
         return ['database', FcmChannel::class];
     }
 
-    
+
     protected function getNotificationData(): array
     {
         return [
@@ -68,8 +69,7 @@ class AddServiceRequestNotification extends Notification implements ShouldQueue,
     public function toFcm($notifiable)
     {
         $data = $this->getNotificationData();
-        
-        // تحديد لغة المستخدم لتصل الرسالة مترجمة للهاتف
+
         $locale = $notifiable->locale ?? app()->getLocale();
 
         $title = __($data['title_key'], [], $locale);

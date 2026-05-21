@@ -24,7 +24,7 @@ class ServiceManagementService
                 'category_id' => $data['category_id'],
                 'title' => $data['title'],
                 'description' => $data['description'],
-                'quantity' => $data['quantity'],
+                'quantity' => $data['quantity'] ?? null,
                 'type' => $data['type'],
                 'price_syp' => $data['price_syp'],
                 'price_usd' => $data['price_usd'],
@@ -63,7 +63,11 @@ class ServiceManagementService
             ->withAvg('reviews', 'rating');
 
         if ($businessAccountId) {
-            $query->where('business_account_id', $businessAccountId);
+            if (is_array($businessAccountId)) {
+                $query->whereIn('business_account_id', $businessAccountId);
+            } else {
+                $query->where('business_account_id', $businessAccountId);
+            }
 
             if (!empty($filters['status'])) {
                 $query->where('status', $filters['status']);
@@ -120,8 +124,14 @@ class ServiceManagementService
     public function showServiceDetails(Service $service, $businessAccountId = null)
     {
         if ($businessAccountId) {
-            if ($service->business_account_id != $businessAccountId) {
-                throw new AuthorizationException();
+            if (is_array($businessAccountId)) {
+                if (!in_array($service->business_account_id, $businessAccountId)) {
+                    throw new AuthorizationException();
+                }
+            } else {
+                if ($service->business_account_id != $businessAccountId) {
+                    throw new AuthorizationException();
+                }
             }
         } else {
             if ($service->status->value != StatusEnum::APPROVED->value) {
@@ -129,7 +139,7 @@ class ServiceManagementService
             }
         }
 
-        $service->load(['businessAccount', 'category', 'fieldValues.dynamicField'])
+        $service->load(['businessAccount', 'category', 'fieldValues.field'])
             ->loadCount('reviews')
             ->loadAvg('reviews', 'rating');;
 

@@ -46,4 +46,12 @@ return [
     'activate' => 'تنشيط الخدمة',
     'confirm_deactivate' => 'هل أنت متأكد من تعطيل هذه الخدمة؟ لن تظهر للمستخدمين.',
     'confirm_activate' => 'هل أنت متأكد من إعادة تنشيط الخدمة؟',
+
+    'approve_confirm_msg' => 'هل أنت متأكد من قبول هذه الخدمة؟',
+    'activate_confirm_msg' => 'هل أنت متأكد من إعادة تفعيل هذه الخدمة؟',
+    'rejection_placeholder' => 'يرجى كتابة سبب الرفض هنا...',
+    'deactivation_reason' => 'سبب الإيقاف',
+    'deactivation_placeholder' => 'يرجى كتابة سبب إيقاف الخدمة...',
+    'confirm_deactivation' => 'تأكيد الإيقاف',
+    'cancel' => 'إلغاء',
 ];

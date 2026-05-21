@@ -20,7 +20,7 @@ class ServiceRequestController extends Controller
         $requests = $this->serviceRequest->getAllMyRequests();
 
         return successResponse([
-            'sent_requests'     => ServiceRequestResource::collection($requests['sent'])->response()->getData(true),
+            'sent_requests' => ServiceRequestResource::collection($requests['sent'])->response()->getData(true),
             'received_requests' => ServiceRequestResource::collection($requests['received'])->response()->getData(true),
         ]);
     }

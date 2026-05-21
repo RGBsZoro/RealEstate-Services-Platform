@@ -76,6 +76,11 @@ class CategoryService
         'isActive' => $data['isActive'] ?? false
       ]);
 
+      if ($category->wasChanged('isActive') && $category->isActive == false) {
+        $category->children()->update(['isActive' => false]);
+      }
+
+
       if (isset($data['icon'])) {
         $category->clearMediaCollection('Categories');
         $category->addMedia($data['icon'])->toMediaCollection('Categories');

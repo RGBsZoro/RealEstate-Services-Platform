@@ -80,8 +80,6 @@ $container = ($container ?? 'container-xxl');
         <!-- Drag Target Area To SlideIn Menu On Small Screens -->
         <div class="drag-target"></div>
 
-        <?php echo $__env->make('_partials.firebase', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-
     </div>
     <?php echo $__env->yieldPushContent('vendor-script'); ?>
 <?php echo $__env->yieldPushContent('page-script'); ?>

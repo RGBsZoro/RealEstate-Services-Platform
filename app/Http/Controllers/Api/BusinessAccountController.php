@@ -11,6 +11,7 @@ use App\Http\Requests\Api\StoreBusinessAccountStep4Request;
 use App\Http\Requests\Api\UpdateBusinessAccountRequest;
 use App\Http\Resources\BusinessAccountDetailsResource;
 use App\Http\Resources\BusinessAccountResource;
+use App\Http\Resources\CityResource;
 use App\Models\BusinessAccount;
 use App\Services\Api\BusinessAccountService;
 use Illuminate\Http\Request;
@@ -37,6 +38,12 @@ class BusinessAccountController extends Controller
     {
         $account = $this->businessAccount->getAccountDetails($businessAccount);
         return successResponse(BusinessAccountDetailsResource::make($account));
+    }
+
+    public function getAllCities()
+    {
+        $cities = $this->businessAccount->getAllCities();
+        return successResponse(CityResource::collection($cities));
     }
 
     public function update(UpdateBusinessAccountRequest $request, BusinessAccount $businessAccount)

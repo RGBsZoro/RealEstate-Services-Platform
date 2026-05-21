@@ -15,13 +15,13 @@ class NotificationController extends Controller
     public function index()
     {
         $notifications = $this->notification->getNotifications(auth('api')->user());
-        return successResponse(NotificationResource::collection($notifications));
+        return successResponse(NotificationResource::collection($notifications)->response()->getData(true));
     }
 
     public function getUnreadNotifications()
     {
         $unReadNotifications = $this->notification->getUnreadNotifications(auth('api')->user());
-        return successResponse(NotificationResource::collection($unReadNotifications));
+        return successResponse(NotificationResource::collection($unReadNotifications)->response()->getData(true));
     }
 
     public function markAsRead(DatabaseNotification $notification)
