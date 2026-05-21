@@ -138,7 +138,7 @@ class ServiceRequestService
         $end = Carbon::parse($endDate)->endOfDay();
 
         $sent = $this->user->serviceRequests()
-            ->whereIn('status', [ServiceRequestStatusEnum::APPROVED->value, ServiceRequestStatusEnum::PENDING->value])
+            ->whereIn('service_requests.status', [ServiceRequestStatusEnum::APPROVED->value, ServiceRequestStatusEnum::PENDING->value])
             ->whereBetween('required_at', [$start, $end])
             ->with('service:id,title')
             ->get()
@@ -153,7 +153,7 @@ class ServiceRequestService
             });
 
         $received = $this->user->receivedServiceRequests()
-            ->whereIn('status', [ServiceRequestStatusEnum::APPROVED->value])
+            ->whereIn('service_requests.status', [ServiceRequestStatusEnum::APPROVED->value])
             ->whereBetween('required_at', [$start, $end])
             ->with('service:id,title')
             ->get()

@@ -11,12 +11,12 @@ class NotificationResource extends JsonResource
     {
         $data = $this->data;
 
-        $title = isset($data['title_key']) 
-            ? __($data['title_key'], [], $request->header('Accept-Language')) 
+        $title = isset($data['title_key'])
+            ? __($data['title_key'], [], $request->header('Accept-Language'))
             : ($data['title'] ?? '');
 
-        $body = isset($data['body_key']) 
-            ? __($data['body_key'], $data['body_args'] ?? [], $request->header('Accept-Language')) 
+        $body = isset($data['body_key'])
+            ? __($data['body_key'], $data['body_args'] ?? [], $request->header('Accept-Language'))
             : ($data['body'] ?? '');
 
         return [
@@ -28,7 +28,8 @@ class NotificationResource extends JsonResource
             'payload'    => [
                 'id'   => $data['data']['id'] ?? null,
                 'type' => $data['data']['type'] ?? 'general',
-                'url'  => $data['data']['url'] ?? null, // سنناقش هذا بالأسفل
+                'url'  => $data['data']['url'] ?? null,
+                'reason' => $data['data']['reason'] ?? null,
             ],
             'read_at'    => $this->read_at ? $this->read_at->format('Y-m-d H:i:s') : null,
             'created_at' => $this->created_at->diffForHumans(),

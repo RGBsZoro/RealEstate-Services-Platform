@@ -155,62 +155,56 @@
             </div>
         </div>
 
-            {{-- أزرار التحكم بالتصميم الاحترافي الجديد --}}
-            @can('manage-business-accounts') 
-                <div class="card bg-transparent shadow-none border-0 mt-4">
-                    <div class="card-body p-0">
-                        <div class="row g-3">
-                            {{-- الحالة 1: الطلب معلق - يظهر قبول ورفض --}}
-                            @if($businessAccount->status->value === \App\Enum\StatusEnum::PENDING->value)
-                                <div class="col-12 col-md-6">
-                                    <form action="{{ route('business-accounts.update-status', $businessAccount->id) }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="status" value="approved">
-                                        <button type="submit" class="btn btn-approve w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm">
-                                            <i class="bx bx-check-circle fs-4 me-2"></i> {{ __('business.approve_req') }}
-                                        </button>
-                                    </form>
-                                </div>
-                                <div class="col-12 col-md-6">
-                                    <button type="button" class="btn btn-reject w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm" 
-                                        data-bs-toggle="modal" data-bs-target="#rejectModal">
-                                        <i class="bx bx-x-circle fs-4 me-2"></i> {{ __('business.reject_req') }}
-                                    </button>
-                                </div>
-
-                            {{-- الحالة 2: الحساب مقبول - يظهر زر إيقاف --}}
-                            @elseif($businessAccount->status->value === \App\Enum\StatusEnum::APPROVED->value)
-                                <div class="col-12">
-                                    <form action="{{ route('business-accounts.update-status', $businessAccount->id) }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="status" value="inactive">
-                                        <button type="submit" class="btn btn-inactive w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm"
-                                            onclick="return confirm('{{ __("business.deactivate_confirm_msg") }}')">
-                                            <i class="bx bx-power-off fs-4 me-2"></i> {{ __('business.deactivate_acc') }}
-                                        </button>
-                                    </form>
-                                </div>
-
-                            {{-- الحالة 3: الحساب موقوف - يظهر زر إعادة تفعيل --}}
-                            @elseif($businessAccount->status->value === \App\Enum\StatusEnum::INACTIVE->value)
-                                <div class="col-12">
-                                    <form action="{{ route('business-accounts.update-status', $businessAccount->id) }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="status" value="approved">
-                                        <button type="submit" class="btn btn-approve w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm">
-                                            <i class="bx bx-play-circle fs-4 me-2"></i> {{ __('business.activate_acc') }}
-                                        </button>
-                                    </form>
-                                </div>
-                            @endif
-                        </div>
+           {{-- أزرار التحكم بالتصميم الاحترافي الجديد --}}
+@can('manage-business-accounts') 
+    <div class="card bg-transparent shadow-none border-0 mt-4">
+        <div class="card-body p-0">
+            <div class="row g-3">
+                {{-- الحالة 1: الطلب معلق - يظهر قبول ورفض --}}
+                @if($businessAccount->status->value === \App\Enum\StatusEnum::PENDING->value)
+                    <div class="col-12 col-md-6">
+                        <form action="{{ route('business-accounts.update-status', $businessAccount->id) }}" method="POST" onsubmit="return confirm('{{ __("business.approve_confirm_msg") }}')">
+                            @csrf
+                            <input type="hidden" name="status" value="approved">
+                            <button type="submit" class="btn btn-approve w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm">
+                                <i class="bx bx-check-circle fs-4 me-2"></i> {{ __('business.approve_req') }}
+                            </button>
+                        </form>
                     </div>
-                </div>
-            @endcan
-    </div>
-</div>
+                    <div class="col-12 col-md-6">
+                        <button type="button" class="btn btn-reject w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm" 
+                            data-bs-toggle="modal" data-bs-target="#rejectModal">
+                            <i class="bx bx-x-circle fs-4 me-2"></i> {{ __('business.reject_req') }}
+                        </button>
+                    </div>
 
-{{-- Modal الرفض الموحد --}}
+                {{-- الحالة 2: الحساب مقبول - يظهر زر إيقاف يفتح مودال السبب --}}
+                @elseif($businessAccount->status->value === \App\Enum\StatusEnum::APPROVED->value)
+                    <div class="col-12">
+                        <button type="button" class="btn btn-inactive w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm"
+                            data-bs-toggle="modal" data-bs-target="#deactivateModal">
+                            <i class="bx bx-power-off fs-4 me-2"></i> {{ __('business.deactivate_acc') }}
+                        </button>
+                    </div>
+
+                {{-- الحالة 3: الحساب موقوف - يظهر زر إعادة تفعيل مباشرة --}}
+                @elseif($businessAccount->status->value === \App\Enum\StatusEnum::INACTIVE->value)
+                    <div class="col-12">
+                        <form action="{{ route('business-accounts.update-status', $businessAccount->id) }}" method="POST" onsubmit="return confirm('{{ __("business.activate_confirm_msg") }}')">
+                            @csrf
+                            <input type="hidden" name="status" value="approved">
+                            <button type="submit" class="btn btn-approve w-100 btn-lg rounded-3 py-3 fw-bold shadow-sm">
+                                <i class="bx bx-play-circle fs-4 me-2"></i> {{ __('business.activate_acc') }}
+                            </button>
+                        </form>
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+@endcan
+
+{{-- Modal الرفض --}}
 <div class="modal fade" id="rejectModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content shadow-lg border-0">
@@ -223,12 +217,37 @@
                 <div class="modal-body p-4">
                     <input type="hidden" name="status" value="rejected">
                     <label for="rejection_reason" class="form-label fw-bold mb-2">{{ __('business.rejection_reason') }}</label>
-                    <textarea id="rejection_reason" name="rejection_reason" class="form-control border-2" rows="5" 
+                    <textarea id="rejection_reason" name="reason" class="form-control border-2" rows="4"
                         placeholder="{{ __('business.rejection_placeholder') }}"></textarea>
                 </div>
                 <div class="modal-footer border-top p-4">
                     <button type="button" class="btn btn-label-secondary px-4 py-2" data-bs-dismiss="modal">{{ __('business.cancel') }}</button>
                     <button type="submit" class="btn btn-danger px-4 py-2 fw-bold shadow-sm">{{ __('business.confirm_rejection') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Modal الإيقاف (جديد) --}}
+<div class="modal fade" id="deactivateModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header border-bottom p-4">
+                <h5 class="modal-title text-warning fw-bold fs-4">{{ __('business.deactivate_acc') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('business-accounts.update-status', $businessAccount->id) }}" method="POST">
+                @csrf
+                <div class="modal-body p-4">
+                    <input type="hidden" name="status" value="inactive">
+                    <label for="deactivation_reason" class="form-label fw-bold mb-2">{{ __('business.deactivation_reason') }}</label>
+                    <textarea id="deactivation_reason" name="reason" class="form-control border-2" rows="4"
+                        placeholder="{{ __('business.deactivation_placeholder') }}"></textarea>
+                </div>
+                <div class="modal-footer border-top p-4">
+                    <button type="button" class="btn btn-label-secondary px-4 py-2" data-bs-dismiss="modal">{{ __('business.cancel') }}</button>
+                    <button type="submit" class="btn btn-warning text-white px-4 py-2 fw-bold shadow-sm">{{ __('business.confirm_deactivation') }}</button>
                 </div>
             </form>
         </div>

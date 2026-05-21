@@ -65,4 +65,9 @@ return [
   'activate_acc' => 'Activate Account',
   'deactivate_confirm_msg' => 'Are you sure you want to deactivate this account? This will also deactivate all related services.',
 
+  'deactivation_reason' => 'Deactivation Reason',
+  'deactivation_placeholder' => 'Please provide a reason for deactivating this business account...',
+  'confirm_deactivation' => 'Confirm Deactivation & Send Reason',
+
+  'activate_confirm_msg' => 'Are you sure you want to re-activate this business account?',
 ];

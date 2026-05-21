@@ -8,11 +8,11 @@
 <div class="row g-4 mb-4">
     {{-- Total Cities --}}
     <div class="col-sm-6 col-xl-4">
-        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(105, 108, 255, 0.08);">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body p-3"> 
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="content-left">
-                        <h6 class="mb-1 fw-bold text-primary">{{ __('cities.total_cities') }}</h6>
+                        <h6 class="mb-1 fw-bold">{{ __('cities.total_cities') }}</h6>
                         <div class="d-flex align-items-center">
                             <h4 class="mb-0 me-2 fw-black">{{ $stats['total_cities'] }}</h4>
                         </div>
@@ -27,11 +27,11 @@
 
     {{-- Coverage Area --}}
     <div class="col-sm-6 col-xl-4">
-        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(3, 195, 236, 0.08);">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body p-3">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="content-left">
-                        <h6 class="mb-1 fw-bold text-info">{{ __('cities.coverage_area') }}</h6>
+                        <h6 class="mb-1 fw-bold">{{ __('cities.coverage_area') }}</h6>
                         <div class="d-flex align-items-center">
                             <h4 class="mb-0 me-2 fw-black">{{ number_format($stats['total_radius']) }}</h4>
                             <small class="text-muted">{{ __('cities.km') }}</small>
@@ -47,11 +47,11 @@
 
     {{-- Business Accounts --}}
     <div class="col-sm-6 col-xl-4">
-        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(255, 171, 0, 0.08);">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body p-3">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="content-left">
-                        <h6 class="mb-1 fw-bold text-warning">{{ __('cities.business_accounts') }}</h6>
+                        <h6 class="mb-1 fw-bold">{{ __('cities.business_accounts') }}</h6>
                         <div class="d-flex align-items-center">
                             <h4 class="mb-0 me-2 fw-black">{{ $stats['total_accounts'] }}</h4>
                         </div>

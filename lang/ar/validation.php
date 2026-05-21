@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 return [
+    'category_inactive'         => 'القسم الذي اخترته غير فعال حالياً.',
+    'must_choose_subcategory'   => 'يجب عليك اختيار قسم فرعي، هذا القسم يحتوي على أقسام تابعة له.',
     'accepted'               => 'يجب قبول :attribute.',
     'accepted_if'            => 'يجب قبول :attribute في حالة :other يساوي :value.',
     'active_url'             => 'حقل :attribute لا يُمثّل رابطًا صحيحًا.',

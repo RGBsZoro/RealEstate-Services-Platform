@@ -83,8 +83,6 @@ $container = ($container ?? 'container-xxl');
         <!-- Drag Target Area To SlideIn Menu On Small Screens -->
         <div class="drag-target"></div>
 
-        @include('_partials.firebase')
-
     </div>
     @stack('vendor-script')
 @stack('page-script')

@@ -39,7 +39,7 @@ class ServiceController extends Controller
 
     public function getMyServices(FilterServicesRequest $request)
     {
-        $businessAccountId = auth('api')->user()->businessAccount->id;
+        $businessAccountId = auth('api')->user()->businessAccounts()->pluck('id')->toArray();;
 
         $services = $this->service->getAllServices($request->validated(), $businessAccountId);
 
@@ -55,7 +55,7 @@ class ServiceController extends Controller
 
     public function showMyService(Service $service)
     {
-        $businessAccountId = auth('api')->user()->businessAccount->id;
+        $businessAccountId = auth('api')->user()->businessAccounts()->pluck('id')->toArray();
 
         $service = $this->service->showServiceDetails($service, $businessAccountId);
 

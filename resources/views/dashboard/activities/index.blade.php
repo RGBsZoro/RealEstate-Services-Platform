@@ -7,11 +7,11 @@
 {{-- الإحصائيات الملونة --}}
 <div class="row g-4 mb-4">
     <div class="col-sm-6 col-xl-4">
-        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(105, 108, 255, 0.08);">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body p-3">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="content-left">
-                        <h6 class="mb-1 fw-bold text-primary">{{ __('activities.total_activities') }}</h6>
+                        <h6 class="mb-1 fw-bold">{{ __('activities.total_activities') }}</h6>
                         <h4 class="mb-0 fw-black">{{ $stats['total_activities'] }}</h4>
                     </div>
                     <span class="badge bg-primary rounded-circle p-2">
@@ -23,11 +23,11 @@
     </div>
 
     <div class="col-sm-6 col-xl-4">
-        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(113, 221, 55, 0.08);">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body p-3">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="content-left">
-                        <h6 class="mb-1 fw-bold text-success">{{ __('activities.utilized_activities') }}</h6>
+                        <h6 class="mb-1 fw-bold">{{ __('activities.utilized_activities') }}</h6>
                         <h4 class="mb-0 fw-black">{{ $stats['active_usage'] }}</h4>
                     </div>
                     <span class="badge bg-success rounded-circle p-2">
@@ -39,11 +39,11 @@
     </div>
 
     <div class="col-sm-6 col-xl-4">
-        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(255, 171, 0, 0.08);">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body p-3">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="content-left">
-                        <h6 class="mb-1 fw-bold text-warning">{{ __('activities.total_assignments') }}</h6>
+                        <h6 class="mb-1 fw-bold">{{ __('activities.total_assignments') }}</h6>
                         <h4 class="mb-0 fw-black">{{ $stats['total_assignments'] }}</h4>
                     </div>
                     <span class="badge bg-warning rounded-circle p-2">

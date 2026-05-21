@@ -19,7 +19,8 @@ class SliderService
                 $query->WhereDate('end_date', '>=', $today);
             })
             ->latest()
-            ->get();
+            ->cursorPaginate(10);
+
         return $sliders;
     }
     public function getAllSliders($filters = [])

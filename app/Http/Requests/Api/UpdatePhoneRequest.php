@@ -23,7 +23,7 @@ class UpdatePhoneRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone' => ['required', 'string', 'unique:users,phone' . $this->user->id],
+            'phone' => ['required', 'string','max:20', 'unique:users,phone,' . $this->user()->id],
         ];
     }
 }

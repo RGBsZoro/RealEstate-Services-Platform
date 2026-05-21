@@ -42,9 +42,9 @@ class StoreBusinessAccountRequest extends FormRequest
             'latitude' => 'required',
             'longitude' => 'required',
             'documents' => 'nullable|array',
-            'documents.*' => 'file|mimes:pdf|max:2048',
+            'documents.*' => 'file|mimes:pdf|max:10048',
             'images' => 'nullable|array',
-            'images.*' => 'file|mimes:jpg,jpeg,png|max:2048'
+            'images.*' => 'file|mimes:jpg,jpeg,png|max:4048'
         ];
     }
 }

@@ -20,11 +20,11 @@ class DatabaseSeeder extends Seeder
             RolesAndPermissionsSeeder::class,
             CitySeeder::class,
             ActivitySeeder::class,
-            // CategorySeeder::class,
-            // UserAndBusinessSeeder::class,
-            // ServiceSeeder::class,
-            // SliderSeeder::class,
-            // ServiceReportSeeder::class,
+            CategorySeeder::class,
+            UserAndBusinessSeeder::class,
+            ServiceSeeder::class,
+            SliderSeeder::class,
+            ServiceReportSeeder::class,
         ]);
     }
 }

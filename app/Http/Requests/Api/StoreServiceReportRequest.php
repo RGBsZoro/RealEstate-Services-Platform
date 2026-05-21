@@ -39,6 +39,7 @@ class StoreServiceReportRequest extends FormRequest
                 new NotOwnService()
             ],
             'reason' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
         ];
     }
 }

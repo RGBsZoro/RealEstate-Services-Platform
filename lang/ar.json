@@ -1,4 +1,11 @@
 {
+    "Unauthenticated.": "يرجى تسجيل الدخول أولاً للوصول إلى هذه الخدمة.",
+    "You do not have the required authorization.": "ليس لديك الصلاحيات الكافية لإتمام هذا الإجراء.",
+    "Resource not found.": "المورد أو الصفحة المطلوبة غير موجودة.",
+    "HTTP Method not allowed for this route.": "طريقة الطلب (HTTP Method) غير مدعومة لهذا المسار.",
+    "Too many requests, please slow down.": "طلبات كثيرة جداً، يرجى التمهل قليلاً والمحاولة لاحقاً.",
+    "Something went wrong.": "حدث خطأ ما، يرجى المحاولة مرة أخرى.",
+    "Internal Server Error. Please try again later.": "حدث خطأ داخلي في الخادم، يرجى المحاولة مرة أخرى لاحقاً.",
     "(and :count more error)": "(و :count خطأ إضافي)",
     "(and :count more errors)": "(و :count خطأ إضافي)|(و :count أخطاء إضافية)|(و :count أخطاء إضافية)",
     "A decryption key is required.": "مطلوب مفتاح فك التشفير.",

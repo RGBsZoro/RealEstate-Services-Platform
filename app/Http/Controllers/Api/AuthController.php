@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\ForgotPasswordRequest;
 use App\Http\Requests\Api\LoginRequest;
 use App\Http\Requests\Api\RegisterRequest;
+use App\Http\Requests\Api\ResetPasswordRequest;
+use App\Http\Requests\Api\VerifyForgotPasswordOtpRequest;
 use App\Http\Requests\Api\VerifyRegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Services\Api\AuthService;
@@ -43,5 +46,23 @@ class AuthController extends Controller
         $this->auth->logout();
 
         return successResponse();
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request)
+    {
+        $resetId = $this->auth->forgotPassword($request->validated());
+        return successResponse(['reset_id' => $resetId]);
+    }
+
+    public function verifyForgotPasswordOtp(VerifyForgotPasswordOtpRequest $request)
+    {
+        $tempToken = $this->auth->verifyForgotPasswordOtp($request->validated());
+        return successResponse(['reset_token' => $tempToken]);
+    }
+
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        $this->auth->resetPassword($request->validated());
+        return successResponse(['message' => 'Password has been reset successfully.']);
     }
 }

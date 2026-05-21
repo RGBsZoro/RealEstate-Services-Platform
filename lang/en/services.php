@@ -47,4 +47,12 @@ return [
     'activate' => 'Activate Service',
     'confirm_deactivate' => 'Are you sure you want to deactivate this service? It will be hidden from users.',
     'confirm_activate' => 'Are you sure you want to reactivate this service?',
+
+    'approve_confirm_msg' => 'Are you sure you want to approve this service?',
+    'activate_confirm_msg' => 'Are you sure you want to reactivate this service?',
+    'rejection_placeholder' => 'Please enter the reason for rejection here...',
+    'deactivation_reason' => 'Reason for Deactivation',
+    'deactivation_placeholder' => 'Please enter the reason for deactivation here...',
+    'confirm_deactivation' => 'Confirm Deactivation',
+    'cancel' => 'Cancel',
 ];

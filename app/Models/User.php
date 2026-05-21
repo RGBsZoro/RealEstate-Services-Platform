@@ -82,9 +82,9 @@ class User extends Authenticatable implements HasMedia
     }
 
     public function favoriteServices()
-{
-    return $this->belongsToMany(Service::class, 'favorites')
-                ->withTimestamps()
-                ->orderByPivot('created_at', 'desc'); 
-}
+    {
+        return $this->belongsToMany(Service::class, 'favorites')
+            ->withTimestamps()
+            ->orderByPivot('created_at', 'desc');
+    }
 }

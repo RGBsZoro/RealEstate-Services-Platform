@@ -5,7 +5,7 @@ namespace App\Http\Requests\Api;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class VerifyPhoneRequest extends FormRequest
+class ForgotPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,7 @@ class VerifyPhoneRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone' => ['required', 'string', 'max:20', 'unique:users,phone,' . $this->user()->id],
-            'registration_id' => ['required', 'string'],
-            'otp' => ['required', 'string', 'size:6'],
+            'phone' => ['required', 'string', 'exists:users,phone'],
         ];
     }
 }

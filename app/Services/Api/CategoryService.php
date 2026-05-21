@@ -21,4 +21,9 @@ class CategoryService
             ->orderBy('name')
             ->get();
     }
+
+    public function getDynamicFildes(Category $category)
+    {
+        return $category->allDynamicFields();
+    }
 }

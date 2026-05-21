@@ -51,4 +51,13 @@ return [
 
     'new_service_report_title' => 'بلاغ جديد عن خدمة',
     'new_service_report_body'  => 'قام المستخدم :user بتقديم بلاغ عن الخدمة: :service.',
+
+    'service_approved_title' => 'تم قبول عرضك',
+    'service_approved_body'  => 'تهانينا، تم قبول ونشر عرضك الجديد ":title" بنجاح.',
+
+    'service_rejected_title' => 'تم رفض العرض',
+    'service_rejected_body'  => 'نعتذر منك، تم رفض العرض الخاص بك ":title" لعدم استيفاء الشروط.',
+
+    'service_inactive_title' => 'تم إيقاف العرض',
+    'service_inactive_body'  => 'تم تحويل حالة العرض ":title" إلى غير نشط بناءً على التحديثات الأخيرة.',
 ];

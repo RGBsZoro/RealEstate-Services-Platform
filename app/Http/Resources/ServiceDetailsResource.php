@@ -51,8 +51,8 @@ class ServiceDetailsResource extends JsonResource
 
             'dynamic_fields' => $this->fieldValues->map(function ($fieldValue) {
                 return [
-                    'id' => $fieldValue->dynamicField->id,
-                    'name' => $fieldValue->dynamicField->name,
+                    'id' => $fieldValue->field->id,
+                    'name' => $fieldValue->field->label,
                     'value' => $fieldValue->value,
                 ];
             }),

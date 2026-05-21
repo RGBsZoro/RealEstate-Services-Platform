@@ -6,11 +6,11 @@
 <div class="row g-4 mb-4">
     
     <div class="col-sm-6 col-xl-3">
-        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(255, 171, 0, 0.08);">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body p-3">
                 <div class="d-flex align-items-center justify-content-between text-nowrap">
                     <div>
-                        <h6 class="mb-1 fw-bold text-warning"><?php echo e(__('services.pending_requests')); ?></h6>
+                        <h6 class="mb-1 fw-bold"><?php echo e(__('services.pending_requests')); ?></h6>
                         <h4 class="mb-0 fw-black"><?php echo e($stats['pending']); ?></h4>
                     </div>
                     <span class="badge bg-warning rounded-circle p-2"><i class="bx bx-time-five fs-3"></i></span>
@@ -21,11 +21,11 @@
 
     
     <div class="col-sm-6 col-xl-3">
-        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(113, 221, 55, 0.08);">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body p-3 text-nowrap">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <h6 class="mb-1 fw-bold text-success"><?php echo e(__('services.approved_services')); ?></h6>
+                        <h6 class="mb-1 fw-bold"><?php echo e(__('services.approved_services')); ?></h6>
                         <h4 class="mb-0 fw-black"><?php echo e($stats['approved']); ?></h4>
                     </div>
                     <span class="badge bg-success rounded-circle p-2"><i class="bx bx-check-double fs-3"></i></span>
@@ -36,11 +36,11 @@
 
     
     <div class="col-sm-6 col-xl-3">
-        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(133, 146, 163, 0.08);">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body p-3 text-nowrap">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <h6 class="mb-1 fw-bold text-secondary"><?php echo e(__('services.inactive_services')); ?></h6>
+                        <h6 class="mb-1 fw-bold"><?php echo e(__('services.inactive_services')); ?></h6>
                         <h4 class="mb-0 fw-black"><?php echo e($stats['inactive'] ?? 0); ?></h4>
                     </div>
                     <span class="badge bg-secondary rounded-circle p-2"><i class="bx bx-power-off fs-3"></i></span>
@@ -51,11 +51,11 @@
 
     
     <div class="col-sm-6 col-xl-3">
-        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(105, 108, 255, 0.08);">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body p-3 text-nowrap">
                 <div class="d-flex align-items-center justify-content-between">
                     <div>
-                        <h6 class="mb-1 fw-bold text-primary"><?php echo e(__('services.total_services')); ?></h6>
+                        <h6 class="mb-1 fw-bold"><?php echo e(__('services.total_services')); ?></h6>
                         <h4 class="mb-0 fw-black"><?php echo e(array_sum($stats)); ?></h4>
                     </div>
                     <span class="badge bg-primary rounded-circle p-2"><i class="bx bx-list-ul fs-3"></i></span>

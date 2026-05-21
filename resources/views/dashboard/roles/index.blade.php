@@ -7,11 +7,11 @@
 {{-- بطاقات الإحصائيات الملونة --}}
 <div class="row g-4 mb-4">
     <div class="col-sm-6 col-xl-4">
-        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(105, 108, 255, 0.08);">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body p-3 text-nowrap">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="content-left">
-                        <h6 class="mb-1 fw-bold text-primary">{{ __('roles.total_roles') }}</h6>
+                        <h6 class="mb-1 fw-bold ">{{ __('roles.total_roles') }}</h6>
                         <h4 class="mb-0 fw-black">{{ $stats['total_roles'] }}</h4>
                     </div>
                     <span class="badge bg-primary rounded-circle p-2">
@@ -22,11 +22,11 @@
         </div>
     </div>
     <div class="col-sm-6 col-xl-4">
-        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(255, 171, 0, 0.08);">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body p-3 text-nowrap">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="content-left">
-                        <h6 class="mb-1 fw-bold text-warning">{{ __('roles.system_permissions') }}</h6>
+                        <h6 class="mb-1 fw-bold">{{ __('roles.system_permissions') }}</h6>
                         <h4 class="mb-0 fw-black">{{ $stats['total_perms'] }}</h4>
                     </div>
                     <span class="badge bg-warning rounded-circle p-2">
@@ -37,11 +37,11 @@
         </div>
     </div>
     <div class="col-sm-6 col-xl-4">
-        <div class="card shadow-none border-0 rounded-4" style="background-color: rgba(3, 195, 236, 0.08);">
+        <div class="card shadow-none border-0 rounded-4" style="background-color: #dbdee0">
             <div class="card-body p-3 text-nowrap">
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="content-left">
-                        <h6 class="mb-1 fw-bold text-info">{{ __('roles.authorized_admins') }}</h6>
+                        <h6 class="mb-1 fw-bold">{{ __('roles.authorized_admins') }}</h6>
                         <h4 class="mb-0 fw-black">{{ $stats['assigned_admins'] }}</h4>
                     </div>
                     <span class="badge bg-info rounded-circle p-2">
