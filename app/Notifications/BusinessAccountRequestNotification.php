@@ -45,6 +45,7 @@ class BusinessAccountRequestNotification extends Notification implements ShouldQ
         ];
     }
 
+    // 1. save notification in database
     public function toDatabase(object $notifiable): array
     {
         $data = $this->getNotificationData();
@@ -62,10 +63,11 @@ class BusinessAccountRequestNotification extends Notification implements ShouldQ
         ];
     }
 
+    // 2. send notification by firebase    
     public function toFcm($notifiable)
     {
         $data = $this->getNotificationData();
-        
+
         $locale = $notifiable->locale ?? app()->getLocale();
 
         $title = __($data['title_key'], [], $locale);

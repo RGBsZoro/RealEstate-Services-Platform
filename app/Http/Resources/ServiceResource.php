@@ -34,7 +34,7 @@ class ServiceResource extends JsonResource
     }
 
     protected function handleIsFavorite(): bool
-    {
+    { 
         if (isset($this->is_favorite_exists)) {
             return (bool) $this->is_favorite_exists;
         }

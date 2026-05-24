@@ -80,6 +80,9 @@ class ServiceManagementService
                 if (!empty($userBusinessAccounts)) {
                     $query->whereNotIn('business_account_id', $userBusinessAccounts);
                 }
+                $query->withExists(['favorites as is_favorite_exists' => function ($q) {
+                    $q->where('user_id', auth('api')->id());
+                }]);
             }
         }
 
@@ -141,7 +144,13 @@ class ServiceManagementService
 
         $service->load(['businessAccount', 'category', 'fieldValues.field'])
             ->loadCount('reviews')
-            ->loadAvg('reviews', 'rating');;
+            ->loadAvg('reviews', 'rating');
+
+        if (auth('api')->check()) {
+            $service->loadExists(['favorites as is_favorite_exists' => function ($q) {
+                $q->where('user_id', auth('api')->id());
+            }]);
+        }
 
         return $service;
     }

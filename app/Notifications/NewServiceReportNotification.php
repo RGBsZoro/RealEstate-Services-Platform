@@ -46,6 +46,7 @@ class NewServiceReportNotification extends Notification implements ShouldQueue, 
         ];
     }
 
+    // 1. save notification in database
     public function toDatabase(object $notifiable): array
     {
         $data = $this->getNotificationData();
@@ -64,6 +65,7 @@ class NewServiceReportNotification extends Notification implements ShouldQueue, 
         ];
     }
 
+    // 2. send notification by firebase    
     public function toFcm($notifiable)
     {
         $data = $this->getNotificationData();

@@ -27,7 +27,7 @@ class UpdateDynamicFieldRequest extends FormRequest
             'type' => ['sometimes', new Enum(FieldTypeEnum::class)],
             'label.en' => 'sometimes|string',
             'label.ar' => 'sometimes|string',
-            'is_sometimes' => 'sometimes|boolean',
+            'is_required' => 'sometimes|boolean',
             'options' => 'required_if:type,' . FieldTypeEnum::SELECT->value . '|array',
         ];
     }

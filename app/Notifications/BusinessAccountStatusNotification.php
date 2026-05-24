@@ -44,6 +44,7 @@ class BusinessAccountStatusNotification extends Notification implements ShouldQu
         ];
     }
 
+    // 1. save notification in database
     public function toDatabase(object $notifiable): array
     {
         $data = $this->getNotificationData();

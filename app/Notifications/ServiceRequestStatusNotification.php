@@ -73,6 +73,7 @@ class ServiceRequestStatusNotification extends Notification implements ShouldQue
         };
     }
 
+    // 1. save notification in database
     public function toDatabase(object $notifiable): array
     {
         $data = $this->getNotificationData();

@@ -52,6 +52,7 @@ class ServiceStatusNotification extends Notification implements ShouldQueue
         ];
     }
 
+    // 1. save notification in database
     public function toDatabase(object $notifiable): array
     {
         $data = $this->getNotificationData();

@@ -14,7 +14,10 @@ class FavoriteService
                 'media',
                 'businessAccount:id,user_id,name'
             ])
-            ->cursorPaginate(15);
+            ->cursorPaginate(15)->through(function ($service) {
+                $service->is_favorite_exists = true;
+                return $service;
+            });
     }
 
     public function addFavorite(User $user, array $data)

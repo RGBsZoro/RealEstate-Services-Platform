@@ -68,4 +68,9 @@ class Service extends Model implements HasMedia
     {
         return $this->morphMany(Slider::class, 'sliderable');
     }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
+    }
 }

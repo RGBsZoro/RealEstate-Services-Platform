@@ -29,11 +29,11 @@ class UpdateBusinessAccountRequest extends FormRequest
             'activity_id' => ['sometimes', 'integer', 'exists:activities,id', new UniqueBusinessAccountPerActivity($this->businessAccount->id)],
             'name' => ['sometimes', 'array'],
             'name.ar' => [
-                'required',
+                'sometimes',
                 Rule::unique('business_accounts', 'name->ar')->whereNot('status', 'rejected')
             ],
             'name.en' => [
-                'required',
+                'sometimes',
                 Rule::unique('business_accounts', 'name->en')->whereNot('status', 'rejected')
             ],
             'license_number' => ['sometimes', 'string', 'max:255'],

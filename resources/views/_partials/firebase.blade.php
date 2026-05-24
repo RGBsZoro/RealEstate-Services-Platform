@@ -30,7 +30,7 @@
                     console.log('Permission granted');
                     
                     getToken(messaging, {
-                        vapidKey: "BMcORtsdig4aiPqnkpjC6Y-DzU2Eowr7A4L9kWousf1FC2g0MqqwjoEmkCYjGc0fS2Rrn4WnGkjGCOmlucJT4Ck",
+                        vapidKey: "BKN1uxnlEaP39y3a1OWzbRw6DvoSTW7wSYKNe34yV7_aWTeclXejl3QYqHYqApj0rqZozmOSkaHoq8Ty6sNRdtQ",
                         serviceWorkerRegistration: registration
                     }).then(token => {
                         console.log('FCM Token:', token);
